@@ -16,13 +16,17 @@
 #ifndef STATISTIC_H
 #define STATISTIC_H
 
+#ifndef M_PI
+#define M_PI 3.14159265359
+#endif
+
 #include <vector>
 #include <string>
 #include <cmath>
 #include <random>
 #include <iostream>
 
-#include "Eigen/Eigen/Eigen"
+#include "/usr/include/Eigen/Eigen/Eigen"
 
 using namespace std;
 using namespace Eigen;

@@ -1,0 +1,140 @@
+[TITLE]
+Converted from Epanet to Staci, case name: racs_alap_16.spr
+
+
+[JUNCTIONS]
+;ID              	Elev        	Demand      	Pattern         
+ node.0.1        	1.0000      	38.580247   	                	;
+ node.0.2        	1.0000      	38.580247   	                	;
+ node.0.3        	1.0000      	38.580247   	                	;
+ node.1.0        	1.0000      	38.580247   	                	;
+ node.1.1        	1.0000      	38.580247   	                	;
+ node.1.2        	1.0000      	38.580247   	                	;
+ node.1.3        	1.0000      	38.580247   	                	;
+ node.2.0        	1.0000      	38.580247   	                	;
+ node.2.1        	1.0000      	38.580247   	                	;
+ node.2.2        	1.0000      	38.580247   	                	;
+ node.2.3        	1.0000      	38.580247   	                	;
+ node.3.0        	1.0000      	38.580247   	                	;
+ node.3.1        	1.0000      	38.580247   	                	;
+ node.3.2        	1.0000      	38.580247   	                	;
+ node.3.3        	1.0000      	38.580247   	                	;
+
+[RESERVOIRS]
+;ID              	Head        	Pattern         
+ PRES            	51.9684     	                
+
+[TANKS]
+;ID             	Elevation   	InitLevel   	MinLevel    	MaxLevel    	Diameter    	MinVol      	VolCurve
+
+[PIPES]
+;ID             	Node1           	Node2           	Length      	Diameter    	Roughness   	MinorLoss   	Status
+ pipe_node.0.0_to_node.0.1	PRES            	node.0.1        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.0.1_to_node.0.2	node.0.1        	node.0.2        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.0.2_to_node.0.3	node.0.2        	node.0.3        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.1.0_to_node.1.1	node.1.0        	node.1.1        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.1.1_to_node.1.2	node.1.1        	node.1.2        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.1.2_to_node.1.3	node.1.2        	node.1.3        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.2.0_to_node.2.1	node.2.0        	node.2.1        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.2.1_to_node.2.2	node.2.1        	node.2.2        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.2.2_to_node.2.3	node.2.2        	node.2.3        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.3.0_to_node.3.1	node.3.0        	node.3.1        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.3.1_to_node.3.2	node.3.1        	node.3.2        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.3.2_to_node.3.3	node.3.2        	node.3.3        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.0.0_to_node.1.0	PRES            	node.1.0        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.0.1_to_node.1.1	node.0.1        	node.1.1        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.0.2_to_node.1.2	node.0.2        	node.1.2        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.0.3_to_node.1.3	node.0.3        	node.1.3        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.1.0_to_node.2.0	node.1.0        	node.2.0        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.1.1_to_node.2.1	node.1.1        	node.2.1        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.1.2_to_node.2.2	node.1.2        	node.2.2        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.1.3_to_node.2.3	node.1.3        	node.2.3        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.2.0_to_node.3.0	node.2.0        	node.3.0        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.2.1_to_node.3.1	node.2.1        	node.3.1        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.2.2_to_node.3.2	node.2.2        	node.3.2        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.2.3_to_node.3.3	node.2.3        	node.3.3        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+
+[PUMPS]
+;ID             	Node1           	Node2           	Parameters
+
+[VALVES]
+;ID             	Node1           	Node2           	Diameter    	Type	Setting     	MinorLoss   
+
+[TAGS]
+
+[DEMANDS]
+;Junction       	Demand      	Pattern         	Category
+
+[STATUS]
+;ID              	Status/Setting
+
+[PATTERNS]
+;ID             	Multipliers
+
+[CURVES]
+;ID             	X-Value     	Y-Value
+
+[CONTROLS]
+
+[RULES]
+
+[ENERGY]
+
+[EMITTERS]
+
+[QUALITY]
+
+[SOURCES]
+
+[REACTIONS]
+
+[MIXING]
+
+[TIMES]
+
+[REPORT]
+
+[OPTIONS]
+ Units              	LPS
+ Headloss           	C-F
+ Specific Gravity   	1.0
+ Viscosity          	1.0
+ Trials             	40
+ Accuracy           	0.001
+ CHECKFREQ          	2
+ MAXCHECK           	10
+ DAMPLIMIT          	0
+ Unbalanced         	Continue 10
+ Pattern            	1
+ Demand Multiplier  	1.0
+ Emitter Exponent   	0.5
+ Quality            	Chlorine mg/L
+ Diffusivity        	1.0
+ Tolerance          	0.01
+
+[COORDINATES]
+;Node           	X-Coord         	Y-Coord
+ PRES            	0.0000          	0.0000          
+ node.0.1        	0.0000          	100.0000        
+ node.0.2        	0.0000          	200.0000        
+ node.0.3        	0.0000          	300.0000        
+ node.1.0        	100.0000        	0.0000          
+ node.1.1        	100.0000        	100.0000        
+ node.1.2        	100.0000        	200.0000        
+ node.1.3        	100.0000        	300.0000        
+ node.2.0        	200.0000        	0.0000          
+ node.2.1        	200.0000        	100.0000        
+ node.2.2        	200.0000        	200.0000        
+ node.2.3        	200.0000        	300.0000        
+ node.3.0        	300.0000        	0.0000          
+ node.3.1        	300.0000        	100.0000        
+ node.3.2        	300.0000        	200.0000        
+ node.3.3        	300.0000        	300.0000        
+
+[VERTICES]
+
+[LABELS]
+
+[BACKDROP]
+
+[END]

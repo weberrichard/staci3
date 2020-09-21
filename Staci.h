@@ -16,6 +16,10 @@
 #ifndef STACI_H
 #define STACI_H
 
+#ifndef M_PI
+#define M_PI 3.14159265359
+#endif
+
 #include "BasicFileIO.h"
 #include "Edge.h"
 #include "Graph.h"
@@ -33,7 +37,7 @@
 #include "ValvePSV.h"
 #include "ValveTCV.h"
 
-#include "Eigen/Eigen/Eigen"
+#include "/usr/include/Eigen/Eigen/Eigen"
 
 #include <string>
 #include <iomanip>
@@ -69,6 +73,7 @@ public:
   // Constants for hydraulics, note: there are constants in Edge.h
   const double gravity = 9.81; // [m/s2]
   const double density = 1000.; // [kg/m3]
+  double relativeViscosity = 1.0; // compared to 20 degree C, 1e-6; equals 1.0 by default
 
   // Converts node names (IDs) to indicies i.e. finds the node name in the list of the nodes
   //vector<int> ID2Index(const vector<string> &id);
@@ -87,10 +92,11 @@ public:
   // level of printing
   int printLevel = 0;
 
-protected:
-  vector<string> line2sv(string line); // cutting string line to pieces
   int nodeIDtoIndex(string ID);
   int edgeIDtoIndex(string ID);
+
+protected:
+  vector<string> line2sv(string line); // cutting string line to pieces
 
   // UNITS
   double demandUnit, headUnit; // LPS, GPM etc. to LPS
@@ -100,13 +106,14 @@ protected:
   string caseName;
   string definitionFile;
 
-private:
-  bool isInitialization = false;
-  string frictionModel;
   // Creates the indicies for the nodes of edges and edges of nodes i.e. indexing of the sparse Jacobian
   void buildSystem();
   // Create the indexing, making the code more efficient
   void buildIndexing();
+
+private:
+  bool isInitialization = false;
+  string frictionModel;
 };
 
 #endif //STACI_H

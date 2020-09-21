@@ -19,7 +19,6 @@
 
 #include <vector>
 #include <iostream>
-#include <igraph.h>
 
 using namespace std;
 

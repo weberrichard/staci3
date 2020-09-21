@@ -53,12 +53,15 @@ public:
   /// Is the demands depending on pressure
   bool isPressureDemand = false;
 
-protected:
+  // adding new pipe element
+  void addNewPipe(string name, string nodeFrom, string nodeTo, double density, double length, double diameter, double roughness, double volumeFlowRate, bool isCheckVavle, int frictionModel, double relativeViscosity);
+
 	/// Jacobian matrix in a sparse Eigen type container
 	/// Used in f(x) = 0, and also in Sensitivity class
   SparseMatrix<double, ColMajor> jacobianMatrix;
   int maxRank; // max rank of jacobian
   
+protected:
   // Eigen Sparse LU decomposition solver
   SparseLU<SparseMatrix<double, ColMajor> > solver;
 

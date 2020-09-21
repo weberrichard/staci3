@@ -83,7 +83,7 @@ void IOxml::loadSystem(vector<Node *> &nodes, vector<Edge *> &edges) {
       double L = stod(nodeEdgeSpec.getChildNode("length").getText());
       double D = stod(nodeEdgeSpec.getChildNode("diameter").getText());
       double roughness = stod(nodeEdgeSpec.getChildNode("roughness").getText());
-      edges.push_back(new Pipe(id, node_from, node_to, density, L, D, roughness, mass_flow_rate, false, 2));
+      edges.push_back(new Pipe(id, node_from, node_to, density, L, D, roughness, mass_flow_rate, false, 2, 1.0));
     }
     else if(edgeType == "pool") // POOL
     {

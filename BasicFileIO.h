@@ -19,7 +19,8 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
-#include "Eigen/Eigen/Eigen"
+#include "/usr/include/Eigen/Eigen/Eigen"
+#include <sys/stat.h> // mkdir
 
 using namespace std;
 using namespace Eigen;
@@ -38,5 +39,11 @@ int countRows(string fileName);
 
 // Counting the rows and cols for Eigen Vectors
 vector<int> countRowsCols(string fileName, char separator);
+
+// Writing vector double to file
+void writeVectorDouble(string filename, vector<double> v);
+
+// Make new directory, works for windows and linux
+void makeDirectory(string name);
 
 #endif

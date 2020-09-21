@@ -139,3 +139,28 @@ vector<int> countRowsCols(string fileName, char separator)
   ifile.close();
   return v;
 }
+
+// Writing vector double to file
+//--------------------------------------------------------------
+void writeVectorDouble(string filename, vector<double> v)
+{
+  ofstream file;
+  file.open(filename);
+  for(int i=0; i<v.size(); i++)
+    file << v[i] << endl;
+  file.close();
+}
+
+// make new directory, works for windows and linux
+//--------------------------------------------------------------
+void makeDirectory(string name)
+{
+   string narrow_string(name);
+   wstring wide_string = wstring(narrow_string.begin(), narrow_string.end());
+   const wchar_t* name_wchar = wide_string.c_str();
+   #if defined(_WIN32)
+      _wmkdir(name_wchar);
+   #else 
+      mkdir(name.c_str(), 0700); 
+   #endif
+}

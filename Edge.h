@@ -20,7 +20,7 @@
 #define EDGE_H
 
 #include "Statistic.h"
-#include "Eigen/Eigen/Eigen"
+#include "/usr/include/Eigen/Eigen/Eigen"
 
 #include <sstream>
 #include <iostream>

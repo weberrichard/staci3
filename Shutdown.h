@@ -15,9 +15,9 @@
 #ifndef SHUTDOWN_H
 #define SHUTDOWN_H
 
-#include "Staci.h"
+#include "HydraulicSolver.h"
 
-class Shutdown : public Staci
+class Shutdown : public HydraulicSolver
 {
 public:
 	Shutdown(string spr_filename);
@@ -45,7 +45,7 @@ public:
 		return numberSegment;
 	}
 
-private:
+protected:
 	vector<int> edgeVector; // edge vector of the original network
 	vector<int> segmentEdgeVector; // edge vector of the segment graph
 	vector<vector<int> > segmentVector; // contains the original node indicies of pipes

@@ -16,12 +16,12 @@ Staci::Staci(string fileName)
   {
     loadSystem();
   }
-  else if(fileFormat == "spr") // Old STACI spr format
-  {
-    IOxml IOxmlObj(definitionFile.c_str());
-    IOxmlObj.loadSystem(nodes, edges);
-    frictionModel = "C-F";
-  }
+  //else if(fileFormat == "spr") // Old STACI spr format
+  //{
+  //  IOxml IOxmlObj(definitionFile.c_str());
+  //  IOxmlObj.loadSystem(nodes, edges);
+  //  frictionModel = "C-F";
+  //}
   else
   {
     cout << endl << "Unkown file format: " << fileFormat << endl << "Available file formats are: inp" << endl;
@@ -70,7 +70,7 @@ void Staci::buildSystem()
     }
     if(!startGotIt){
       cout << "\n!!! ERROR !!! Edge name: " << edges[i]->name.c_str() << ", startnode not found !!!";
-      cout << endl << "startNode: " << startNode << endl << "Exiting..." << endl;
+      cout << endl << "startNode: " << edges[i]->startNodeName.c_str() << endl << "Exiting..." << endl;
       exit(-1);
     } 
 
@@ -243,8 +243,17 @@ void Staci::saveResult(string property, string element)
 
   if(elementExist)
   {
-    mkdir("Network Data",0777);
-    mkdir(("Network Data/" + caseName).c_str(),0777);
+    // LINUX
+    //mkdir("Network Data",0777);
+    //mkdir(("Network Data/" + caseName).c_str(),0777);
+
+    // FOR WINDOWS
+    //mkdir("Network Data");
+    //mkdir(("Network Data/" + caseName).c_str());
+
+    makeDirectory("Network Data");
+    makeDirectory(("Network Data/" + caseName).c_str());
+
     if(element == "All")
     {
       remove(("/Network Data/" + caseName + "/Node.txt").c_str());

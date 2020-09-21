@@ -173,8 +173,13 @@ while(ischar(line))
           data = strsplit(line);
           data = data(data~=""); % clearing empty cells
           coordName(coordCounter) = string(data(1));
-          coordX(coordCounter) = str2double(data(3));
-          coordY(coordCounter) = -str2double(data(2));
+          if(caseFolder == "../../Networks/Sopron/")
+              coordX(coordCounter) = str2double(data(3));
+              coordY(coordCounter) = -str2double(data(2));
+          else              
+              coordX(coordCounter) = str2double(data(2));
+              coordY(coordCounter) = -str2double(data(3));
+          end
           line = fgetl(fileID);
       end
    end

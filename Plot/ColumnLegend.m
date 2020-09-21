@@ -210,6 +210,8 @@ end
 switch lower(location)
     case {'northeast'}
         set(legend_h, 'position', [pos(1)+fig_pos(3)-pos(3)-padding pos(2) pos(3) pos(4)]);
+    case {'northeast_wd'}
+        set(legend_h, 'position', [pos(1)+fig_pos(3)-pos(3)-padding pos(2)-0.075 pos(3) pos(4)]);
     case {'northwest'}
         set(legend_h, 'position', [pos(1)+padding pos(2) pos(3) pos(4)]);        
     case {'southeast'}

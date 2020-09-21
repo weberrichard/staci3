@@ -24,7 +24,7 @@
 #include <ctime>
 #include <stdlib.h>
 
-#include "Eigen/Eigen/Eigen"
+#include "/usr/include/Eigen/Eigen/Eigen"
 
 using namespace std;
 using namespace Eigen;
@@ -85,7 +85,6 @@ public:
   double xPosition, yPosition;
   double geodeticHeight;
   double demand; // independent from pressure, however it can be varying in time
-  //double valveFlow = 0.0; // Storing the active inflow from controlled valves;
   int segment=-1; // the node takes place in which segment
   double pdExponent = 2.5, pdDesiredPressure = 25., pdMinPressure = 10.; // in case of pressure dependent consumptions
   double userOutput;

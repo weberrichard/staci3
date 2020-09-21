@@ -348,10 +348,9 @@ void Staci::loadSystem()
 							{
 								if(sv[1] == "H-W") // Hazen - Williams
 									friction_model = 0;
-								// TODO TODO TODO
-								//else if(sv[1] == "D-W") // Darcy - Weisbach 
-								//	friction_model = 1;
-								else if(sv[1] == "C-F") // Constant friction coefficient in case of Sopron Networks
+								else if(sv[1] == "D-W") // Darcy - Weisbach 
+									friction_model = 1;
+								else if(sv[1] == "C-F") // Constant friction coefficient, mostly in case of Sopron Networks
 									friction_model = 2;
 								else
 								{
@@ -359,6 +358,9 @@ void Staci::loadSystem()
 									exit(-1);
 								}
 							}
+
+							if(sv[0] == "Viscosity")
+								relativeViscosity = stod(sv[1],0);
 						}
 					}
 				}
@@ -587,7 +589,7 @@ void Staci::loadSystem()
 	  for(int i=0; i<pipe_name.size(); i++){
   		l[i] = l[i]*headUnit; // feet to meter
   		D[i] = D[i]*0.0254; // inches to meter
-  		 // TODO Roughness in D-W
+  		roughness[i] = roughness[i]*headUnit;
   	}
 		for(int i=0; i<pres_name.size(); i++){
 		  pres_head[i] = pres_head[i]*headUnit; // feet to meter
@@ -616,7 +618,13 @@ void Staci::loadSystem()
   }
   else if(unit == "SI"){
   	for(int i=0; i<pipe_name.size(); i++)
+  	{
 	  	D[i] /= 1000.;
+	  	if(friction_model == 1) // only in case of darcy
+	  	{
+		  	roughness[i] /= 1000.;
+	  	}
+  	}
 
 	  for(int i=0; i<pump_name.size(); i++){
 			if(pump_type[i]=="HEAD"){
@@ -671,7 +679,7 @@ void Staci::loadSystem()
 		else
 			isCheckValve = false;
 
-  	edges.push_back(new Pipe(pipe_name[i], node_from[i], node_to[i], density, l[i], D[i], roughness[i], 0.0, isCheckValve, friction_model));
+  	edges.push_back(new Pipe(pipe_name[i], node_from[i], node_to[i], density, l[i], D[i], roughness[i], 0.0, isCheckValve, friction_model, relativeViscosity));
 
    	if(pipe_status[i] == "Open")
    		edges[edges.size()-1]->status = 1;

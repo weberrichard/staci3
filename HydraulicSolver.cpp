@@ -754,3 +754,36 @@ void HydraulicSolver::checkJacobianMatrix()
   else
     exit(-1);
 }
+
+
+//--------------------------------------------------------------
+void HydraulicSolver::addNewPipe(string name, string nodeFrom, string nodeTo, double density, double length, double diameter, double roughness, double volumeFlowRate, bool isCheckVavle, int frictionModel, double relativeViscosity)
+{
+  edges.push_back(new Pipe(name, nodeFrom, nodeTo, density, length, diameter, roughness, volumeFlowRate, isCheckVavle, frictionModel, relativeViscosity));
+
+  numberNodes = nodes.size();
+  numberEdges = edges.size();
+  numberEquations = numberEdges + numberNodes;
+  
+  buildSystem();
+  buildIndexing();
+
+  int n=edges.size();
+  edges[n-1]->startHeight = nodes[edges[n-1]->startNodeIndex]->geodeticHeight;
+  edges[n-1]->endHeight = nodes[edges[n-1]->endNodeIndex]->geodeticHeight;
+
+  // giving initial values to head and volume flow rates
+  initialization();
+
+  // resizing Eigen vectors
+  x.resize(numberEquations);
+  f.resize(numberEquations);
+
+  // Setting initial conditions to x vector
+  for(int i=0; i<numberEdges; i++)
+    x(i) = edges[i]->volumeFlowRate;
+  for(int i=0; i<numberNodes; i++)
+    x(numberEdges + i) = nodes[i]->head;
+
+  buildJacobian(); // building the Jacobian matrix
+}

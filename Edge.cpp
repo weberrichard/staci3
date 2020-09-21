@@ -51,10 +51,14 @@ string Edge::info(){
 double Edge::getEdgeDoubleProperty(string prop)
 {
   double out = 0.;
-  if(prop == "volumeFlowRate") // l/s
+  if(prop == "volumeFlowRate")
     out = volumeFlowRate;
+  else if(prop == "volumeFlowRateLPS")
+    out = volumeFlowRate*1000.;
   else if(prop == "volumeFlowRateAbs")
     out = abs(volumeFlowRate);
+  else if(prop == "volumeFlowRateAbsLPS")
+    out = abs(volumeFlowRate)*1000.;
   else if(prop == "segment")
     out = (double)segment;
   else if(prop == "status")

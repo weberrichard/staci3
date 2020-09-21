@@ -16,13 +16,17 @@
 #ifndef PIPE_H
 #define PIPE_H
 
+#ifndef M_PI
+#define M_PI 3.14159265359
+#endif
+
 #include "Edge.h"
 
 class Pipe : public Edge
 {
 
 public:
-  Pipe(const string a_name, const string a_startNodeName, const string a_endNodeName, const double a_density, const double a_length, const double a_diameter, const double a_rougness, const double a_massFlowRate, bool a_isCheckValve, int a_frictionModel);
+  Pipe(const string a_name, const string a_startNodeName, const string a_endNodeName, const double a_density, const double a_length, const double a_diameter, const double a_rougness, const double a_massFlowRate, bool a_isCheckValve, int a_frictionModel, double a_relativeViscosity);
   ~Pipe();
 
   /// Provides basic informations
@@ -53,12 +57,19 @@ public:
 
   // Pipe roughness (H-W: C factor, D-W: relative roughness, C-F: friction coefficient)
   double roughness; 
+
+  // Relative viscosity of the fluid related to 20 degree water (1e-6 m^2/s)
+  double relativeViscosity;
+
   // 0 - Hazen-Williams (H-W), 1 - Darcy-Weisbach (D-W), 2 - Constant friction coefficient (C-F)
   int frictionModel=-1; 
 
 private:
   // setting the pipeConst value
   void setPipeConst();
+
+  // darcy friction coefficient factor
+  double getDarcy(double q);
 };
 
 #endif

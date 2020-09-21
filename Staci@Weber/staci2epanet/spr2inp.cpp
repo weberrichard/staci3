@@ -100,7 +100,7 @@ int main(int argc, char* argv[])
     if(nodeRankISO[i]>1)
     {
       cout << endl << "!WARNING! Node " << wdsSPR->nodes[i]->name << " has a rank of " << nodeRankISO[i] << " with ISO VALVES\n Do something about it... " << endl;
-      exit(-1);
+      //exit(-1);
     }
   }
 
@@ -117,7 +117,7 @@ int main(int argc, char* argv[])
       if(nodeRank[ei]>0)
       {
         cout << endl << "!WARNING! End node " << wdsSPR->edges[i]->endNodeName << " of iso valve " << wdsSPR->edges[i]->name << " has a rank of " << nodeRank[ei] << endl << " Do something... " << endl;
-        exit(-1);
+        //exit(-1);
       }
 
       // Deleting the node and the valve if the rank is one
@@ -194,7 +194,7 @@ int main(int argc, char* argv[])
   }
 
   // deleting unnecessary nodes
-  for(int i=0; i<nodesToDelete.size(); i++)
+ /*for(int i=0; i<nodesToDelete.size(); i++)
   {
     for(int j=0; j<wdsSPR->nodes.size(); j++)
     {
@@ -217,7 +217,7 @@ int main(int argc, char* argv[])
         wdsSPR->edges.erase(wdsSPR->edges.begin()+j);
       }
     }
-  }
+  }*/
 
   // Renaming everything
   /*for(int i=0; i<wdsSPR->nodes.size(); i++)

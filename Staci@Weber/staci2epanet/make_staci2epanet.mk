@@ -4,6 +4,7 @@ FUNC=spr2inp
 
 CXX=clang++
 CXXFLAGS=-std=c++17 -I/usr/include/python2.7 -I/usr/local/include/igraph -ligraph -O3 -fopenmp -mavx
+# -Wall -Wextra -pedantic -D_GLIBCXX_DEBUG 
 
 OBJS += \
 $(STACI_DIR)BasicFileIO.o \

@@ -87,8 +87,10 @@ if(~isLogColorMap)
         end
     elseif(colorElement == "Both")
         colorBarTicks = 0:0.1:1;
+    elseif(colorElement == "None")
+        colorBarTicks = 0:0.1:1;
     else
-       disp("!!! WARNING !!! Available colorELement: Pipe, Node, All"); 
+       disp("!!! WARNING !!! Available colorELement: Pipe, Node, All, None"); 
        colorBarTicks = [0,1];
     end
 else
@@ -129,8 +131,6 @@ if(colorElement == "Pipe" || colorElement == "Both")
     end
     pipeColor = (pipeColor-min(pipeColor))/denom;
 end
-
-
 
 
 

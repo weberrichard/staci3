@@ -3,7 +3,7 @@ clear;
 addpath('../../Plot');
 % blackBody, blackBodyExt, cividis, coolWarmBent, coolWarmSmooth, inferno, jet, kindlmann, 
 % kindlmannExt, magma, plasma, viridis
-colorMapName = 'grayscale'; 
+colorMapName = 'plasma'; 
 
 colorMap = importdata(['../../Plot/ColorMaps/',colorMapName,'.txt']);
 
@@ -47,13 +47,13 @@ for j=1:length(m)
 end
 plot([10,15],[0,0],'linewidth',lw,'color',[colr_width,colg_width,colb_width]);
 plot([25,30],[1,1],'linewidth',lw,'color',[colr_width,colg_width,colb_width]);
-xlabel('p [m]');
-ylabel('d/d_{des} [-]');
+xlabel('Pressure [m]' ,'fontsize',12);
+ylabel('Relative consumption (c/d) [-]' ,'fontsize',12);
 xticks([pmin,pdes])
 xticklabels({'p_{min}','p_{des}'})
-lgstr = join([repmat("d=",length(m),1),num2str(m')]);
+lgstr = join([repmat("m = ",length(m),1),num2str(m')]);
 legend(lgstr);
-saveas(fig1,'PresDemBlack.png','png');
-saveas(fig1,'PresDemBlack.fig','fig');
-
+saveas(fig1,'PresDem.png','png');
+saveas(fig1,'PresDem.fig','fig');
+saveas(fig1,'PresDem.eps','epsc');
 
