@@ -1,42 +1,54 @@
-clear; close all;
+clear;
+% close all
 
-% caseName = 'Net1';
+% caseName = 'buk';
+% caseName = 'vashegy';
 % caseName = 'ky1';
+% caseName = 'agyagosszergeny';
+% caseName = 'csapod';
+% caseName = 'lovo';
+% caseName = 'und';
+% caseName = 'pozsonyiut';
+% caseName = 'kohegy';
+% caseName = 'Net1orig';
+% caseName = 'ky2';
 % caseName = 'C-town';
-caseName = 'tomalmi';
-% caseName = 'linear_3';
-% caseName = 'ferto';
-% caseName = 'balf';
-% caseName = 'becsidomb';
-% caseName = 'villasor';
-% caseName = 'Anytown';
+% caseName = 'rojtokmuzsaj';
+caseName = 'grid_16';
+
+caseFolder = '../../Networks/Basic/';
 
 % plot settings
-pumpRadius = 0.01;
-presRadius = 0.01;
-tankSize = 0.02;
-valveSize = 0.0005;
-lineWidth = 1.5;
-nodeMarkerSize = 8;
-backgroundColor = [0.9,0.9,0.9];
+pumpRadius = 0.012;
+presRadius = 0.030;
+presAngle = [135,0,90,90,0];
+tankSize = 0.020;
+tankAngle = [45,0,0,0,0,-45,0];
+valveSize = 0.000018;
+lineWidth = 1.8;
+nodeMarkerSize = 15;
+backgroundColor = [1.0,1.0,1.0];
+closedColor = [1.0,0.0,0.0];
 
 % colorbar settings
 
 %blackBody, blackBodyExt, cividis, coolWarmBent, coolWarmSmooth, inferno, jet, kindlmann, kindlmannExt, magma, plasma, viridis
 %discrete: lines, prism
-colorMapName = 'prism'; 
-colorBarText = 'Head [m]';
+colorMapName = 'jet'; 
+colorBarText = 'Nyomás [m]';
 margin = 0.03; % margins around plot
 colorDelta = 0.15; %space for colorbar
 colorPos = "east"; %position of colorbar (east or south)
-colorBarFontSize = 12;
-colorElement = "All"; % "Node" or "Pipe" or "All"
+colorBarFontSize = 14;
+colorElement = "None"; % "Node" or "Pipe" or "All" or "None"
+isLogColorMap = false; % WORKS ONLY WITH NODE COLORELEMENT
+colorBarTicksNumber = 10;
+colorBarVisible = 'off';
 
-caseFolder = '../../Networks/';
 addpath('../../Plot');
 projectFolder = pwd;
-
 operatingSystem = ispc;
+
 if(operatingSystem)
     slashSign = '\';
 else
@@ -77,122 +89,228 @@ set(gcf,'InvertHardCopy','off','Color',backgroundColor);
 %colorbar
 cb = colorbar;
 colorMap = importdata(['../../Plot/ColorMaps/',colorMapName,'.txt']);
+
 %adjusting to discrete colormaps
 if(colorMapName == "lines" || colorMapName == "prism")
     colorMap = repmat(colorMap,ceil(colorMapNumber/size(colorMap,1)),1);
     colorMap = colorMap(1:colorMapNumber,:);
     colorMap(:,1) = linspace(0,1,size(colorMap,1));
+elseif(isLogColorMap)
+    colorMap = [colorMap(1:colorBarTicksNumber-1:end,:);colorMap(end,:)];
+    for i=2:size(colorMap,1)-1
+       colorMap(i,1) = (colorMap(1,1) + colorMap(i+1,1))/2;
+    end
 end
-    % else
-    colormap(colorMap(:,2:4));
-    cb.FontSize = colorBarFontSize;
-    cb.Label.String=colorBarText;
-    for i=1:length(colorBarTicks)
-       cb.TickLabels{i} = round(colorBarTicks(i),-round(log(max(colorBarTicks))/log(10))+2); 
-    end
-    if(colorPos == "south")
-        cb.Orientation = 'horizontal';
-        set(cb,'position',[0.1,0.08,0.8,0.025]);
-    elseif(colorPos == "east")
-        set(cb,'position',[0.9,0.1,0.025,0.8]);
-    else
-        disp('!!! WARNING !!! available colorPos: south | east'); 
-    end
-% end
 
+colormap(colorMap(:,2:4));
+cb.FontSize = colorBarFontSize;
+cb.Label.String = colorBarText;
+cb.TickLabels = round(colorBarTicks,-round(log(max(abs(colorBarTicks)))/log(10))+2); 
+set(cb,'YTick',0:1/(colorBarTicksNumber-1):1)
+cb.Visible = colorBarVisible;
+if(colorPos == "south")
+    cb.Orientation = 'horizontal';
+    set(cb,'position',[0.1,0.08,0.8,0.025]);
+elseif(colorPos == "east")
+    set(cb,'position',[0.9,0.1,0.025,0.8]);
+else
+    disp('!!! WARNING !!! available colorPos: south | east'); 
+end
+
+% colorbar off
 if(colorElement == "Node")
    pipeData = zeros(size(pipe));
-   if(exist('pres'))
-       presData = zeros(size(pres));
-   end
-   if(exist('pool'))
-       poolData = zeros(size(pool));
-   end
-   if(exist('pump'))
-       pumpData = zeros(size(pump));
-   end
 elseif(colorElement == "Pipe")
    nodeData = zeros(size(node));
-   if(exist('pres'))
-       presData = zeros(size(pres));
-   end
-   if(exist('pool'))
-       poolData = zeros(size(pool));
-   end
-   if(exist('pump'))
-       pumpData = zeros(size(pump));
-   end
+elseif(colorElement == "None")
+    pipeData = zeros(size(pipe));
+    nodeData = zeros(size(node));
+%     pumpData = zeros(size(pump));
 end
 
 % start of plotting
+x = zeros(length(pipe),3);
+y = zeros(length(pipe),3);
+for i=1:length(pipe)
+    xx = [node(pipe(i).nodeFromIdx).coordX,node(pipe(i).nodeToIdx).coordX];
+    x(i,:) = [xx(1),(xx(1)+xx(2))/2,xx(2)];
+    yy = [node(pipe(i).nodeFromIdx).coordY,node(pipe(i).nodeToIdx).coordY];
+    y(i,:) = [yy(1),(yy(1)+yy(2))/2,yy(2)];
+end
+
+plotObj = plot(x',y','k');
+
 for i=1:pipeCounter
     if(colorElement == "Pipe" || colorElement == "All")
-        r = min(1,max(0,interp1(colorMap(:,1),colorMap(:,2),pipeColor(i),'spline')));
-        g = min(1,max(0,interp1(colorMap(:,1),colorMap(:,3),pipeColor(i),'spline')));
-        b = min(1,max(0,interp1(colorMap(:,1),colorMap(:,4),pipeColor(i),'spline')));
+        if(~isnan(pipeColor(i)))
+            r = min(1,max(0,interp1(colorMap(:,1),colorMap(:,2),pipeColor(i),'spline')));
+            g = min(1,max(0,interp1(colorMap(:,1),colorMap(:,3),pipeColor(i),'spline')));
+            b = min(1,max(0,interp1(colorMap(:,1),colorMap(:,4),pipeColor(i),'spline')));
+        else
+            r = closedColor(1);
+            g = closedColor(2);
+            b = closedColor(3);
+        end
+    elseif(colorElement == "None")
+        r = 0.0;
+        g = 0.0;
+        b = 0.0;
     else
         r = 0.2;
         g = 0.2;
         b = 0.2;
     end
-    x = [node(pipe(i).nodeFromIdx).coordX,node(pipe(i).nodeToIdx).coordX];
-    y = [node(pipe(i).nodeFromIdx).coordY,node(pipe(i).nodeToIdx).coordY];
-    plot([x(1),(x(1)+x(2))/2,x(2)],[y(1),(y(1)+y(2))/2,y(2)],'k','linewidth',lineWidth,'color',[r,g,b],'tag',join([strrep(pipe(i).ID,'_','\_'),'  ',pipeData(i)]));
+    if(isnan(pipeData(i)))
+        text = "OFF";
+    else
+        text = pipeData(i);
+    end
+    plotObj(i).Color = [r,g,b];
+    plotObj(i).Tag   = join([strrep(pipe(i).ID,'_','\_'),'  ',text]);
+    plotObj(i).LineWidth = lineWidth;
 end
+
 for i=1:pumpCounter
     if(colorElement == "All")
-        r = min(1,max(0,interp1(colorMap(:,1),colorMap(:,2),pumpColor(i),'spline')));
-        g = min(1,max(0,interp1(colorMap(:,1),colorMap(:,3),pumpColor(i),'spline')));
-        b = min(1,max(0,interp1(colorMap(:,1),colorMap(:,4),pumpColor(i),'spline')));
+        if(~isnan(pumpColor(i)))
+            r = min(1,max(0,interp1(colorMap(:,1),colorMap(:,2),pumpColor(i),'spline')));
+            g = min(1,max(0,interp1(colorMap(:,1),colorMap(:,3),pumpColor(i),'spline')));
+            b = min(1,max(0,interp1(colorMap(:,1),colorMap(:,4),pumpColor(i),'spline')));
+        else
+            r = closedColor(1);
+            g = closedColor(2);
+            b = closedColor(3);
+        end
     else
         r = 0.5;
         g = 0.5;
         b = 0.5;
     end
-    PlotPump([node(pump(i).nodeFromIdx).coordX,node(pump(i).nodeToIdx).coordX],[node(pump(i).nodeFromIdx).coordY,node(pump(i).nodeToIdx).coordY],pumpRadius,1,[r,g,b],join([strrep(pump(i).ID,'_','\_'),'  ',pumpData(i)]));
+    if(isnan(pumpData(i)))
+        text = "OFF";
+    else
+        text = pumpData(i);
+    end
+    PlotPump([node(pump(i).nodeFromIdx).coordX,node(pump(i).nodeToIdx).coordX],[node(pump(i).nodeFromIdx).coordY,node(pump(i).nodeToIdx).coordY],pumpRadius,1,[r,g,b],join([strrep(pump(i).ID,'_','\_'),'  ',text]));
 end
 for i=1:presCounter
     if(colorElement == "All")
-        r = min(1,max(0,interp1(colorMap(:,1),colorMap(:,2),presColor(i),'spline')));
-        g = min(1,max(0,interp1(colorMap(:,1),colorMap(:,3),presColor(i),'spline')));
-        b = min(1,max(0,interp1(colorMap(:,1),colorMap(:,4),presColor(i),'spline')));
+        if(~isnan(presColor(i)))
+            r = min(1,max(0,interp1(colorMap(:,1),colorMap(:,2),presColor(i),'spline')));
+            g = min(1,max(0,interp1(colorMap(:,1),colorMap(:,3),presColor(i),'spline')));
+            b = min(1,max(0,interp1(colorMap(:,1),colorMap(:,4),presColor(i),'spline')));
+        else
+            r = closedColor(1);
+            g = closedColor(2);
+            b = closedColor(3);
+        end
+        if(isnan(presData(i)))
+            text = "OFF";
+        else
+            text = presData(i);
+        end
     else
         r = 0.5;
         g = 0.5;
         b = 0.5;
+        text = "";
     end
-    PlotPres(pres(i).coordX,pres(i).coordY,presRadius,1,90,[r,g,b],join([strrep(pres(i).ID,'_','\_'),'  ',presData(i)]));
+    PlotPres(pres(i).coordX,pres(i).coordY,presRadius,1.5,presAngle(i),[r,g,b],join([strrep(pres(i).ID,'_','\_'),'  ',text]));
 end
 for i=1:poolCounter
+% for i=1:2
     if(colorElement == "All")
-        r = min(1,max(0,interp1(colorMap(:,1),colorMap(:,2),poolColor(i),'spline')));
-        g = min(1,max(0,interp1(colorMap(:,1),colorMap(:,3),poolColor(i),'spline')));
-        b = min(1,max(0,interp1(colorMap(:,1),colorMap(:,4),poolColor(i),'spline')));
+        if(~isnan(poolColor(i)))
+            r = min(1,max(0,interp1(colorMap(:,1),colorMap(:,2),poolColor(i),'spline')));
+            g = min(1,max(0,interp1(colorMap(:,1),colorMap(:,3),poolColor(i),'spline')));
+            b = min(1,max(0,interp1(colorMap(:,1),colorMap(:,4),poolColor(i),'spline')));
+        else
+            r = closedColor(1);
+            g = closedColor(2);
+            b = closedColor(3); 
+        end
+        if(isnan(poolData(i)))
+            text = "OFF";
+        else
+            text = poolData(i);
+        end
     else
         r = 0.5;
         g = 0.5;
         b = 0.5;
+        text = "";
     end
-    PlotPool(pool(i).coordX,pool(i).coordY,tankSize,1,0,[r,g,b],join([strrep(pool(i).ID,'_','\_'),'  ',poolData(i)]));
+
+    PlotPool(pool(i).coordX,pool(i).coordY,tankSize,1,tankAngle(i),[r,g,b],join([strrep(pool(i).ID,'_','\_'),'  ',text]));
 end
 for i=1:valveCounter
-    PlotValve([node(valve(i).nodeFromIdx).coordX,node(valve(i).nodeToIdx).coordX],[node(valve(i).nodeFromIdx).coordY,node(valve(i).nodeToIdx).coordY],valveSize,1,join([strrep(valve(i).ID,'_','\_'),'  ']));
+    if(colorElement == "All")
+        if(~isnan(valveColor(i)))
+            r = min(1,max(0,interp1(colorMap(:,1),colorMap(:,2),valveColor(i),'spline')));
+            g = min(1,max(0,interp1(colorMap(:,1),colorMap(:,3),valveColor(i),'spline')));
+            b = min(1,max(0,interp1(colorMap(:,1),colorMap(:,4),valveColor(i),'spline')));
+        else
+            r = closedColor(1);
+            g = closedColor(2);
+            b = closedColor(3); 
+        end
+        if(isnan(valveData(i)))
+            text = "OFF";
+        else
+            text = valveData(i);
+        end
+    else
+        r = 0.5;
+        g = 0.5;
+        b = 0.5;
+        text = "";
+    end
+    PlotValve([node(valve(i).nodeFromIdx).coordX,node(valve(i).nodeToIdx).coordX],[node(valve(i).nodeFromIdx).coordY,node(valve(i).nodeToIdx).coordY],valveSize,1,[r,g,b],join([strrep(valve(i).ID,'_','\_'),'  ',text]));
 end
+
+x = zeros(size(node));
+y = zeros(size(node));
+for i=1:length(node)
+   x(i) = node(i).coordX; 
+   y(i) = node(i).coordY; 
+end
+plotObj = plot([x;x],[y;y],'ko');
+
+% NODE_1332821
 for i=1:nodeCounter
     if(colorElement == "Node" || colorElement == "All")
-        r = min(1,max(0,interp1(colorMap(:,1),colorMap(:,2),nodeColor(i),'spline')));
-        g = min(1,max(0,interp1(colorMap(:,1),colorMap(:,3),nodeColor(i),'spline')));
-        b = min(1,max(0,interp1(colorMap(:,1),colorMap(:,4),nodeColor(i),'spline')));
+        if(~isnan(nodeColor(i)))
+            r = min(1,max(0,interp1(colorMap(:,1),colorMap(:,2),nodeColor(i))));
+            g = min(1,max(0,interp1(colorMap(:,1),colorMap(:,3),nodeColor(i))));
+            b = min(1,max(0,interp1(colorMap(:,1),colorMap(:,4),nodeColor(i))));
+        else
+            r = closedColor(1);
+            g = closedColor(2);
+            b = closedColor(3);
+        end
+    elseif(colorElement == "None")
+        r = 0.4;
+        g = 0.4;
+        b = 0.4;
     else
         r = 0.2;
         g = 0.2;
         b = 0.2;
     end
-    plot(node(i).coordX,node(i).coordY,'ko','linewidth',1,'markersize',nodeMarkerSize,'markerfacecolor',[r,g,b],'color',[0,0,0],'tag',join([strrep(node(i).ID,'_','\_'),'  ',nodeData(i)]));
+    if(isnan(nodeData(i)))
+        text = "OFF";
+    else
+        text = nodeData(i);
+    end
+    plotObj(i).MarkerFaceColor = [r,g,b];
+    plotObj(i).Tag             = join([strrep(node(i).ID,'_','\_'),'  ',text]);
+    plotObj(i).MarkerSize      = nodeMarkerSize;
+    
+%     plot(node(i).coordX,node(i).coordY,'o','linewidth',1,'markersize',nodeMarkerSize,'markerfacecolor',[r,g,b],'color',[0,0,0],'tag',join([strrep(node(i).ID,'_','\_'),'  ',text]));
 end
 
 datacursormode on
 dcm = datacursormode(gcf);
 set(dcm,'UpdateFcn',@ShowTag)
 
-SaveTightFigure(fig,caseName);
+SaveTightFigure(fig,['Plots',slashSign,caseName]);

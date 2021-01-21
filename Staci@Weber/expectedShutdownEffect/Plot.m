@@ -2,25 +2,24 @@ clear;
 % close all
 
 % caseName = 'buk';
-% caseName = 'vashegy';
+% caseName = 'nagycenk';
 % caseName = 'ky1';
-% caseName = 'C-town';
 % caseName = 'agyagosszergeny';
-caseName = 'nagycenk';
+% caseName = 'csapod';
 % caseName = 'sanchegy';
-% caseName = 'balf';
+% caseName = 'acsad';
 % caseName = 'becsidomb';
 % caseName = 'villasor';
-% caseName = 'ujhermes';
+caseName = 'tomalom';
 
 % plot settings
 pumpRadius = 0.001;
 presRadius = 0.008;
-presAngle = [0,150];
+presAngle = [0,90];
 tankSize = 0.017;
 valveSize = 0.00005;
 lineWidth = 2;
-nodeMarkerSize = 7;
+nodeMarkerSize = 6;
 backgroundColor = [1.0,1.0,1.0];
 closedColor = [1.0,0.0,0.0];
 
@@ -28,15 +27,16 @@ closedColor = [1.0,0.0,0.0];
 
 %blackBody, blackBodyExt, cividis, coolWarmBent, coolWarmSmooth, inferno, jet, kindlmann, kindlmannExt, magma, plasma, viridis
 %discrete: lines, prism
-colorMapName = 'grayscale'; 
-colorBarText = 'Gamma [-]';
+colorMapName = 'plasma'; 
+colorBarText = '';
 margin = 0.03; % margins around plot
 colorDelta = 0.15; %space for colorbar
 colorPos = "east"; %position of colorbar (east or south)
-colorBarFontSize = 12;
-colorElement = "Node"; % "Node" or "Pipe" or "All"
-isLogColorMap = true; % WORKS ONLY WITH NODE COLORELEMENT
-colorBarTicksNumber = 11;
+colorBarFontSize = 15;
+colorElement = "Node"; % "Node" or "Pipe" or "All" or "None"
+isLogColorMap = false; % WORKS ONLY WITH NODE COLORELEMENT
+colorBarTicksNumber = 6;
+isColorBarVisible = true;
 
 caseFolder = '../../Networks/Sopron/';
 addpath('../../Plot');
@@ -98,9 +98,11 @@ end
 
 colormap(colorMap(:,2:4));
 cb.FontSize = colorBarFontSize;
+cb.Label.FontSize = 20;
 cb.Label.String = colorBarText;
 cb.TickLabels = round(colorBarTicks,-round(log(max(abs(colorBarTicks)))/log(10))+2); 
 set(cb,'YTick',0:1/(colorBarTicksNumber-1):1)
+cb.Visible = isColorBarVisible;
 
 if(colorPos == "south")
     cb.Orientation = 'horizontal';
@@ -112,9 +114,9 @@ else
 end
 
 % colorbar off
-if(colorElement == "Node")
+if(colorElement == "Node" || colorElement == "None")
    pipeData = zeros(size(pipe));
-elseif(colorElement == "Pipe")
+elseif(colorElement == "Pipe" || colorElement == "None")
    nodeData = zeros(size(node));
 end
 
@@ -141,6 +143,10 @@ for i=1:pipeCounter
             g = closedColor(2);
             b = closedColor(3);
         end
+    elseif(colorElement == "None")
+        r = 0.0;
+        g = 0.0;
+        b = 0.0;
     else
         r = 0.2;
         g = 0.2;
@@ -274,6 +280,10 @@ for i=1:nodeCounter
             g = closedColor(2);
             b = closedColor(3);
         end
+    elseif(colorElement == "None")
+        r = 0.4;
+        g = 0.4;
+        b = 0.4;
     else
         r = 0.2;
         g = 0.2;
@@ -295,4 +305,4 @@ datacursormode on
 dcm = datacursormode(gcf);
 set(dcm,'UpdateFcn',@ShowTag)
 
-SaveTightFigure(fig,['Plots',slashSign,caseName,'BlackLog']);
+SaveTightFigure(fig,['Plots',slashSign,caseName]);

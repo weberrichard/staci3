@@ -5,7 +5,8 @@ addpath('../../Plot');
 
 %blackBody, blackBodyExt, cividis, coolWarmBent, coolWarmSmooth, inferno, jet, kindlmann, kindlmannExt, magma, plasma, viridis
 %discrete: lines, prism
-colorMapName = 'grayscale'; 
+% colorMapName = 'grayscale';
+colorMapName = 'plasma';
 
 colorMap = importdata(['../../Plot/ColorMaps/',colorMapName,'.txt']);
 
@@ -62,7 +63,8 @@ M2=[
 
 % SET INDEX
 
-idx = 1:27; %ALL
+% idx = 1:27; %ALL
+idx = 10;
 % idx = [2:9,11:17]; %BEST
 % idx = 1:10; %LARGE
 % idx = 11:42; % SMALL
@@ -87,7 +89,7 @@ end
 for i=1:size(rank,1)
     ev{i} = [];
     for j=1:size(rank,2)
-       ev{i} = [ev{i}, (j-1) * ones(1,rank(i,j))];
+       ev{i} = [ev{i}, j * ones(1,rank(i,j))];
     end
     averageRank(i) = mean(ev{i});
 end
@@ -101,13 +103,17 @@ for i=1:size(relRank,1)
     b = min(1,max(0,interp1(colorMap(:,1),colorMap(:,4),(i-1)/size(relRank,1),'spline')));
     plot(1:size(rank,2),relRank(i,:),'x','color',[r,g,b],'linewidth',1.5);
 end
-ylim([0,1]);
+ylim([0,0.6]);
 xlabel('Degree [-]','fontsize',12);
 ylabel('Relative frequency [-]','fontsize',12);
+% xlabel('Fokszám [-]','fontsize',12);
+% ylabel('Relatív frekvencia [-]','fontsize',12);
+set(gca,'FontSize',14);
 ColumnLegend(2,num2str(idx(:)));
-rectangle('Position',[5.7 0.43 1.25 0.55],'FaceColor',[1 1 1])
-saveas(gca,'Plots/RankDistBlack.fig','fig');
-saveas(gca,'Plots/RankDistBlack.png','png');
+rectangle('Position',[5.6 0.165 1.35 0.42],'FaceColor',[1 1 1])
+saveas(gca,'Plots/RankDist.fig','fig');
+saveas(gca,'Plots/RankDist.png','png');
+saveas(gca,'Plots/RankDist.eps','epsc');
 
 % FITTING
 figure(2);cla;
@@ -115,24 +121,54 @@ set(gcf,'units','points','position',[100,100,600,400])
 hold on; grid on;
 plot(1:size(rank,2),relRank(1,:),'kx','linewidth',1.5);
 fitRelRank = mean(relRank);
-plot(1:size(rank,2),fitRelRank,'s','markersize',10,'linewidth',1.5,'markerfacecolor',[0.7,0.7,0.7],'color',[0.7,0.7,0.7]);
+
+c1 = 0.4;
+r = min(1,max(0,interp1(colorMap(:,1),colorMap(:,2),c1,'spline')));
+g = min(1,max(0,interp1(colorMap(:,1),colorMap(:,3),c1,'spline')));
+b = min(1,max(0,interp1(colorMap(:,1),colorMap(:,4),c1,'spline')));
+plot(1:size(rank,2),fitRelRank,'s','markersize',10,'linewidth',1.5,'markerfacecolor',[r,g,b],'color',[r,g,b]);
+
+km = mean(averageRank);
+y_poisson = poisspdf(1:size(rank,2),km);
+c2 = 0.7;
+r = min(1,max(0,interp1(colorMap(:,1),colorMap(:,2),c2,'spline')));
+g = min(1,max(0,interp1(colorMap(:,1),colorMap(:,3),c2,'spline')));
+b = min(1,max(0,interp1(colorMap(:,1),colorMap(:,4),c2,'spline')));
+plot(1:size(rank,2),y_poisson,'o','markersize',10,'linewidth',1.5,'markerfacecolor',[r,g,b],'color',[r,g,b]);
+
 for i=2:size(relRank,1)
     plot(1:size(rank,2),relRank(i,:),'kx','linewidth',1.5);
 end
-plot(1:size(rank,2),fitRelRank,'s','markersize',10,'linewidth',1.5,'markerfacecolor',[0.7,0.7,0.7],'color',[0.7,0.7,0.7]);
-legend('WDNs','Fitted Function');
-ylim([0,1]);
+
+r = min(1,max(0,interp1(colorMap(:,1),colorMap(:,2),c1,'spline')));
+g = min(1,max(0,interp1(colorMap(:,1),colorMap(:,3),c1,'spline')));
+b = min(1,max(0,interp1(colorMap(:,1),colorMap(:,4),c1,'spline')));
+plot(1:size(rank,2),fitRelRank,'s','markersize',10,'linewidth',1.5,'markerfacecolor',[r,g,b],'color',[r,g,b]);
+
+r = min(1,max(0,interp1(colorMap(:,1),colorMap(:,2),c2,'spline')));
+g = min(1,max(0,interp1(colorMap(:,1),colorMap(:,3),c2,'spline')));
+b = min(1,max(0,interp1(colorMap(:,1),colorMap(:,4),c2,'spline')));
+plot(1:size(rank,2),y_poisson,'o','markersize',10,'linewidth',1.5,'markerfacecolor',[r,g,b],'color',[r,g,b]);
+
+% legend('WDNs','Poisson');
+legend('WDNs','Fitted Function','Poisson');
+ylim([0,0.6]);
 xlabel('Degree [-]','fontsize',12);
 ylabel('Relative frequency [-]','fontsize',12);
-saveas(gca,'Plots/RankDistFitBlack.fig','fig');
-saveas(gca,'Plots/RankDistFitBlack.png','png');
+% xlabel('Fokszám [-]','fontsize',12);
+% ylabel('Relatív frekvencia [-]','fontsize',12);
+set(gca,'FontSize',14);
+saveas(gca,'Plots/RankDistFit.fig','fig');
+saveas(gca,'Plots/RankDistFit.png','png');
+saveas(gca,'Plots/RankDistFit.eps','epsc');
 
 % CHI SQUARE TEST 
 
 p = 0.95;
 chi2test = zeros(length(cases),1);
 for i = 1:length(cases)
-    chi2 = (rank(i,:)-nSeg(i)*fitRelRank).^2./(nSeg(i)*fitRelRank);
+%     chi2 = (rank(i,:)-nSeg(i)*fitRelRank).^2./(nSeg(i)*fitRelRank);
+    chi2 = (rank(i,:) - nSeg(i)*y_poisson).^2./(nSeg(i)*y_poisson);
     chi2 = chi2(~isnan(chi2));
     r = sum(~isnan(chi2));
     chi2obs = sum(chi2);

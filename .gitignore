@@ -291,3 +291,11 @@ Staci@Weber/calibFigures/calib_anytown.eps
 *.pdf
 *.exe
 *.zip
+Staci@Weber/*
+Networks/Galambos/export_200324.spr
+Networks/Galambos/m_tv_k12_200323.spr
+Networks/Galambos/m_tv_k12_200324.spr
+Networks/Galambos/m_tv_k12_200324_2.spr
+Networks/racs_alap_16.spr
+Networks/Sopron/varis_old.inp
+Networks/Sopron/vashegy_old.inp

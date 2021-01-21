@@ -19,7 +19,8 @@ int main()
   string caseFolder = "../../Networks/Sopron/";
 
   vector<string> everyCase;
-  everyCase.push_back("villasor");
+  everyCase.push_back("tomalom");
+  /*everyCase.push_back("villasor");
   everyCase.push_back("ferto");
   everyCase.push_back("sanchegy");
   everyCase.push_back("buk");
@@ -60,7 +61,7 @@ int main()
   everyCase.push_back("gloriette");
   everyCase.push_back("alomhegy");
   everyCase.push_back("ohermes");
-  everyCase.push_back("ujhermes");
+  everyCase.push_back("ujhermes");*/
 
   int nCases = everyCase.size();
   cout << endl << "   CASES\n***********\n";
@@ -393,7 +394,6 @@ int main()
 
         //localGamma[j] /= sumDemand;
         //localGamma[j] = 1. - localGamma[j];
-
       }
       printf(" i / nCase: %3i / %-3i  |  j / nSeg: %3i / %-3i", i, nCases, j, nSegments);
       cout << endl;
@@ -412,7 +412,7 @@ int main()
     for(int j=0; j<nSegments; j++)
     {
       everyGammaLength[i][j] = localGamma[j] * segmentLength[j];
-      everyGammaRelLength[i][j] = localGamma[j] * segmentLength[j] / sumLength / sumDemand;
+      everyGammaRelLength[i][j] = localGamma[j]/sumDemand * segmentLength[j]/sumLength ;
     }
 
     for(int k=0; k<nSegments; k++)
@@ -421,8 +421,7 @@ int main()
       globalGamma[i] += localGamma[k] * segmentLength[k];
     }
     globalBeta[i] /= sumLength;
-    globalGamma[i] /= sumLength;
-
+    globalGamma[i] /= (sumLength*sumDemand);
 
     for(int k=0; k<hs->nodes.size(); k++)
     {
@@ -432,8 +431,8 @@ int main()
     for(int j=0; j<sd->nodes.size(); j++)
     {
       //hs->nodes[j]->setProperty("userOutput",sd->nodes[j]->segment);
-      //hs->nodes[j]->setProperty("userOutput",everyGammaRelLength[i][sd->nodes[j]->segment]);
-      hs->nodes[j]->setProperty("userOutput",segmentDemand[sd->nodes[j]->segment]);
+      hs->nodes[j]->setProperty("userOutput",everyGammaRelLength[i][sd->nodes[j]->segment]);
+      //hs->nodes[j]->setProperty("userOutput",segmentDemand[sd->nodes[j]->segment]);
     }
     hs->saveResult("userOutput","Node");
     //sd->saveResult("segment","Pipe");
@@ -452,10 +451,15 @@ int main()
     wfile.close();
 
     // CALCULATING STRUCTURAL GRAPH STUFF
-    everyClustering[i] = globalClustering(sev);
-    everyPathLength[i] = avPathLength(sev);
-    everyDiameter[i] = graphDiameter(sev);
-    everyNumberArticulation[i] = articulationPoints(sev);
+    //everyClustering[i] = globalClustering(sev);
+    //everyPathLength[i] = avPathLength(sev);
+    //everyDiameter[i] = graphDiameter(sev);
+    //everyNumberArticulation[i] = articulationPoints(sev);
+
+    everyClustering[i] = 0.;
+    everyPathLength[i] = 0.;
+    everyDiameter[i] = 0.;
+    everyNumberArticulation[i] = 0.;
   }
 
   // ********************

@@ -16,6 +16,7 @@ using namespace Eigen;
 int main(int argc, char* argv[]){
 
   // Name of containing folder of staci file
+  //string caseFolder = "../../Networks/Basic/";
   string caseFolder = "../../Networks/Sopron/";
   //string caseFolder = "/home/rweber/0_PhD/Halozatok/sopron_halozatok/";
 
@@ -24,7 +25,8 @@ int main(int argc, char* argv[]){
     //caseName = "C-town.inp";
     //caseName = "Anytown.inp";
     //caseName = "m_tv_k12_200324.spr";
-    caseName =  "tomalom.inp";
+    caseName =  "linear_4.inp";
+    //caseName =  "tomalom.inp";
     //caseName =  "ky2.inp";
     //caseName =  "Net1.inp";
   }else if(argc == 2){
@@ -38,8 +40,9 @@ int main(int argc, char* argv[]){
   wds = new HydraulicSolver(caseFolder + caseName);
   wds->printLevel = 3;
   wds->initialization();
+  wds->isPressureDemand = true;
   wds->solveSystem();
-  wds->saveResult("head","Node");
+  wds->saveResult("demand","Node");
   wds->saveResult("volumeFlowRateAbsLPS","Pipe");
 
   /*Shutdown *sd;

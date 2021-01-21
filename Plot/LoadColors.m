@@ -28,8 +28,8 @@ if(exist([projectFolder,slashSign,'Network Data',slashSign,caseName,slashSign,'P
     fclose(fileID);
     poolData = poolColor;
 else
-    poolColor = 0;
-    poolData = 0;
+    poolColor = 0.2*ones(10,1);
+    poolData = zeros(10,1);
 end
 if(exist([projectFolder,slashSign,'Network Data',slashSign,caseName,slashSign,'Pres.txt']))
     fileID = fopen([projectFolder,slashSign,'Network Data',slashSign,caseName,slashSign,'Pres.txt'],'r');
@@ -37,8 +37,8 @@ if(exist([projectFolder,slashSign,'Network Data',slashSign,caseName,slashSign,'P
     fclose(fileID);
     presData = presColor;
 else
-    presColor = 0;
-    presData = 0;
+    presColor = 0.2*ones(10,1);
+    presData = zeros(10,1);
 end
 if(exist([projectFolder,slashSign,'Network Data',slashSign,caseName,slashSign,'Pump.txt']))
     fileID = fopen([projectFolder,slashSign,'Network Data',slashSign,caseName,slashSign,'Pump.txt'],'r');
@@ -55,8 +55,8 @@ if(exist([projectFolder,slashSign,'Network Data',slashSign,caseName,slashSign,'V
     fclose(fileID);
     valveData = valveColor;
 else
-    valveColor = 0;
-    valveData = 0;
+    valveColor = 0.5*ones(5000,1);
+    valveData = zeros(5000,1);
 end
 
 allColor = [nodeColor;pipeColor;presColor;poolColor;pumpColor;valveColor];

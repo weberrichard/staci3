@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <sys/stat.h>
 
-#include "../../Sensitivity.h"
+#include "../../HydraulicSolver.h"
 #include "../../Shutdown.h"
 
 using namespace std;
@@ -16,14 +16,15 @@ using namespace Eigen;
 int main(int argc, char* argv[]){
 
   // Name of containing folder of staci file
-  string caseFolder = "../../Networks/";
+  string caseFolder = "../../Networks/Sopron/";
   //string caseFolder = "/home/rweber/0_PhD/Halozatok/sopron_halozatok/";
 
   string caseName;
   if(argc == 1){
     //caseName = "C-town.inp";
-    caseName = "Anytown.inp";
-    //caseName =  "grid_9.inp";
+    //caseName = "Anytown.inp";
+    //caseName = "m_tv_k12_200324.spr";
+    caseName =  "tomalom.inp";
     //caseName =  "ky2.inp";
     //caseName =  "Net1.inp";
   }else if(argc == 2){
@@ -33,17 +34,18 @@ int main(int argc, char* argv[]){
   cout << endl << "Case: " << caseName << endl;
   srand((unsigned int) time(0));
 
-  Sensitivity *wds;
-  //wds = new Sensitivity(caseFolder + caseName);
-  wds = new Sensitivity(caseFolder + caseName);
+  HydraulicSolver *wds;
+  wds = new HydraulicSolver(caseFolder + caseName);
+  wds->printLevel = 3;
   wds->initialization();
   wds->solveSystem();
-  //wds->saveResult("head","Node");
+  wds->saveResult("head","Node");
+  wds->saveResult("volumeFlowRateAbsLPS","Pipe");
 
-  Shutdown *wds2;
-  wds2 = new Shutdown(caseFolder + caseName);
-  wds2->buildSegmentGraph();
-  wds2->saveResult("segment","All");
+  /*Shutdown *sd;
+  sd = new Shutdown(caseFolder + caseName);
+  sd->buildSegmentGraph();
+  sd->saveResult("segment","All");*/
 
   cout << endl << endl;
   return 0;

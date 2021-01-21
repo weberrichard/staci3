@@ -10,9 +10,11 @@ clear;
 
 % caseName = 'pozsonyiut';
 
-caseName = 'tomalom';
+% caseName = 'tomalom';
 
-% caseName = 'villasor';
+% caseName = 'linear_4';
+
+caseName = 'nagycenk';
 % caseName = 'kohegy';
 % caseName = 'und';
 % caseName = 'rojtokmuzsaj';
@@ -23,24 +25,26 @@ caseName = 'tomalom';
 % caseName = 'grid_16';
 
 caseFolder = '../../Networks/Sopron/';
+% caseFolder = '../../Networks/Basic/';
 
 % plot settings
 pumpRadius = 0.000015;
 pumpColor = 0.8*ones(11,1);
 pumpLineWidth = 1.6;
-presRadius = 0.013;
+presRadius = 0.01;
 presColor = 0.2*ones(10,1);
-presAngle = [-180,0,90,90,0];
+presAngle = [0,135,90,90,0];
 presLineWidth = 1.6;
-poolSize = 0.026;
-poolAngle = [0,-210,0,0,0,-75,0];
+poolSize = 0.02;
+poolAngle = [90,45,0,0,0,-75,0];
 poolColor = 0.2*ones(10,1);
 poolLineWidth = 1.6;
 valveSize = 0.000022;
 valveColor = 0.5*ones(2000,1);
 valveLineWidth = 1.2;
-lineWidth = 1.6;
+lineWidth = 2.0;
 nodeMarkerSize = 5;
+nodeLineWidth = 1.5;
 backgroundColor = [1.0,1.0,1.0];
 closedColor = [1.0,0.0,0.0];
 
@@ -49,9 +53,9 @@ closedColor = [1.0,0.0,0.0];
 %blackBody, blackBodyExt, cividis, coolWarmBent, coolWarmSmooth, inferno, jet, kindlmann, kindlmannExt, magma, plasma, viridis
 %discrete: lines, prism
 colorMapName = 'plasma'; 
-colorBarText = 'Edge sensitvity [i]';
-margin = 0.03; % margins around plot
-colorDelta = 0.15; %space for colorbar
+colorBarText = 'Volume flow rate [lps]';
+margin = 0.05; % margins around plot
+colorDelta = 0.0; %space for colorbar
 colorPos = "east"; %position of colorbar (east or south)
 colorBarFontSize = 14;
 colorElement = "Node"; % "Node" or "Pipe" or "All" or "None"
@@ -94,7 +98,7 @@ if(xyRatio<16/9)
    ySize = 1000;
    xSize = ySize*xyRatio;
 else
-   xSize = 1800;
+   xSize = 1800/2;
    ySize = xSize/xyRatio;
 end
 set(gcf, 'Position',  [xPos, yPos, xSize, ySize]);
@@ -126,7 +130,7 @@ if(colorPos == "south")
     cb.Orientation = 'horizontal';
     set(cb,'position',[0.1,0.08,0.8,0.025]);
 elseif(colorPos == "east")
-    set(cb,'position',[0.9,0.1,0.025,0.8]);
+    set(cb,'position',[0.85,0.1,0.025,0.8]);
 else
     disp('!!! WARNING !!! available colorPos: south | east'); 
 end
@@ -277,6 +281,7 @@ for i=1:nodeCounter
     plotObj(i).MarkerFaceColor = [r,g,b];
     plotObj(i).Tag             = join([strrep(node(i).ID,'_','\_'),'  ',text]);
     plotObj(i).MarkerSize      = nodeMarkerSize;
+    plotObj(i).LineWidth       = nodeLineWidth;
     
 %     plot(node(i).coordX,node(i).coordY,'o','linewidth',1,'markersize',nodeMarkerSize,'markerfacecolor',[r,g,b],'color',[0,0,0],'tag',join([strrep(node(i).ID,'_','\_'),'  ',text]));
 end

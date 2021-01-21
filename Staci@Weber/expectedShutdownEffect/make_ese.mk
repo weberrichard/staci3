@@ -3,7 +3,7 @@ STACI_DIR=../bin/
 FUNC=ese
 
 CXX=clang++
-CXXFLAGS=-std=c++17 -I/usr/include/python2.7 -I/usr/local/include/igraph -ligraph -O3 -fopenmp -mavx
+CXXFLAGS=-std=c++17 -I/usr/include/python2.7
 
 # for debugging
 # -Wall -Wextra -pedantic -D_GLIBCXX_DEBUG 
@@ -35,7 +35,7 @@ $(FUNC).o
 %.o: ../../%.cpp
 	@echo '[*] Building file: $<'
 	@echo '[*] Invoking: CLANG++ Compiler'
-	$(CXX) $(CXXFLAGS) -c -MT "$(@:%.o=%.d)" -o "$@"  "$<"
+	$(CXX) $(CXXFLAGS) -O3 -c -MT "$(@:%.o=%.d)" -o "$@"  "$<"
 	@echo '[*] Finished building: $<'
 	@echo ' '
 
@@ -43,4 +43,4 @@ all: $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $(FUNC) $(OBJS)
 
 clean:
-	-rm $(STACI_DIR)*.o $(FUNC) $(FUNC).o
+	-rm $(STACI_DIR)*.o $(STACI_DIR)*.d $(FUNC) $(FUNC).o

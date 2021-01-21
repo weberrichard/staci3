@@ -13,7 +13,8 @@ idx = 1:27;
 
 %blackBody, blackBodyExt, cividis, coolWarmBent, coolWarmSmooth, inferno, jet, kindlmann, kindlmannExt, magma, plasma, viridis
 %discrete: lines, prism
-colorMapName = 'plasma'; 
+% colorMapName = 'grayscale'; 
+colorMapName = 'plasma';
 
 colorMap = importdata(['../../Plot/ColorMaps/',colorMapName,'.txt']);
 
@@ -75,17 +76,21 @@ for i=1:size(data,1)
 %     cy = reshape([y';y'], [], 1)';
 %     plot(cx,cy,'color',[colr,colg,colb],'linewidth',1.1);
 end
-xlabel('$\overline{\gamma}$','interpreter','latex','fontsize',14);
-ylabel('$f(\overline{\gamma})$','interpreter','latex','fontsize',14);
+xlabel('Local vulnerability [-]','fontsize',14);
+ylabel('Probability density [-]','fontsize',14);
+% xlabel('Szegmens sebezhetõség [-]','interpreter','latex','fontsize',14);
+% ylabel('Valószínûség sûrûség [-]','interpreter','latex','fontsize',14);
 xlim([1e-9,1e-1])
 ylim([1e-1,1e8])
 % set(gca,'Position',[100,100,600,400])
 % legend(cases(idx),'location','west');
-ColumnLegend(2,num2str(idx(:)));
+set(gca,'FontSize',14);
+ColumnLegend(3,num2str(idx(:)));
 % ColumnLegend(3,cases(idx),'location','southwest_sf');
-rectangle('Position',[2.8e-3 3.0e3 8e-2 6.5e7],'FaceColor',[1 1 1])
-% saveas(gca,'Plots/GammaDensityBlack.fig','fig');
-% saveas(gca,'Plots/GammaDensityBlack.png','png');
+rectangle('Position',[3e-4 1.5e4 8e-2 6.5e7],'FaceColor',[1 1 1])
+saveas(gca,'Plots/GammaDensity.fig','fig');
+saveas(gca,'Plots/GammaDensity.png','png');
+saveas(gca,'Plots/GammaDensity.eps','epsc');
 
 
 % % CREATING THE OVERALL DENSITY FUNCTION
@@ -163,7 +168,6 @@ xlabel('$\overline{\gamma}$','interpreter','latex','fontsize',14);
 ylabel('$f(\overline{\gamma})$','interpreter','latex','fontsize',14);
 % saveas(gca,'Plots/GammaDensityFit.fig','fig');
 % saveas(gca,'Plots/GammaDensityFit.png','png');
-
 
 % CHI SQUARE TEST 
 p = 0.95;
