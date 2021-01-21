@@ -286,3 +286,6 @@ Staci@Weber/calibFigures/calib_c-town.fig
 Staci@Weber/calibFigures/calib_c-town.eps
 Staci@Weber/calibFigures/calib_anytown.fig
 Staci@Weber/calibFigures/calib_anytown.eps
+
+*.txt
+*.pdf
