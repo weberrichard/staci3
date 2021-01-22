@@ -2,7 +2,7 @@ clear;
 figure;hold on;
 %set
 markerSize = 10;
-files = dir('*.txt');
+files = dir('*.col');
 for i=1:length(files)
     colorMap = importdata([files(i).name]);
     for j=1:size(colorMap,1)
