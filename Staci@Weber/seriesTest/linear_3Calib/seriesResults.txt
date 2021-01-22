@@ -1,2 +1,0 @@
-time;pres_0 [mtr];pres_0 [lps];
-0;50.9684;-45;
