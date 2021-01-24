@@ -787,3 +787,34 @@ void HydraulicSolver::addNewPipe(string name, string nodeFrom, string nodeTo, do
 
   buildJacobian(); // building the Jacobian matrix
 }
+
+void HydraulicSolver::addNewISOValve(string name, string startNodeName, string endNodeName, double density, double referenceCrossSection, double volumeFlowRate)
+{
+  edges.push_back(new ValveISO(name, startNodeName, endNodeName, density, referenceCrossSection, volumeFlowRate));
+
+  numberNodes = nodes.size();
+  numberEdges = edges.size();
+  numberEquations = numberEdges + numberNodes;
+  
+  buildSystem();
+  buildIndexing();
+
+  int n=edges.size();
+  edges[n-1]->startHeight = nodes[edges[n-1]->startNodeIndex]->geodeticHeight;
+  edges[n-1]->endHeight = nodes[edges[n-1]->endNodeIndex]->geodeticHeight;
+
+  // giving initial values to head and volume flow rates
+  initialization();
+
+  // resizing Eigen vectors
+  x.resize(numberEquations);
+  f.resize(numberEquations);
+
+  // Setting initial conditions to x vector
+  for(int i=0; i<numberEdges; i++)
+    x(i) = edges[i]->volumeFlowRate;
+  for(int i=0; i<numberNodes; i++)
+    x(numberEdges + i) = nodes[i]->head;
+
+  buildJacobian(); // building the Jacobian matrix
+}

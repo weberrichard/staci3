@@ -55,7 +55,8 @@ public:
 
   // adding new pipe element
   void addNewPipe(string name, string nodeFrom, string nodeTo, double density, double length, double diameter, double roughness, double volumeFlowRate, bool isCheckVavle, int frictionModel, double relativeViscosity);
-
+  // adding new ISO Valve element
+  void addNewISOValve(string name, string startNodeName, string endNodeName, double density, double referenceCrossSection, double volumeFlowRate);
 	/// Jacobian matrix in a sparse Eigen type container
 	/// Used in f(x) = 0, and also in Sensitivity class
   SparseMatrix<double, ColMajor> jacobianMatrix;

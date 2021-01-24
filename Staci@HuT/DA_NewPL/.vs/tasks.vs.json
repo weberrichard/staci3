@@ -1,0 +1,10 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskLabel": "task-Staci_Sens_CalcV3",
+      "appliesTo": "Staci_Sens_CalcV3.cpp",
+      "type": "launch"
+    }
+  ]
+}
