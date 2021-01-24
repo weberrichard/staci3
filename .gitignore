@@ -291,3 +291,5 @@ Staci@Weber/calibFigures/calib_anytown.eps
 *.pdf
 *.exe
 *.zip
+*.svg
+*.m
