@@ -1,0 +1,95 @@
+[TITLE]
+Converted from Epanet to Staci, case name: linear_3.spr
+
+
+[JUNCTIONS]
+;ID              	Elev        	Demand      	Pattern         
+ node_1          	0.0000      	2.0 	                	;
+ node_2          	0.0000      	2.0 	                	;
+ node_3          	0.0000      	2.0 	                	;
+
+[RESERVOIRS]
+;ID              	Head        	Pattern         
+ pres_0          	40.     	                
+
+[TANKS]
+;ID             	Elevation   	InitLevel   	MinLevel    	MaxLevel    	Diameter    	MinVol      	VolCurve
+
+[PIPES]
+;ID             	Node1           	Node2           	Length      	Diameter    	Roughness   	MinorLoss   	Status
+ pipe_2          	node_2          	node_3          	1000.0	      100.0000    	0.03     	0.0000      	Open
+ pipe_0          	pres_0          	node_1          	1000.0	      100.0000    	0.03     	0.0000      	Open
+ pipe_1          	node_1          	node_2          	1000.0	      100.0000    	0.03     	0.0000      	Open
+
+[PUMPS]
+;ID             	Node1           	Node2           	Parameters
+
+[VALVES]
+;ID             	Node1           	Node2           	Diameter    	Type	Setting     	MinorLoss   
+
+[TAGS]
+
+[DEMANDS]
+;Junction       	Demand      	Pattern         	Category
+
+[STATUS]
+;ID              	Status/Setting
+
+[PATTERNS]
+;ID             	Multipliers
+
+[CURVES]
+;ID             	X-Value     	Y-Value
+
+[CONTROLS]
+
+[RULES]
+
+[ENERGY]
+
+[EMITTERS]
+
+[QUALITY]
+
+[SOURCES]
+
+[REACTIONS]
+
+[MIXING]
+
+[TIMES]
+
+[REPORT]
+
+[OPTIONS]
+ Units              	LPS
+ Headloss           	C-F 
+ Specific Gravity   	1.0
+ Viscosity          	1.0
+ Trials             	40
+ Accuracy           	0.001
+ CHECKFREQ          	2
+ MAXCHECK           	10
+ DAMPLIMIT          	0
+ Unbalanced         	Continue 10
+ Pattern            	1
+ Demand Multiplier  	1.0
+ Emitter Exponent   	0.5
+ Quality            	Chlorine mg/L
+ Diffusivity        	1.0
+ Tolerance          	0.01
+
+[COORDINATES]
+;Node           	X-Coord         	Y-Coord
+ pres_0          	0.0000          	400.0000        
+ node_1          	100.0000        	400.0000        
+ node_2          	200.0000        	400.0000        
+ node_3          	300.0000        	400.0000        
+
+[VERTICES]
+
+[LABELS]
+
+[BACKDROP]
+
+[END]

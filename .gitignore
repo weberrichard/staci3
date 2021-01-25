@@ -1,295 +1,65 @@
-
-Staci@Weber/tranziensGilice/tranziensGilice.o
-Staci@Weber/tranziensGilice/tranziensGilice.cpp
-Staci@Weber/tranziensGilice/tranziensGilice
-Staci@Weber/tranziensGilice/Plot.m
-Staci@Weber/tranziensGilice/make_series.mk
-Staci@Weber/tranziensGilice/gilice/Pump.txt
-Staci@Weber/tranziensGilice/gilice/Pres.txt
-Staci@Weber/tranziensGilice/gilice/Pool.txt
-Staci@Weber/tranziensGilice/gilice/Pipe.txt
-Staci@Weber/tranziensGilice/gilice/Node.txt
-Staci@Weber/tranziensGilice/gilice.pdf
-Staci@Weber/seriesTest/seriesTest.o
-Staci@Weber/seriesTest/seriesTest
-Staci@Weber/seriesTest/Net1Calib2/seriesResults.txt
-Staci@Weber/seriesTest/Net1Calib/seriesResults.txt
-Staci@Weber/seriesTest/MUModel/seriesResults.txt
-Staci@Weber/seriesTest/C-town/seriesResults.txt
-Staci@Weber/seriesTest/Anytown/seriesResults.txt
-Staci@Weber/expectedShutdownEffect/tomalom/Pump.txt
-Staci@Weber/expectedShutdownEffect/tomalom/Pres.txt
-Staci@Weber/expectedShutdownEffect/tomalom/Pool.txt
-Staci@Weber/expectedShutdownEffect/tomalom/Pipe.txt
-Staci@Weber/expectedShutdownEffect/tomalom/Node.txt
-Staci@Weber/expectedShutdownEffect/tomalom.pdf
-Staci@Weber/expectedShutdownEffect/Plots/vashegy.pdf
-Staci@Weber/expectedShutdownEffect/Plots/tomalom.pdf
-Staci@Weber/expectedShutdownEffect/Plots/sanchegy.pdf
-Staci@Weber/expectedShutdownEffect/Plots/RankDistFitBlack.png
-Staci@Weber/expectedShutdownEffect/Plots/RankDistFitBlack.fig
-Staci@Weber/expectedShutdownEffect/Plots/RankDistFit.png
-Staci@Weber/expectedShutdownEffect/Plots/RankDistFit.fig
-Staci@Weber/expectedShutdownEffect/Plots/RankDistBlack.png
-Staci@Weber/expectedShutdownEffect/Plots/RankDistBlack.fig
-Staci@Weber/expectedShutdownEffect/Plots/RankDist.png
-Staci@Weber/expectedShutdownEffect/Plots/RankDist.fig
-Staci@Weber/expectedShutdownEffect/Plots/nagycenkLog.pdf
-Staci@Weber/expectedShutdownEffect/Plots/nagycenkBlackLog.pdf
-Staci@Weber/expectedShutdownEffect/Plots/nagycenkBlack.pdf
-Staci@Weber/expectedShutdownEffect/Plots/nagycenk.pdf
-Staci@Weber/expectedShutdownEffect/Plots/GammaDensityFit.png
-Staci@Weber/expectedShutdownEffect/Plots/GammaDensityFit.fig
-Staci@Weber/expectedShutdownEffect/Plots/GammaDensityBlack.png
-Staci@Weber/expectedShutdownEffect/Plots/GammaDensityBlack.fig
-Staci@Weber/expectedShutdownEffect/Plots/GammaDensity.png
-Staci@Weber/expectedShutdownEffect/Plots/GammaDensity.fig
-Staci@Weber/expectedShutdownEffect/Plots/buk.pdf
-Staci@Weber/expectedShutdownEffect/Plots/balf.pdf
-Staci@Weber/expectedShutdownEffect/Plots/agyagosszergeny.pdf
-Staci@Weber/expectedShutdownEffect/Network Data/villasor/Pipe.txt
-Staci@Weber/expectedShutdownEffect/Network Data/villasor/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/villasor/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/vashegy/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/vashegy/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/varis/Pipe.txt
-Staci@Weber/expectedShutdownEffect/Network Data/varis/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/varis/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/und/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/und/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/ujhermes/Valve.txt
-Staci@Weber/expectedShutdownEffect/Network Data/ujhermes/Pump.txt
-Staci@Weber/expectedShutdownEffect/Network Data/ujhermes/Pres.txt
-Staci@Weber/expectedShutdownEffect/Network Data/ujhermes/Pool.txt
-Staci@Weber/expectedShutdownEffect/Network Data/ujhermes/Pipe.txt
-Staci@Weber/expectedShutdownEffect/Network Data/ujhermes/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/ujhermes/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/tozeggyarmajor/Valve.txt
-Staci@Weber/expectedShutdownEffect/Network Data/tozeggyarmajor/Pump.txt
-Staci@Weber/expectedShutdownEffect/Network Data/tozeggyarmajor/Pres.txt
-Staci@Weber/expectedShutdownEffect/Network Data/tozeggyarmajor/Pool.txt
-Staci@Weber/expectedShutdownEffect/Network Data/tozeggyarmajor/Pipe.txt
-Staci@Weber/expectedShutdownEffect/Network Data/tozeggyarmajor/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/tozeggyarmajor/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/tomalom/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/tomalom/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/szakov/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/szakov/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/sopronkovesd/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/sopronkovesd/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/simasag/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/simasag/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/sanchegy/Pipe.txt
-Staci@Weber/expectedShutdownEffect/Network Data/sanchegy/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/sanchegy/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/rojtokmuzsaj/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/rojtokmuzsaj/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/pusztacsalad/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/pusztacsalad/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/pozsonyiut/Valve.txt
-Staci@Weber/expectedShutdownEffect/Network Data/pozsonyiut/Pump.txt
-Staci@Weber/expectedShutdownEffect/Network Data/pozsonyiut/Pres.txt
-Staci@Weber/expectedShutdownEffect/Network Data/pozsonyiut/Pool.txt
-Staci@Weber/expectedShutdownEffect/Network Data/pozsonyiut/Pipe.txt
-Staci@Weber/expectedShutdownEffect/Network Data/pozsonyiut/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/pozsonyiut/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/ohermes/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/ohermes/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/nyarliget/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/nyarliget/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/nagylozs/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/nagylozs/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/nagycenk/Valve.txt
-Staci@Weber/expectedShutdownEffect/Network Data/nagycenk/Pump.txt
-Staci@Weber/expectedShutdownEffect/Network Data/nagycenk/Pres.txt
-Staci@Weber/expectedShutdownEffect/Network Data/nagycenk/Pool.txt
-Staci@Weber/expectedShutdownEffect/Network Data/nagycenk/Pipe.txt
-Staci@Weber/expectedShutdownEffect/Network Data/nagycenk/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/nagycenk/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/meszlen/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/meszlen/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/lovo/Pipe.txt
-Staci@Weber/expectedShutdownEffect/Network Data/lovo/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/lovo/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/kutyahegy/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/kutyahegy/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/kohegy/Pipe.txt
-Staci@Weber/expectedShutdownEffect/Network Data/kohegy/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/kohegy/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/kofejto/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/kofejto/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/jerevan/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/jerevan/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/ivan/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/ivan/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/harka/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/harka/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/gorbehalom/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/gorbehalom/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/gloriette/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/gloriette/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/fertoujlak/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/fertoujlak/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/ferto/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/ferto/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/ebergoc/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/ebergoc/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/dudlesz/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/dudlesz/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/csillahegy/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/csillahegy/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/csapod/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/csapod/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/csaford/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/csaford/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/buk/Pipe.txt
-Staci@Weber/expectedShutdownEffect/Network Data/buk/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/buk/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/brennberg/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/brennberg/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/becsidomb/Pipe.txt
-Staci@Weber/expectedShutdownEffect/Network Data/becsidomb/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/becsidomb/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/balf/Valve.txt
-Staci@Weber/expectedShutdownEffect/Network Data/balf/Pump.txt
-Staci@Weber/expectedShutdownEffect/Network Data/balf/Pres.txt
-Staci@Weber/expectedShutdownEffect/Network Data/balf/Pool.txt
-Staci@Weber/expectedShutdownEffect/Network Data/balf/Pipe.txt
-Staci@Weber/expectedShutdownEffect/Network Data/balf/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/balf/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/alomhegy/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/alomhegy/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/agyagosszergeny/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/agyagosszergeny/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Network Data/acsad/Node.txt
-Staci@Weber/expectedShutdownEffect/Network Data/acsad/EdgeVector.txt
-Staci@Weber/expectedShutdownEffect/Huzsvar_Tamas_Diplomaterv_2018.pdf
-Staci@Weber/expectedShutdownEffect/HuT_DT.xlsx
-Staci@Weber/expectedShutdownEffect/gammaBarRelLength.txt
-Staci@Weber/expectedShutdownEffect/gammaBarLength.txt
-Staci@Weber/expectedShutdownEffect/ese.o
-Staci@Weber/expectedShutdownEffect/ese
-Staci@Weber/dhiCalibration/PlotSeries.m
-Staci@Weber/dhiCalibration/Plot.m
-Staci@Weber/dhiCalibration/Net2Calib/time.txt
-Staci@Weber/dhiCalibration/Net2Calib/pressureID.txt
-Staci@Weber/dhiCalibration/Net2Calib/pressureData.txt
-Staci@Weber/dhiCalibration/Net1Calib/time.txt
-Staci@Weber/dhiCalibration/Net1Calib/pressureID.txt
-Staci@Weber/dhiCalibration/Net1Calib/pressureData.txt
-Staci@Weber/dhiCalibration/MUModel/time.txt
-Staci@Weber/dhiCalibration/MUModel/pressureID.txt
-Staci@Weber/dhiCalibration/MUModel/pressureData.txt
-Staci@Weber/dhiCalibration/MUModel/ModifiedData.xlsx
-Staci@Weber/dhiCalibration/MPbD_ThesisAgreementUK_BME.pdf
-Staci@Weber/dhiCalibration/MPbD_ThesisAgreementUK_BME.docx
-Staci@Weber/dhiCalibration/make_dhiCalibration.mk
-Staci@Weber/dhiCalibration/log.txt
-Staci@Weber/dhiCalibration/linear_3Calib/time.txt
-Staci@Weber/dhiCalibration/linear_3Calib/pressureID.txt
-Staci@Weber/dhiCalibration/linear_3Calib/pressureData.txt
-Staci@Weber/dhiCalibration/grid_4Calib/time.txt
-Staci@Weber/dhiCalibration/grid_4Calib/pressureID.txt
-Staci@Weber/dhiCalibration/grid_4Calib/pressureData.txt
-Staci@Weber/dhiCalibration/dhiCalibration.o
-Staci@Weber/dhiCalibration/dhiCalibration.cpp
-Staci@Weber/dhiCalibration/dhiCalibration
-Staci@Weber/dhiCalibration/CalibrationSheet Graphs (May7-13, 2018)-Rev3.xlsm
-Staci@Weber/dhiCalibration/Anytown/time.txt
-Staci@Weber/dhiCalibration/Anytown/pressureID.txt
-Staci@Weber/dhiCalibration/Anytown/pressureData.txt
-Staci@Weber/bin/xmlParser.o
-Staci@Weber/bin/ValveTCV.o
-Staci@Weber/bin/ValvePSV.o
-Staci@Weber/bin/ValvePRV.o
-Staci@Weber/bin/ValveISO.o
-Staci@Weber/bin/ValveFCV.o
-Staci@Weber/bin/Valve.o
-Staci@Weber/bin/Statistic.o
-Staci@Weber/bin/Staci.o
-Staci@Weber/bin/Shutdown.o
-Staci@Weber/bin/Pump.o
-Staci@Weber/bin/PressurePoint.o
-Staci@Weber/bin/Pool.o
-Staci@Weber/bin/Pipe.o
-Staci@Weber/bin/Node.o
-Staci@Weber/bin/IOxml.o
-Staci@Weber/bin/IOinp.o
-Staci@Weber/bin/HydraulicSolver.o
-Staci@Weber/bin/Graph.o
-Staci@Weber/bin/Edge.o
-Staci@Weber/bin/BasicFileIO.o
-oldButGold/SVDCalibration2.h
-oldButGold/SVDCalibration2.cpp
-oldButGold/SVDCalibration.h
-oldButGold/SVDCalibration.cpp
-Networks/Sopron/villasor.inp
-Networks/Sopron/vashegy.inp
-Networks/Sopron/varis.inp
-Networks/Sopron/und.inp
-Networks/Sopron/ujhermes.inp
-Networks/Sopron/tozeggyarmajor.inp
-Networks/Sopron/tomalom.inp
-Networks/Sopron/szakov.inp
-Networks/Sopron/sopronkovesd.inp
-Networks/Sopron/simasag.inp
-Networks/Sopron/sanchegy.inp
-Networks/Sopron/rojtokmuzsaj.inp
-Networks/Sopron/pusztacsalad.inp
-Networks/Sopron/pozsonyiut.inp
-Networks/Sopron/ohermes.inp
-Networks/Sopron/nyarliget.inp
-Networks/Sopron/nagylozs.inp
-Networks/Sopron/nagycenk.inp
-Networks/Sopron/meszlen.inp
-Networks/Sopron/lovo.inp
-Networks/Sopron/kutyahegy.inp
-Networks/Sopron/kohegy.inp
-Networks/Sopron/kofejto.inp
-Networks/Sopron/jerevan.inp
-Networks/Sopron/ivan.inp
-Networks/Sopron/harka.inp
-Networks/Sopron/gorbehalom.inp
-Networks/Sopron/gloriette.inp
-Networks/Sopron/fertoujlak.inp
-Networks/Sopron/ferto.inp
-Networks/Sopron/ebergoc.inp
-Networks/Sopron/dudlesz.inp
-Networks/Sopron/csillahegy.inp
-Networks/Sopron/csapod.inp
-Networks/Sopron/csaford.inp
-Networks/Sopron/buk.inp
-Networks/Sopron/brennberg.inp
-Networks/Sopron/becsidomb.inp
-Networks/Sopron/balf.inp
-Networks/Sopron/alomhegy.inp
-Networks/Sopron/agyagosszergeny.inp
-Networks/Sopron/acsad.inp
-Networks/Sopron/0SopronNetworks.xlsx
-Networks/DHI/MUModelOrig.inp
-Networks/DHI/MUModel.inp
-Networks/Basic/linearTCV.inp
-Networks/Basic/linear_3Calib2.inp
-Networks/Basic/linear_3Calib.inp
-Staci@Weber/expectedShutdownEffect/tomalom.pdf
-*.o
+# Prerequisites
 *.d
-Staci@Weber/calibFigures/calib_sn-26.fig
-Staci@Weber/calibFigures/calib_sn-26.eps
-Staci@Weber/calibFigures/calib_sn-12.fig
-Staci@Weber/calibFigures/calib_sn-12.eps
-Staci@Weber/calibFigures/calib_ky2.fig
-Staci@Weber/calibFigures/calib_ky2.eps
-Staci@Weber/calibFigures/calib_grid.fig
-Staci@Weber/calibFigures/calib_grid.eps
-Staci@Weber/calibFigures/calib_c-town.fig
-Staci@Weber/calibFigures/calib_c-town.eps
-Staci@Weber/calibFigures/calib_anytown.fig
-Staci@Weber/calibFigures/calib_anytown.eps
 
-*.txt
-*.pdf
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
 *.exe
 *.zip
 *.svg
 *.m
+*.out
+*.app
+
+# models
+Networks/Sopron/*
+Networks/DHI/*
+Networks/Galambos/*
+
+# folders
+Archive/*
+
+# other files
+*.xlsx
+*.res
+*.pdf
+*.gif
+*.out
+*.fig
+*.spr
+*.txt
+
+# pics
+*.png
+*.svg
+*.eps
+
+# unsynced projects Weber
+ProjectsWeber/darcyFriction/*
+ProjectsWeber/inpTest/*
+*/Network Data/*
+ProjectsWeber/isSegmentGraphPlanar/matlab_bgl/*
+ProjectsWeber/pressureDemandTest/*
