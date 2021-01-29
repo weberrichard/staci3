@@ -43,7 +43,6 @@ public:
   string getStringProperty(string prop);
   int getIntProperty(string property);
 
-//private:
   int startSegment, endSegment;
 };
 

@@ -45,7 +45,6 @@ string Pipe::info()
   strstrm << "\n diameter              : " << diameter << " [m]";
   strstrm << "\n roughness             : " << roughness << " [mm]";
   strstrm << "\n lambda                : " << lambda << " [-]";
-  strstrm << "\n headloss              : " << getDoubleProperty("headLoss") << " [m]";
   strstrm << "\n velocity              : " << getDoubleProperty("velocity") << " [m/s]";
   strstrm << "\n friction model        : ";
   if(frictionModel==0)
@@ -54,7 +53,6 @@ string Pipe::info()
     strstrm << "C-F";
   else
     strstrm << "!ERROR!";
-  strstrm << endl;
 
   return strstrm.str();
 }

@@ -160,10 +160,16 @@ void Staci::listSystem()
 {
   cout << "\n\n Nodes:\n--------------------------";
   for (int i = 0; i < numberNodes; i++)
+  {
+    cout << "\n Node index      : " << i;
     cout << nodes[i]->info(true);
+  }
   cout << "\n\n Edges:\n--------------------------";
   for (int i = 0; i < numberEdges; i++)
+  {
+    cout << "\n\n Edge index            : " << i;
     cout << edges[i]->info();
+  }
 }
 
 

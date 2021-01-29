@@ -3,7 +3,8 @@
 ValveISO::ValveISO(const string a_name, const string a_startNodeName, const string a_endNodeName, const double a_density, const double a_referenceCrossSection, const double a_volumeFlowRate) : Valve(a_name, a_startNodeName, a_endNodeName, a_density,a_referenceCrossSection, a_volumeFlowRate) {
   type = "ValveISO";
   status = 1;
-  typeCode = 9;  
+  typeCode = 9;
+  setting = 0.0 * density/2./(referenceCrossSection*referenceCrossSection); // loss coefficient
 }
 
 //--------------------------------------------------------------
@@ -26,9 +27,10 @@ double ValveISO::function(const VectorXd &ppq, VectorXd &fDer)
   double out;
   if(status == 1) // OPEN
   {
-    out = ppq(1) - ppq(0) + (endHeight-startHeight);
+    out = ppq(1) - ppq(0) + (endHeight-startHeight) + setting * ppq(2) * abs(ppq(2));
     fDer(0) = -1.0;
     fDer(1) =  1.0;
+    fDer(2) = setting * abs(ppq(2));
   }
   else // CLOSED, status is 0 or -1
   {
@@ -80,6 +82,8 @@ double ValveISO::getDoubleProperty(string property) {
     out = volumeFlowRate;
   else if ((property == "length") || (property == "L"))
     out = 0.5;
+  else if (property == "velocity")
+    out = volumeFlowRate / referenceCrossSection;
   else if (property == "cross_section")
     out = referenceCrossSection;
   else if (property == "startHeight")

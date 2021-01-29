@@ -10,7 +10,17 @@ Shutdown::~Shutdown(){}
 //--------------------------------------------------------------
 void Shutdown::buildSegmentGraph()
 { 
-  updateEdgeVector(); 
+  // clearing node and edge segment variable
+  for(int i=0; i<numberNodes; i++)
+  {
+    nodes[i]->segment = -1;
+  }
+  for(int i=0; i<numberEdges; i++)
+  {
+    edges[i]->segment = -1;
+  }
+
+  updateEdgeVector();
 
   // creating the edge vector of the segments
   segmentVector = segmenter(edgeVector);
@@ -40,9 +50,29 @@ void Shutdown::buildSegmentGraph()
     }
   }
 
+  // Handling the nodes connecting only ISO valves
+  int counter = numberSegment;
+  for(int i=0; i<numberNodes; i++)
+  {
+    if(nodes[i]->segment == -1)
+    { 
+      nodes[i]->segment = counter;
+      for(unsigned int j=0; j<nodes[i]->edgeIn.size(); j++)
+      {
+        edges[nodes[i]->edgeIn[j]]->segment = counter;
+      }
+      for(unsigned int j=0; j<nodes[i]->edgeOut.size(); j++)
+      {
+        edges[nodes[i]->edgeOut[j]]->segment = counter;
+      }
+      counter++;
+    }
+  }
+  numberSegment = counter;
+
   // Creating the edge vector of the segment graph
   segmentEdgeVector.clear();
-  for(int i=0; i<edges.size(); i++)
+  for(unsigned int i=0; i<edges.size(); i++)
   {
     if(edges[i]->typeCode == 9) // 9: iso
     {
@@ -92,7 +122,7 @@ vector<int> Shutdown::closeSegment(int segmentToClose)
     }
   }
 
-  for(int i=0; i<numberNodes; i++)
+  for(int i=0; i<nodes.size(); i++)
   {
     if(nodes[i]->segment == segmentToClose)
     {
