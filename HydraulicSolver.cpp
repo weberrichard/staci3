@@ -790,11 +790,24 @@ void HydraulicSolver::addNewPipe(string name, string nodeFrom, string nodeTo, do
 
 //--------------------------------------------------------------
 void HydraulicSolver::addNewISOValves(vector<string> valveName, vector<string> pipeName, vector<bool> isStart, double density, vector<double> referenceCrossSection, double volumeFlowRate)
+{ 
+  vector<int> pipeIndex;
+  for(unsigned int i=0; i<pipeName.size(); i++)
+  {
+    int pi = edgeIDtoIndex(pipeName[i]); // pipe index
+    pipeIndex.push_back(pi);
+  }
+
+  addNewISOValves(valveName, pipeIndex, isStart, density, referenceCrossSection, volumeFlowRate);
+}
+
+//--------------------------------------------------------------
+void HydraulicSolver::addNewISOValves(vector<string> valveName, vector<int> pipeIndex, vector<bool> isStart, double density, vector<double> referenceCrossSection, double volumeFlowRate)
 {
 
   for(unsigned int i=0; i<valveName.size(); i++)
   {
-    int pi = edgeIDtoIndex(pipeName[i]); // pipe index
+    int pi = pipeIndex[i]; // pipe index
     int ns = nodeIDtoIndex(edges[pi]->startNodeName); // start node index
     int ne = nodeIDtoIndex(edges[pi]->startNodeName); // end node index
     double x = nodes[ns]->xPosition + nodes[ne]->xPosition; // coordinates of additional node
@@ -850,12 +863,25 @@ void HydraulicSolver::addNewISOValves(vector<string> valveName, vector<string> p
 //--------------------------------------------------------------
 void HydraulicSolver::deleteISOValves(vector<string> valveName)
 {
-  vector<string> nodesToDelete;
-  vector<string> changeToNodes;
-  vector<double> nodeHeight;
+  vector<int> valveIndex;
   for(unsigned int i=0; i<valveName.size(); i++)
   { 
     int idx = edgeIDtoIndex(valveName[i]);
+    valveIndex.push_back(idx);
+  }
+
+  deleteISOValves(valveIndex);
+}
+
+//--------------------------------------------------------------
+void HydraulicSolver::deleteISOValves(vector<int> valveIndex)
+{
+  vector<string> nodesToDelete;
+  vector<string> changeToNodes;
+  vector<double> nodeHeight;
+  for(unsigned int i=0; i<valveIndex.size(); i++)
+  { 
+    int idx = valveIndex[i];
     nodesToDelete.push_back(edges[idx]->endNodeName);
     changeToNodes.push_back(edges[idx]->startNodeName);
     idx = nodeIDtoIndex(nodesToDelete[i]);
@@ -869,9 +895,9 @@ void HydraulicSolver::deleteISOValves(vector<string> valveName)
   // deleting edges
   for(unsigned int i=0; i<edges.size(); i++)
   {
-    for(unsigned int j=0; j<valveName.size(); j++)
+    for(unsigned int j=0; j<valveIndex.size(); j++)
     {
-      if(edges[i]->name == valveName[j])
+      if(i == valveIndex[j])
       {
         edges.erase(edges.begin()+i);
         i--;

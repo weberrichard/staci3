@@ -94,9 +94,10 @@ public:
 
   int nodeIDtoIndex(string ID);
   int edgeIDtoIndex(string ID);
+  
+  vector<string> line2sv(string line); // cutting string line to pieces
 
 protected:
-  vector<string> line2sv(string line); // cutting string line to pieces
 
   // UNITS
   double demandUnit, headUnit; // LPS, GPM etc. to LPS

@@ -89,6 +89,29 @@ void Shutdown::buildSegmentGraph()
   }
 
   segmentRank = calculateRank(segmentEdgeVector);
+
+  // calculating how much pipe lengths are in each segment
+  vector<double> Li(numberSegment,0.); // in meter
+  vector<double> li(numberSegment,0.); // dimensionless
+  relativePipeLength.resize(numberSegment,0.);
+  absolutePipeLength.resize(numberSegment,0.);
+  double sumL=0.; // in meter
+
+  for(int i=0; i<edges.size(); i++)
+  {
+      if(edges[i]->typeCode == 1 || edges[i]->typeCode == 0) // pipe, pipeCV
+      {
+        double L = edges[i]->getDoubleProperty("length");
+      Li[edges[i]->segment] += L;
+      sumL += L;
+      }
+  }
+  for(int i=0; i<numberSegment; i++)
+  {
+    li[i] = Li[i] / sumL;
+    relativePipeLength[i] = li[i];
+    absolutePipeLength[i] = Li[i];
+  }
 }
 
 //--------------------------------------------------------------

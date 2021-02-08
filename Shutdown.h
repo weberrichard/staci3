@@ -44,13 +44,19 @@ public:
 	{
 		return numberSegment;
 	}
+	
+	vector<int> segmentRank; // rank of each segment
+	int numberSegment;
+
+	// relative pipeline length for every segment
+	vector<double> relativePipeLength;
+	// absolute pipeline length for every segment
+	vector<double> absolutePipeLength;
 
 protected:
 	vector<int> edgeVector; // edge vector of the original network
 	vector<int> segmentEdgeVector; // edge vector of the segment graph
 	vector<vector<int> > segmentVector; // contains the original node indicies of pipes
-	vector<int> segmentRank; // rank of each segment
-	int numberSegment;
 
 	void updateEdgeVector();
 	vector<int> findConnectionError(vector<int> connectingNodes);

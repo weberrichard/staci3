@@ -57,8 +57,11 @@ public:
   void addNewPipe(string name, string nodeFrom, string nodeTo, double density, double length, double diameter, double roughness, double volumeFlowRate, bool isCheckVavle, int frictionModel, double relativeViscosity);
   // adding multiple new ISO Valves element
   void addNewISOValves(vector<string> valveName, vector<string> pipeName, vector<bool> isStart, double density, vector<double> referenceCrossSection, double volumeFlowRate);
+  void addNewISOValves(vector<string> valveName, vector<int> pipeIndex, vector<bool> isStart, double density, vector<double> referenceCrossSection, double volumeFlowRate);
+
   // deleting multiple ISO valves
   void deleteISOValves(vector<string> valveName);
+  void deleteISOValves(vector<int> valveIndex);
 
 	/// Jacobian matrix in a sparse Eigen type container
 	/// Used in f(x) = 0, and also in Sensitivity class

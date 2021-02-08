@@ -109,6 +109,14 @@ int main(int argc, char* argv[])
       }
       wFile.close();
 
+      // rank of segments
+      wFile.open("Network Data/" + caseName + "/rank_orig.txt");
+      for(int j=0; j<wds->segmentRank; j++)
+      {
+         wFile << wds->segmentRank[j] << '\n';
+      }
+      wFile.close();
+
       // deleting every existing 
       vector<string> ISOValvesToDelete;
       for(unsigned int j=0; j<wds->valveISOIndex.size(); j++)
@@ -187,6 +195,14 @@ int main(int argc, char* argv[])
       for(int j=0; j<vulner.size(); j++)
       {
          wFile << vulner[j] << '\n';
+      }
+      wFile.close();
+
+      // rank of segments
+      wFile.open("Network Data/" + caseName + "/rank_N.txt");
+      for(int j=0; j<wds->segmentRank; j++)
+      {
+         wFile << wds->segmentRank[j] << '\n';
       }
       wFile.close();
 
@@ -284,6 +300,13 @@ int main(int argc, char* argv[])
       }
       wFile.close();
 
+      // rank of segments
+      wFile.open("Network Data/" + caseName + "/rank_Nm1.txt");
+      for(int j=0; j<wds->segmentRank; j++)
+      {
+         wFile << wds->segmentRank[j] << '\n';
+      }
+      wFile.close();
    }
 
    cout << endl << endl;
