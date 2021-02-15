@@ -24,7 +24,7 @@
 #include <ctime>
 #include <stdlib.h>
 
-#include "/usr/include/Eigen/Eigen/Eigen"
+#include </usr/include/eigen3/Eigen/Eigen>
 
 using namespace std;
 using namespace Eigen;

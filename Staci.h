@@ -37,7 +37,7 @@
 #include "ValvePSV.h"
 #include "ValveTCV.h"
 
-#include "/usr/include/Eigen/Eigen/Eigen"
+#include </usr/include/eigen3/Eigen/Eigen>
 
 #include <string>
 #include <iomanip>

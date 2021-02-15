@@ -26,7 +26,7 @@
 #include <random>
 #include <iostream>
 
-#include "/usr/include/Eigen/Eigen/Eigen"
+#include </usr/include/eigen3/Eigen/Eigen>
 
 using namespace std;
 using namespace Eigen;

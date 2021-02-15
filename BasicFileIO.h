@@ -19,7 +19,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
-#include "/usr/include/Eigen/Eigen/Eigen"
+#include </usr/include/eigen3/Eigen/Eigen>
 #include <sys/stat.h> // mkdir
 
 using namespace std;
