@@ -129,14 +129,21 @@ double Pump::function(const VectorXd &ppq, VectorXd &fDer)// ppq = [Pstart, Pend
     double dp = characteristicCurve(ppq(2));
     out = (ppq(1) - ppq(0)) - dp + (endHeight - startHeight);
 
-    double dx;
-    if(abs(ppq(2))>0.1)
-      dx = ppq(2)*0.001;
-    else
-      dx = 1e-4;
+    double derivative;
+    if(ppq(2)<0.){
+      out = 1e8*ppq(2);
+      derivative = 1e8;
+    }
+    else{
+      double dx;
+      if(abs(ppq(2))>0.1)
+        dx = ppq(2)*0.001;
+      else
+        dx = 1e-4;
 
-    double dp2 = characteristicCurve(ppq(2)+dx);
-    double derivative = (dp-dp2)/dx;
+      double dp2 = characteristicCurve(ppq(2)+dx);
+      derivative = (dp-dp2)/dx;
+    }
 
     fDer(0) = -1.0;
     fDer(1) = 1.0;
@@ -173,9 +180,8 @@ double Pump::characteristicCurve(double Q)
 
   if(curveType == -1) // P0/Q i.e. POWER is constant
   {
-    if(abs(Q)<2.832e-5)
-      Q = 2.832e-5;
-
+    if(Q<2.8e-5)
+      Q = 2.8e-5;
     H = constantPerformance / Q;
   }
   else if(curveType == 0) // a+bq^2

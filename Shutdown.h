@@ -52,10 +52,10 @@ public:
 	vector<double> relativePipeLength;
 	// absolute pipeline length for every segment
 	vector<double> absolutePipeLength;
+	vector<int> segmentEdgeVector; // edge vector of the segment graph
 
 protected:
 	vector<int> edgeVector; // edge vector of the original network
-	vector<int> segmentEdgeVector; // edge vector of the segment graph
 	vector<vector<int> > segmentVector; // contains the original node indicies of pipes
 
 	void updateEdgeVector();

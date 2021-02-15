@@ -24,9 +24,9 @@ int main(int argc, char* argv[])
    vector<string> everyCase;
    everyCase.push_back("villasor");
    //everyCase.push_back("ferto");
-   /*everyCase.push_back("sanchegy");
-   everyCase.push_back("buk");
-   everyCase.push_back("lovo");
+   //everyCase.push_back("sanchegy");
+   //everyCase.push_back("buk");
+   /*everyCase.push_back("lovo");
    everyCase.push_back("nagycenk");
    everyCase.push_back("vashegy");
    everyCase.push_back("varis");
@@ -111,11 +111,109 @@ int main(int argc, char* argv[])
 
       // rank of segments
       wFile.open("Network Data/" + caseName + "/rank_orig.txt");
-      for(int j=0; j<wds->segmentRank; j++)
+      for(int j=0; j<wds->segmentRank.size(); j++)
       {
          wFile << wds->segmentRank[j] << '\n';
       }
       wFile.close();
+
+      // edge vector of segment graph
+      wFile.open("Network Data/" + caseName + "/segment_edge_orig.txt");
+      for(int j=0; j<wds->segmentEdgeVector.size(); j+=2)
+      {
+         wFile << wds->segmentEdgeVector[j] << ',' << wds->segmentEdgeVector[j+1] << '\n';
+      }
+      wFile.close();
+
+      // edge vector of segment graph
+      wFile.open("Network Data/" + caseName + "/input_segment_orig.txt");
+      for(int j=0; j<wds->presIndex.size(); j++)
+      {
+         int idx = wds->presIndex[j];
+         wFile << wds->edges[idx]->segment << '\n';
+      }
+      for(int j=0; j<wds->poolIndex.size(); j++)
+      {
+         int idx = wds->poolIndex[j];
+         wFile << wds->edges[idx]->segment << '\n';
+      }
+      wFile.close();
+
+      // demand loss
+      wFile.open("Network Data/" + caseName + "/demand_loss_orig.txt");
+      for(int j=0; j<wds->relativeDemandLoss.size(); j++)
+      {
+         wFile << wds->relativeDemandLoss[j] << '\n';
+      }
+      wFile.close();
+
+      // segment demand
+      wFile.open("Network Data/" + caseName + "/segment_demand_orig.txt");
+      vector<double> segmentDemand(wds->numberSegment,0.);
+      for(int j=0; j<wds->nodes.size(); j++)
+      {
+         int seg = wds->nodes[j]->segment;
+         segmentDemand[seg] += wds->nodes[j]->demand;
+      }
+      for(int j=0; j<wds->numberSegment; j++)
+      {
+         wFile << segmentDemand[j] << '\n';
+      }
+      wFile.close();
+
+      // absolute pipeline length
+      wFile.open("Network Data/" + caseName + "/absolute_segment_length_orig.txt");
+      for(int j=0; j<wds->numberSegment; j++)
+      {
+         wFile << wds->absolutePipeLength[j] << '\n';
+      }
+      wFile.close();
+
+      // network vulnerability
+      wFile.open("Network Data/" + caseName + "/network_vulner_orig.txt");
+      wFile << wds->globalGamma << '\n';
+      wFile.close();
+
+      // topological fitness function
+      double ns = wds->numberSegment;
+      double f1 = 1./ns;
+      // finding Lmax
+      double Lmax = 0.;
+      for(int j=0; j<ns; j++)
+      {  
+         double Li = wds->absolutePipeLength[j];
+         if(Lmax<Li)
+         {
+            Lmax = Li;
+         }
+      }
+
+      // calculating lamda for fitness function
+      double f2=0.;
+      for(int j=0; j<ns; j++)
+      {
+         double Li = wds->absolutePipeLength[j];
+         f2 -= Li/Lmax;
+      }
+      f2 += ns;
+
+      wFile.open("Network Data/" + caseName + "/Lambda_orig.txt");
+      wFile << f1 << '\n';
+      wFile << f2 << '\n';
+      wFile.close();
+
+      wds->isPressureDemand=false;
+      wds->solveSystem();
+      wds->isPressureDemand=true;
+      // saving relative demand loss
+      for(unsigned int j=0; j<wds->nodes.size(); j++)
+      {  
+         int seg = wds->nodes[j]->segment;
+         double dem_loss = wds->relativeDemandLoss[seg];
+         double vul = wds->localGamma[seg];
+         wds->nodes[j]->setProperty("userOutput",vul);
+      }
+      wds->saveResult("head","Node");
 
       // deleting every existing 
       vector<string> ISOValvesToDelete;
@@ -200,11 +298,107 @@ int main(int argc, char* argv[])
 
       // rank of segments
       wFile.open("Network Data/" + caseName + "/rank_N.txt");
-      for(int j=0; j<wds->segmentRank; j++)
+      for(int j=0; j<wds->segmentRank.size(); j++)
       {
          wFile << wds->segmentRank[j] << '\n';
       }
       wFile.close();
+
+      // edge vector of segment graph
+      wFile.open("Network Data/" + caseName + "/segment_edge_N.txt");
+      for(int j=0; j<wds->segmentEdgeVector.size(); j+=2)
+      {
+         wFile << wds->segmentEdgeVector[j] << ',' << wds->segmentEdgeVector[j+1] << '\n';
+      }
+      wFile.close();
+
+      // edge vector of segment graph
+      wFile.open("Network Data/" + caseName + "/input_segment_N.txt");
+      for(int j=0; j<wds->presIndex.size(); j++)
+      {
+         int idx = wds->presIndex[j];
+         wFile << wds->edges[idx]->segment << '\n';
+      }
+      for(int j=0; j<wds->poolIndex.size(); j++)
+      {
+         int idx = wds->poolIndex[j];
+         wFile << wds->edges[idx]->segment << '\n';
+      }
+      wFile.close();
+
+      // demand loss
+      wFile.open("Network Data/" + caseName + "/demand_loss_N.txt");
+      for(int j=0; j<wds->relativeDemandLoss.size(); j++)
+      {
+         wFile << wds->relativeDemandLoss[j] << '\n';
+      }
+      wFile.close();
+
+      // network vulnerability
+      wFile.open("Network Data/" + caseName + "/network_vulner_N.txt");
+      wFile << wds->globalGamma << '\n';
+      wFile.close();
+
+      // segment demand
+      wFile.open("Network Data/" + caseName + "/segment_demand_N.txt");
+      segmentDemand.clear();
+      segmentDemand.resize(wds->numberSegment);
+      for(int j=0; j<wds->nodes.size(); j++)
+      {
+         int seg = wds->nodes[j]->segment;
+         segmentDemand[seg] += wds->nodes[j]->demand;
+      }
+      for(int j=0; j<wds->numberSegment; j++)
+      {
+         wFile << segmentDemand[j] << '\n';
+      }
+      wFile.close();
+
+      // absolute pipeline length
+      wFile.open("Network Data/" + caseName + "/absolute_segment_length_N.txt");
+      for(int j=0; j<wds->numberSegment; j++)
+      {
+         wFile << wds->absolutePipeLength[j] << '\n';
+      }
+      wFile.close();
+
+      // topological fitness function
+      ns = wds->numberSegment;
+      f1 = 1./ns;
+      // finding Lmax
+      Lmax = 0.;
+      for(int j=0; j<ns; j++)
+      {  
+         double Li = wds->absolutePipeLength[j];
+         if(Lmax<Li)
+         {
+            Lmax = Li;
+         }
+      }
+
+      // calculating lamda for fitness function
+      f2=0.;
+      for(int j=0; j<ns; j++)
+      {
+         double Li = wds->absolutePipeLength[j];
+         f2 -= Li/Lmax;
+      }
+      f2 += ns;
+
+      wFile.open("Network Data/" + caseName + "/Lambda_N.txt");
+      wFile << f1 << '\n';
+      wFile << f2 << '\n';
+      wFile.close();
+
+      // saving relative demand loss
+      /*for(unsigned int j=0; j<wds->nodes.size(); j++)
+      {  
+         int seg = wds->nodes[j]->segment;
+         double dem_loss = wds->relativeDemandLoss[seg];
+         double vul = wds->localGamma[seg];
+         wds->nodes[j]->setProperty("userOutput",vul);
+      }
+      wds->saveResult("userOutput","Node");*/
 
       // ------------------------
       //         N-1 RULE
@@ -302,11 +496,107 @@ int main(int argc, char* argv[])
 
       // rank of segments
       wFile.open("Network Data/" + caseName + "/rank_Nm1.txt");
-      for(int j=0; j<wds->segmentRank; j++)
+      for(int j=0; j<wds->segmentRank.size(); j++)
       {
          wFile << wds->segmentRank[j] << '\n';
       }
       wFile.close();
+
+      // edge vector of segment graph
+      wFile.open("Network Data/" + caseName + "/segment_edge_Nm1.txt");
+      for(int j=0; j<wds->segmentEdgeVector.size(); j+=2)
+      {
+         wFile << wds->segmentEdgeVector[j] << ',' << wds->segmentEdgeVector[j+1] << '\n';
+      }
+      wFile.close();
+
+      // edge vector of segment graph
+      wFile.open("Network Data/" + caseName + "/input_segment_Nm1.txt");
+      for(int j=0; j<wds->presIndex.size(); j++)
+      {
+         int idx = wds->presIndex[j];
+         wFile << wds->edges[idx]->segment << '\n';
+      }
+      for(int j=0; j<wds->poolIndex.size(); j++)
+      {
+         int idx = wds->poolIndex[j];
+         wFile << wds->edges[idx]->segment << '\n';
+      }
+      wFile.close();
+
+      // demand loss
+      wFile.open("Network Data/" + caseName + "/demand_loss_Nm1.txt");
+      for(int j=0; j<wds->relativeDemandLoss.size(); j++)
+      {
+         wFile << wds->relativeDemandLoss[j] << '\n';
+      }
+      wFile.close();
+
+      // network vulnerability
+      wFile.open("Network Data/" + caseName + "/network_vulner_Nm1.txt");
+      wFile << wds->globalGamma << '\n';
+      wFile.close();
+
+      // segment demand
+      wFile.open("Network Data/" + caseName + "/segment_demand_Nm1.txt");
+      segmentDemand.clear();
+      segmentDemand.resize(wds->numberSegment);
+      for(int j=0; j<wds->nodes.size(); j++)
+      {
+         int seg = wds->nodes[j]->segment;
+         segmentDemand[seg] += wds->nodes[j]->demand;
+      }
+      for(int j=0; j<wds->numberSegment; j++)
+      {
+         wFile << segmentDemand[j] << '\n';
+      }
+      wFile.close();
+
+      // absolute pipeline length
+      wFile.open("Network Data/" + caseName + "/absolute_segment_length_Nm1.txt");
+      for(int j=0; j<wds->numberSegment; j++)
+      {
+         wFile << wds->absolutePipeLength[j] << '\n';
+      }
+      wFile.close();
+
+      // topological fitness function
+      ns = wds->numberSegment;
+      f1 = 1./ns;
+      // finding Lmax
+      Lmax = 0.;
+      for(int j=0; j<ns; j++)
+      {  
+         double Li = wds->absolutePipeLength[j];
+         if(Lmax<Li)
+         {
+            Lmax = Li;
+         }
+      }
+
+      // calculating lamda for fitness function
+      f2=0.;
+      for(int j=0; j<ns; j++)
+      {
+         double Li = wds->absolutePipeLength[j];
+         f2 -= Li/Lmax;
+      }
+      f2 += ns;
+
+      wFile.open("Network Data/" + caseName + "/Lambda_Nm1.txt");
+      wFile << f1 << '\n';
+      wFile << f2 << '\n';
+      wFile.close();
+
+      // saving relative demand loss
+      /*for(unsigned int j=0; j<wds->nodes.size(); j++)
+      {  
+         int seg = wds->nodes[j]->segment;
+         double dem_loss = wds->relativeDemandLoss[seg];
+         double vul = wds->localGamma[seg];
+         wds->nodes[j]->setProperty("userOutput",vul);
+      }
+      wds->saveResult("userOutput","Node");*/
    }
 
    cout << endl << endl;
