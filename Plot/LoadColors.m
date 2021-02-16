@@ -46,8 +46,8 @@ if(exist([projectFolder,slashSign,'Network Data',slashSign,caseName,slashSign,'P
     fclose(fileID);
     pumpData = pumpColor;
 else
-    pumpColor = 0;
-    pumpData = 0;
+    pumpColor = 0.2*ones(10,1);
+    pumpData = zeros(20,1);
 end
 if(exist([projectFolder,slashSign,'Network Data',slashSign,caseName,slashSign,'Valve.txt']))
     fileID = fopen([projectFolder,slashSign,'Network Data',slashSign,caseName,slashSign,'Valve.txt'],'r');

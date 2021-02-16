@@ -102,8 +102,8 @@ void Shutdown::buildSegmentGraph()
       if(edges[i]->typeCode == 1 || edges[i]->typeCode == 0) // pipe, pipeCV
       {
         double L = edges[i]->getDoubleProperty("length");
-      Li[edges[i]->segment] += L;
-      sumL += L;
+        Li[edges[i]->segment] += L;
+        sumL += L;
       }
   }
   for(int i=0; i<numberSegment; i++)

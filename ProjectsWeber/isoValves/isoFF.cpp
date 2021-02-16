@@ -61,7 +61,6 @@ int main(int argc, char* argv[])
          ISOValvesToDelete.push_back(wds->valveISOIndex[i]);
       }
       wds->deleteISOValves(ISOValvesToDelete);
-      // todo string helyett index
 
       // loading iso valve positions
       string inFileName = argv[3];

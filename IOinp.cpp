@@ -50,6 +50,7 @@ void Staci::loadSystem()
   if(file_in.is_open())
   {
 	  getline(file_in,line);
+
 	  while(true)
 	  {
 	  	while(line[0] != '[')
@@ -503,12 +504,12 @@ void Staci::loadSystem()
 	  			}
   			}
   		}
-  		else if(pump_type[i]=="POWER"){
- 				pump_cv_x[i].push_back(0.); // not used
- 				pump_cv_y[i].push_back(0.); // not used
- 				pump_performance.push_back(stod(pump_par[i],0)); // not used
-  		}
   	}
+  	if(pump_type[i]=="POWER"){
+			pump_cv_x[i].push_back(0.); // not used
+			pump_cv_y[i].push_back(0.); // not used
+			pump_performance.push_back(stod(pump_par[i],0)); // not used
+		}
   }
 
   // Converting units from EPANET to STACI (litre/sec)
@@ -612,7 +613,7 @@ void Staci::loadSystem()
 	  		}
 	  	}
 	  	else if(pump_type[i] == "POWER"){
-	  		pump_performance[i] = pump_performance[i]*745.699872;// horsepower tot watt
+	  		pump_performance[i] = pump_performance[i]*745.699872;// horsepower to watt
 	  	}
 	  }
   }
@@ -633,7 +634,7 @@ void Staci::loadSystem()
 				}
 			}
 			else if(pump_type[i]=="POWER"){
-	  		pump_performance[i] = pump_performance[i]*1000.;// horsepower tot watt
+	  		pump_performance[i] = pump_performance[i]*1000.;// kilowatt to watt
 			}
 	  }
 
@@ -650,8 +651,6 @@ void Staci::loadSystem()
 		pres_head[i] = pres_head[i]-elev[idx]; // meter to Pascal minus elevation
 	}
 	
-
-
 	// ########################
 	// CREATING THE NODES/PIPES
 	// ########################
@@ -711,7 +710,6 @@ void Staci::loadSystem()
 		{
 			pumpType = 0;
 			cout << endl << "!WARNING! Pump type unkown: " << pump_type[i] << " at " << pump_name[i] << endl;
-			cin.get();
 		}
    	edges.push_back(new Pump(pump_name[i], pump_node_from[i], pump_node_to[i], density, 1.0, pump_cv_x[i], pump_cv_y[i], pump_performance[i], 0.0, pumpType));
 	}
