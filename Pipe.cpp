@@ -202,6 +202,32 @@ double Pipe::functionParameterDerivative(int parameter)
 }
 
 //--------------------------------------------------------------
+void Pipe::setStringProperty(string prop, string val)
+{
+  if(prop == "material")
+    material = val;
+  else
+  {  
+    cout << endl << endl << "Pipe::setStringProperty( STRING ) wrong argument:" << prop;
+    cout << ", right values: material" << endl << endl;
+  }
+}
+
+//--------------------------------------------------------------
+string Pipe::getStringProperty(string prop)
+{
+  string out="";
+  if(prop == "material")
+    out = material;
+  else
+  {
+    cout << endl << endl << "STRING Pipe::getStringProperty() wrong argument:" << prop;
+    cout << ", right values: material" << endl << endl;
+  }
+  return out;
+}
+
+//--------------------------------------------------------------
 double Pipe::getDoubleProperty(string prop)
 {
   double out = 0.;

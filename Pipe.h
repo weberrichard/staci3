@@ -46,8 +46,10 @@ public:
   //========================
   double getDoubleProperty(string prop);
   int getIntProperty(string prop);
+  string getStringProperty(string prop);
   void setDoubleProperty(string prop, double value);
   void setIntProperty(string prop, int value);
+  void setStringProperty(string prop, string val);
   
   // Basic pipe data
   double length, diameter, lambda;
@@ -62,7 +64,10 @@ public:
   double relativeViscosity;
 
   // 0 - Hazen-Williams (H-W), 1 - Darcy-Weisbach (D-W), 2 - Constant friction coefficient (C-F)
-  int frictionModel=-1; 
+  int frictionModel=-1;
+
+  // info about the material of the pipe, default is unkown
+  string material = "unkown";
 
 private:
   // setting the pipeConst value
