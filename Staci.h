@@ -87,7 +87,7 @@ public:
   /// Loading the system from INP | IOinp.cpp
   void loadSystem();
   /// Saving the system to INP | IOinp.cpp
-  void saveSystem(vector<Node *> &nodes, vector<Edge *> &edges, string frictionModel);
+  void saveSystem(string newFileName);
 
   // level of printing
   int printLevel = 0;
@@ -96,7 +96,8 @@ public:
   int edgeIDtoIndex(string ID);
   
   vector<string> line2sv(string line); // cutting string line to pieces
-
+  string frictionModel; // Darcy-Weisbach (DW) or Hazen-Williams (HW)
+  
 protected:
 
   // UNITS
@@ -114,7 +115,6 @@ protected:
 
 private:
   bool isInitialization = false;
-  string frictionModel;
 };
 
 #endif //STACI_H

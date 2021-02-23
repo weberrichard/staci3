@@ -791,23 +791,23 @@ void HydraulicSolver::addNewPipe(string name, string nodeFrom, string nodeTo, do
 //--------------------------------------------------------------
 void HydraulicSolver::addNewISOValves(vector<string> valveName, vector<string> pipeName, vector<bool> isStart, double density, vector<double> referenceCrossSection, double volumeFlowRate)
 { 
-  vector<int> pipeIndex;
+  vector<int> pipeISO;
   for(unsigned int i=0; i<pipeName.size(); i++)
   {
     int pi = edgeIDtoIndex(pipeName[i]); // pipe index
-    pipeIndex.push_back(pi);
+    pipeISO.push_back(pi);
   }
 
-  addNewISOValves(valveName, pipeIndex, isStart, density, referenceCrossSection, volumeFlowRate);
+  addNewISOValves(valveName, pipeISO, isStart, density, referenceCrossSection, volumeFlowRate);
 }
 
 //--------------------------------------------------------------
-void HydraulicSolver::addNewISOValves(vector<string> valveName, vector<int> pipeIndex, vector<bool> isStart, double density, vector<double> referenceCrossSection, double volumeFlowRate)
+void HydraulicSolver::addNewISOValves(vector<string> valveName, vector<int> pipeISO, vector<bool> isStart, double density, vector<double> referenceCrossSection, double volumeFlowRate)
 {
 
   for(unsigned int i=0; i<valveName.size(); i++)
   {
-    int pi = pipeIndex[i]; // pipe index
+    int pi = pipeISO[i]; // pipe index
     int ns = nodeIDtoIndex(edges[pi]->startNodeName); // start node index
     int ne = nodeIDtoIndex(edges[pi]->startNodeName); // end node index
     double x = nodes[ns]->xPosition + nodes[ne]->xPosition; // coordinates of additional node

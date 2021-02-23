@@ -89,7 +89,6 @@ private:
   double relaxationFactor, relaxationFactorIncrement, relaxationFactorDecrement;
   double minRelaxationFactor = 0.1, maxRelaxationFactor = 1.0;
   int maxIterationNumber;
-  string frictionModel; // Darcy-Weisbach (DW) or Hazen-Williams (HW)
 
 	/// Linear solver Jac*x = -f
   void linearSolver();

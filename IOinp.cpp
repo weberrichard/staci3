@@ -348,11 +348,20 @@ void Staci::loadSystem()
 							if(sv[0] == "Headloss" || sv[0] == "HEADLOSS")
 							{
 								if(sv[1] == "H-W") // Hazen - Williams
+								{
 									friction_model = 0;
+									frictionModel = "H-W";
+								}
 								else if(sv[1] == "D-W") // Darcy - Weisbach 
+								{
 									friction_model = 1;
+									frictionModel = "D-W";
+								}
 								else if(sv[1] == "C-F") // Constant friction coefficient, mostly in case of Sopron Networks
+								{
 									friction_model = 2;
+									frictionModel = "C-F";
+								}
 								else
 								{
 									cout << endl << " !ERROR! Friction model is unknown: " << sv[1] << "\n Available options: H-W, C-F\n Case name: " << definitionFile << "\n Exiting..." << endl;
@@ -775,7 +784,8 @@ void Staci::loadSystem()
 }
 
 //-------------------------------------------------------------------
-void Staci::saveSystem(vector<Node *> &nodes, vector<Edge *> &edges, string frictionModel){
+void Staci::saveSystem(string newFileName)
+{
   // Adding the elevation to pressure points
   for(int i=0; i<edges.size(); i++){
     if(edges[i]->getEdgeStringProperty("type") == "PressurePoint"){
@@ -790,10 +800,10 @@ void Staci::saveSystem(vector<Node *> &nodes, vector<Edge *> &edges, string fric
 
   // Start of writing the file
   FILE *wfile;
-  wfile = fopen(definitionFile.c_str(),"w");
+  wfile = fopen(newFileName.c_str(),"w");
 
   fprintf(wfile, "[TITLE]\n");
-  fprintf(wfile, "%s\n", (definitionFile + "\n").c_str());
+  fprintf(wfile, "%s\n", (newFileName + "\n").c_str());
 
   // finding the nodes with pressurepoint or pool
   vector<bool> isRealNode(nodes.size(),true);
@@ -844,14 +854,14 @@ void Staci::saveSystem(vector<Node *> &nodes, vector<Edge *> &edges, string fric
   fprintf(wfile, ";ID             \tElevation   \tInitLevel   \tMinLevel    \tMaxLevel    \tDiameter    \tMinVol      \tVolCurve\n");
   for(int i=0; i<edges.size(); i++){
     if(edges[i]->getEdgeStringProperty("type")=="Pool")
-      fprintf(wfile, " %-16s\t%-12.4f\t%-12.4f\t%-12.4f\t%-12.4f\t%-12.4f\t%-12.4f\t%-16s\t\n", edges[i]->getEdgeStringProperty("name").c_str(),edges[i]->getDoubleProperty("bottomLevel"),edges[i]->getDoubleProperty("waterLevel"),0.0,1000.0,pow(edges[i]->getDoubleProperty("referenceCrossSection"),.5)*4./M_PI,0.,"");
+      fprintf(wfile, " %-16s\t%-12.4f\t%-12.4f\t%-12.4f\t%-12.4f\t%-12.4f\t%-12.4f\t%-16s\t\n", edges[i]->getEdgeStringProperty("name").c_str(),edges[i]->getDoubleProperty("bottomLevel"),edges[i]->getDoubleProperty("waterLevel"),0.0,1000.0,pow(edges[i]->getDoubleProperty("referenceCrossSection")*4./M_PI,.5),0.,"");
   }
 
   fprintf(wfile, "\n[PIPES]\n"); // diameter is in mm in INP, while it is in m in SPR
-  fprintf(wfile, ";ID             \tNode1           \tNode2           \tLength      \tDiameter    \tRoughness   \tMinorLoss   \tStatus\n");
+  fprintf(wfile, ";ID             \tNode1           \tNode2           \tLength      \tDiameter    \tRoughness   \tMinorLoss   \tStatus   \tMaterial\n");
   for(int i=0; i<edges.size(); i++){
     if(edges[i]->getEdgeStringProperty("type") == "Pipe")
-      fprintf(wfile, " %-16s\t%-16s\t%-16s\t%-12.4f\t%-12.4f\t%-12.4f\t%-12.4f\t%-6s;\n",edges[i]->getEdgeStringProperty("name").c_str(),edges[i]->getEdgeStringProperty("startNodeName").c_str(),edges[i]->getEdgeStringProperty("endNodeName").c_str(),edges[i]->getDoubleProperty("length"),edges[i]->getDoubleProperty("diameter")*1000.,edges[i]->getDoubleProperty("roughness"),0.0,"Open");
+      fprintf(wfile, " %-16s\t%-16s\t%-16s\t%-12.4f\t%-12.4f\t%-11.4f\t%-12.4f\t%-6s\t%-10s;\n",edges[i]->getEdgeStringProperty("name").c_str(),edges[i]->getEdgeStringProperty("startNodeName").c_str(),edges[i]->getEdgeStringProperty("endNodeName").c_str(),edges[i]->getDoubleProperty("length"),edges[i]->getDoubleProperty("diameter")*1000.,edges[i]->getDoubleProperty("roughness"),0.0,"Open",edges[i]->getStringProperty("material").c_str());
     //if(edges[i]->getEdgeStringProperty("type") == "PressurePoint")
     //  fprintf(wfile, " %-16s\t%-16s\t%-16s\t%-12.4f\t%-12.4f\t%-12.4f\t%-12.4f\t%-6s;\n",("PIPE_" + edges[i]->getEdgeStringProperty("name")).c_str(),edges[i]->getEdgeStringProperty("name").c_str(),edges[i]->getEdgeStringProperty("startNodeName").c_str(),0.0,1.0,0.0,0.0,"Open");
   }
@@ -871,8 +881,8 @@ void Staci::saveSystem(vector<Node *> &nodes, vector<Edge *> &edges, string fric
   fprintf(wfile, "\n[VALVES]\n");
   fprintf(wfile, ";ID             \tNode1           \tNode2           \tDiameter    \tType\tSetting     \tMinorLoss   \n");
   for(int i=0; i<edges.size(); i++){
-    if(edges[i]->getEdgeStringProperty("type") == "Valve")
-      fprintf(wfile, " %-16s\t%-16s\t%-16s\t%-12.4f\t%-4s\t%-12.4f\t%-12.4f\n", edges[i]->getEdgeStringProperty("name").c_str(), edges[i]->getEdgeStringProperty("startNodeName").c_str(), edges[i]->getEdgeStringProperty("endNodeName").c_str(), pow(edges[i]->getEdgeDoubleProperty("referenceCrossSection"),.5)*4/M_PI, "TCV",0.0,0.0);
+    if(edges[i]->getEdgeStringProperty("type") == "ValveISO")
+      fprintf(wfile, " %-16s\t%-16s\t%-16s\t%-12.4f\t%-4s\t%-12.4f\t%-12.4f\n", edges[i]->getEdgeStringProperty("name").c_str(), edges[i]->getEdgeStringProperty("startNodeName").c_str(), edges[i]->getEdgeStringProperty("endNodeName").c_str(), 1000.*pow(edges[i]->getEdgeDoubleProperty("referenceCrossSection")*4/M_PI,.5), "ISO",0.0,0.0);
   }
 
   fprintf(wfile, "\n[TAGS]\n");
@@ -924,11 +934,13 @@ void Staci::saveSystem(vector<Node *> &nodes, vector<Edge *> &edges, string fric
   fprintf(wfile, "\n[REPORT]\n");
 
   fprintf(wfile, "\n[OPTIONS]\n");
-  fprintf(wfile, " Units              \t\n");
-  if(frictionModel == "HW")
+  fprintf(wfile, " Units              	LPS\n");
+  if(frictionModel == "H-W")
     fprintf(wfile, " Headloss           \tH-W\n");
-  else if(frictionModel == "DW")
+  else if(frictionModel == "D-W")
     fprintf(wfile, " Headloss           \tD-W\n");
+  else if(frictionModel == "C-F")
+    fprintf(wfile, " Headloss           \tC-F\n");
   else
     cout << endl << "WARNING, unkown friction model: " << frictionModel << endl;
   fprintf(wfile, " Specific Gravity   \t1.0\n");
@@ -961,7 +973,7 @@ void Staci::saveSystem(vector<Node *> &nodes, vector<Edge *> &edges, string fric
   fprintf(wfile, "\n[END]\n");
   fclose(wfile);
 
-  cout << endl << "[*] File written successfully: " << definitionFile << endl;
+  cout << endl << "[*] File written successfully: " << newFileName << endl;
 }
 
 //--------------------------------------------------
