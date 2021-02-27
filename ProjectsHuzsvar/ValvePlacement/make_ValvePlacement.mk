@@ -1,6 +1,6 @@
 
 STACI_DIR=../bin/
-FUNC=Staci_Sens_CalcV3
+FUNC=ValvePlot
 
 CXX=clang++
 CXXFLAGS=-std=c++17

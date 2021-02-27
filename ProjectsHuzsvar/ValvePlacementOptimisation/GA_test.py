@@ -16,19 +16,19 @@ def func(X):
 	#print(X)
 	a = Parameters_aa()
 	b = Parameters_bb()
-	f = open("input.csv", "w")
+	#f = open("input.csv", "w")
 	Network = Parameters_Network()
-	for i in range(len(X)):
+	"""for i in range(len(X)):
 		#print(i)
 		if(i%2 == 0 and i <len(X)-1):
 			f.write(str(X[i])+","+str(X[i+1])+"\n")
 			#print(str(X[i])+","+str(X[i+1])+"\n")
-	f.close()
+	f.close()"""
 	cmd = './isoFF.out ' + Network + ' Topology input.csv a '+ str(a) + ' b ' + str(b)
 	#print(cmd)
-	so2 = os.popen(cmd).read()
-	ff = open("results.txt", "r")
-	so = ff.read()
+	#so = os.popen(cmd).read()
+	#ff = open("results.txt", "r")
+	so = (-X[0]+a)**2 + (-X[1]+b)**2
 	#print(so)
 	return float(so)
 
@@ -64,13 +64,12 @@ with open('Results.csv', newline='') as csvfile:
 		else:
 			Network_List.append(row[0])
 
-#for i in range(len(Network_List)):
-ActualNetwork = "tomalom"
-for j in range(len(a_per_b_list)):
-	a = 1*float(a_per_b_list[j])
-	b = 1
 
-	callTopology = './isoFF.out '+str(ActualNetwork)+' Min'
+ActualNetwork = "test"
+for j in range(len(a_per_b_list)):
+	a = 1
+	b = 1*float(a_per_b_list[j])
+	"""callTopology = './isoFF.out '+str(ActualNetwork)+' Min'
 	Limit_Min = os.popen(callTopology).read()
 	f = open("results.txt", "r")
 	Limit_Min = f.read()
@@ -81,21 +80,20 @@ for j in range(len(a_per_b_list)):
 	f = open("results.txt", "r")
 	Limit_Max = f.read()
 	f.close()
-	
+
 	callTopology = './isoFF.out '+str(ActualNetwork)+' Valve'
 	Limit_Valve = os.popen(callTopology).read()
 	f = open("results.txt", "r")
 	Limit_Valve = f.read()
-	f.close()
+	f.close()"""
 
-	print(Limit_Min," ", Limit_Max, " ", Limit_Valve)
 	#print(Limit_Min,Limit_Max,Limit_Valve)
-	varbound=np.array([[int(Limit_Min),int(Limit_Max)-1],[0,1]]*int(Limit_Valve))
-	vartype=np.array([['int'],['int']]*int(Limit_Valve))
+	varbound=np.array([[0,1100],[0,1100]]*int(22))
+	vartype=np.array([['int'],['int']]*int(22))
 
 	Parameters_I(ActualNetwork, a, b)
 	algorithm_param = {'max_num_iteration': None,\
-	                   'population_size':50,\
+	                   'population_size':500,\
 	                   'mutation_probability':0.01,\
 	                   'elit_ratio': 0.05,\
 	                   'crossover_probability': 0.8,\
@@ -104,7 +102,7 @@ for j in range(len(a_per_b_list)):
 	                   'max_iteration_without_improv':100}
 
 	model=ga(function=func,\
-	            dimension=int(Limit_Valve)*2,\
+	            dimension=int(22)*2,\
 	            variable_type_mixed=vartype,\
 	            variable_boundaries=varbound,\
 	            algorithm_parameters=algorithm_param)

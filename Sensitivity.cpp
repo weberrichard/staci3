@@ -7,7 +7,7 @@ Sensitivity::~Sensitivity(){}
 bool Sensitivity::calculateSensitivity(string parameter)
 {
   bool convergence = solveSystem();
-
+  double rowSum = 0., rowSumLargest = 0.;
   if(convergence)
   {
     if(parameter == "diameter" || parameter == "roughness")
@@ -41,7 +41,6 @@ bool Sensitivity::calculateSensitivity(string parameter)
           setLargestSensitivity(rowSumLargest);
         }
         cout << "rowSum" << rowSum << endl;
-        edges[i]->setMFRSens(rowSum);
         rowSum = 0.;
       }
     }
@@ -69,7 +68,6 @@ bool Sensitivity::calculateSensitivity(string parameter)
           rowSumLargest = rowSum;
           setLargestSensitivity(rowSumLargest);
         }
-        nodes[i]->setPsens(rowSum);
         rowSum = 0.;
       }
     }
@@ -85,98 +83,4 @@ bool Sensitivity::calculateSensitivity(string parameter)
     cout << endl << "[*] Sensitivity (" << parameter << "): hydraulic solver has NOT convergenved :(" << endl;
 
   return convergence;
-}
-
-void Sensitivity::fillEdgeSensitivityForPlot(double OverrideMax)
-{
-  int numberEdges = edges.size();
-  double rowSum, rowSumLargest = OverrideMax;
-  cout << "max sens: " << rowSumLargest << endl;
-  for (int i = 0; i < numberEdges; ++i)
-  {
-    rowSum = edges[i]->getMFRSens();
-    edges[i]->setMFRSens(rowSum/rowSumLargest);
-  }
-}
-
-void Sensitivity::fillPipeSensitivityForPlot()
-{
-  int numberEdges = edges.size();
-  double rowSum, rowSumLargest = getLargestSensitivity();
-  cout << "max sens: " << rowSumLargest << endl;
-  for (int i = 0; i < numberEdges; ++i)
-  {
-    if(edges[i]->type == "Pipe")
-    {
-      rowSum = edges[i]->getMFRSens();
-      edges[i]->setMFRSens(abs(rowSum/rowSumLargest));
-      edges[i]->setDoubleProperty("MFRSensitivity",abs(rowSum/rowSumLargest));
-      cout <<"rowSum2: " << edges[i]->getMFRSens() << " : " << edges[i]->getDoubleProperty("MFRSensitivity") << endl;
-    }
-  }
-}
-
-void Sensitivity::fillEdgeSensitivityForPlot()
-{
-  int numberEdges = edges.size();
-  double rowSum, rowSumLargest = getLargestSensitivity();
-  cout << "max sens: " << rowSumLargest << endl;
-  for (int i = 0; i < numberEdges; ++i)
-  {
-    rowSum = edges[i]->getMFRSens();
-    edges[i]->setMFRSens(abs(rowSum/rowSumLargest));
-    cout <<"rowSum2: " <<  edges[i]->getMFRSens() << endl;
-  }
-}
-
-void Sensitivity::fillNodalSensitivityForPlot()
-{
-  int numberNodes = nodes.size();
-  double rowSum, rowSumLargest = getLargestSensitivity();
-  cout << "max sens: " << rowSumLargest << endl;
-  for (int i = 0; i < numberNodes; ++i)
-  {
-    rowSum = nodes[i]->getPsens();
-    nodes[i]->setPsens(rowSum/rowSumLargest);
-  }
-}
-
-void Sensitivity::fillNodalSensitivityForPlotNotNormalized()
-{
-  int numberNodes = nodes.size();
-  double rowSum;
-  //cout << "max sens: " << rowSumLargest << endl;
-  for (int i = 0; i < numberNodes; ++i)
-  {
-    rowSum = nodes[i]->getPsens();
-    nodes[i]->setPsens(rowSum);
-  }
-}
-
-double Sensitivity::CalculateAverageSensitivity()
-{
-  int numberNodes = nodes.size();
-  double rowsum = 0.;
-  double nodal = 0.;
-  double AverageLocal;
-  for (int i = 0; i < numberNodes; ++i)
-  {
-    rowsum = nodes[i]->getPsens();
-    //cout << "node " << i << ". loc. sens: " << rowsum << endl; 
-    nodal += rowsum;
-  }
-  AverageLocal = nodal/numberNodes;
-  //cout << " Av. Local: " << AverageLocal << endl;
-  return AverageLocal;
-}
-
-void Sensitivity::fillNodalSensitivityForPlot(double OverrideMax)
-{
-  int numberNodes = nodes.size();
-  double rowSum, rowSumLargest = OverrideMax;
-  for (int i = 0; i < numberNodes; ++i)
-  {
-    rowSum = nodes[i]->getPsens();
-    nodes[i]->setPsens(rowSum/rowSumLargest);
-  }
 }

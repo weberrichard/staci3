@@ -21,6 +21,7 @@ $(STACI_DIR)Pool.o \
 $(STACI_DIR)PressurePoint.o \
 $(STACI_DIR)Pump.o \
 $(STACI_DIR)Shutdown.o \
+$(STACI_DIR)Sensitivity.o \
 $(STACI_DIR)Staci.o \
 $(STACI_DIR)Statistic.o \
 $(STACI_DIR)Valve.o \
