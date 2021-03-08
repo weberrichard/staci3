@@ -12,17 +12,24 @@
 using namespace std;
 using namespace Eigen;
 
+double randomDouble(double a, double b)
+{
+   double random = ((double) rand()) / (double) RAND_MAX;
+   double diff = b - a;
+   double r = random * diff;
+   return a + r;
+}
+
 int main(int argc, char* argv[])
 {
    // Name of containing folder of staci file
    string caseFolder = "../../Networks/Sopron/";
 
    vector<string> everyCase;
-   everyCase.push_back("varis");
-   //everyCase.push_back("villasor");
-   //everyCase.push_back("ferto");
-   //everyCase.push_back("sanchegy");
-   /*everyCase.push_back("buk");
+   everyCase.push_back("villasor");
+   everyCase.push_back("ferto");
+   everyCase.push_back("sanchegy");
+   everyCase.push_back("buk");
    everyCase.push_back("lovo");
    everyCase.push_back("nagycenk");
    everyCase.push_back("vashegy");
@@ -60,7 +67,7 @@ int main(int argc, char* argv[])
    everyCase.push_back("gloriette");
    everyCase.push_back("alomhegy");
    everyCase.push_back("ohermes");
-   everyCase.push_back("ujhermes");*/
+   everyCase.push_back("ujhermes");
 
    int nCases = everyCase.size();
    cout << endl << "   CASES\n***********\n";
@@ -68,75 +75,52 @@ int main(int argc, char* argv[])
       cout << i+1 << "  " << everyCase[i] << endl;
    
    srand( (unsigned)time(NULL) );
+   makeDirectory("Network Data");
 
    // for writing to files
    ofstream wFile;
 
-   vector<vector<double> > everyLocalGamma(nCases);
    for(int i=0; i<nCases; i++)
    {
       printf("\n[*] %15s\n", everyCase[i].c_str());
-
       string caseName = everyCase[i];
+
       Vulnerability *wds = new Vulnerability(caseFolder + caseName + ".inp");
+      wds->buildSegmentGraph();
 
-      //double pat = 1.0;
-      //for(int j=0;j<wds->nodes.size(); j++)
-      //{
-      //   double d = wds->nodes[j]->getProperty("demand");
-      //   double s = (rand()%1000)/1000.-0.5;
-      //   wds->nodes[j]->setProperty("demand",pat*d*s);
-      //}
-
-      wds->calculateVulnerability();
-
-      vector<int> segmentEdgeVector = wds->getSegmentEdgeVector();
-      wFile.open("Network Data/" + caseName + "/EdgeVector.txt");
-      for(int j=0; j<segmentEdgeVector.size(); j+=2)
+      vector<double> failureRate(wds->numberSegment);
+      double norm=0.;
+      for(int j=0; j<wds->numberSegment; j++)
       {
-         wFile << segmentEdgeVector[j] << ',' << segmentEdgeVector[j+1] << '\n';
+         double r = randomDouble(0.,1.);
+         failureRate[j] = wds->relativePipeLength[j]*r;
+         norm += failureRate[j];
+      }
+      for(int j=0; j<wds->numberSegment; j++)
+      {
+         failureRate[j] /= norm;
+      }
+
+      wds->calculateVulnerability(failureRate);
+
+     // saving original vulnerability
+      vector<double> vulner;
+      for(unsigned int j=0; j<wds->getNumberSegment(); j++)
+      {
+         vulner.push_back(wds->localGamma[j]);
+      }
+
+      // writing to file for further analysis
+      wFile.open("Network Data/" + caseName + "/vulner_orig_rand.txt");
+      for(int j=0; j<vulner.size(); j++)
+      {
+         wFile << vulner[j] << '\n';
       }
       wFile.close();
-
-      everyLocalGamma[i].resize(wds->getNumberSegment());
-      for(int j=0; j<wds->getNumberSegment(); j++)
-      {
-         everyLocalGamma[i][j] = wds->localGamma[j];
-      }
-
-      for(int j=0; j<wds->nodes.size(); j++)
-      {
-         int s = wds->nodes[j]->getProperty("segment");
-         //double v = wds->localGamma[s];
-         double v = wds->relativeDemandLoss[s];
-         wds->nodes[j]->setProperty("userOutput",v);
-      }
-      for(int j=0; j<wds->edges.size(); j++)
-      {
-         if(wds->edges[j]->typeCode == 1)
-         {
-            int s = wds->edges[j]->getEdgeIntProperty("segment");
-            //double v = wds->localGamma[s];
-            double v = wds->relativeDemandLoss[s];
-            wds->edges[j]->setEdgeDoubleProperty("userOutput",v);
-         }
-      }
-      wds->saveResult("head","Node");
-      wds->saveResult("userOutput","Pipe");
+      
    }
-
-   wFile.open("localGamma.txt");
-   for(int i=0; i<nCases; i++)
-   {
-      wFile << everyLocalGamma[i][0];
-      for(int j=1; j<everyLocalGamma[i].size(); j++)
-      {
-        wFile << ", " << everyLocalGamma[i][j];
-      }
-      wFile << ";" << endl;
-   }
-   wFile.close();
 
    cout << endl << endl;
    return 0;
 }
+

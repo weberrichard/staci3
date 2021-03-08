@@ -23,10 +23,25 @@ colorMap = importdata(['../../Plot/ColorMaps/',colorMapName,'.col']);
 
 fig = figure('Position',[200 200 900 600]);
 hold on; grid on;
+% moderately vulnerable
+plot([1e-3,1e-3],[1e-1,1e7],'--k','linewidth',1.5,'HandleVisibility','off')
+annotation('textarrow',[0.647,0.717],[0.71,0.71],'FontSize',20,'Linewidth',1.5)
+text(1e-2,3e6,'Moderately','FontSize',14,'HorizontalAlignment','center');
+text(1e-2,1.2e6,'vulnerable','FontSize',14,'HorizontalAlignment','center');
+% text(1e-2,3e6,'Mérsékelten','FontSize',14,'HorizontalAlignment','center');
+% text(1e-2,1.2e6,'sebezhetõ','FontSize',14,'HorizontalAlignment','center');
+% highly vulnerable
+plot([1e-2,1e-2],[1e-1,1e5],'--k','linewidth',1.5,'HandleVisibility','off')
+annotation('textarrow',[0.732,0.802],[0.53,0.53],'FontSize',20,'Linewidth',1.5)
+text(1e-1,3e4,'Highly','FontSize',14,'HorizontalAlignment','center');
+text(1e-1,1.2e4,'vulnerable','FontSize',14,'HorizontalAlignment','center');
+% text(1e-1,3e4,'Kritikusan','FontSize',14,'HorizontalAlignment','center');
+% text(1e-1,1.2e4,'sebezhetõ','FontSize',14,'HorizontalAlignment','center');
 for I=idx
+%     data{1} = importdata(join(['Network Data/',cases(I),'/vulner_orig_rand.txt'],''));
 %     data{1} = importdata(join(['Network Data/',cases(I),'/vulner_orig.txt'],''));
     data{1} = importdata(join(['Network Data/',cases(I),'/vulner_N.txt'],''));
-%     data{2} = importdata(join(['Network Data/',cases(I),'/vulner_Nm1.txt'],''));
+%     data{1} = importdata(join(['Network Data/',cases(I),'/vulner_Nm1.txt'],''));
     set(gca,'XScale','log','YScale','log');
     for i=1:size(data,2)
         gammaBar = data{i};
@@ -69,25 +84,36 @@ for I=idx
 
     end
 end
-
-xlabel('Local vulnerability','fontsize',14);
-ylabel('Probability density','fontsize',14);
-legend(cases(idx));
-set(gca,'FontSize',14);
-% xlabel('Szegmens sebezhetÅ‘sÃ©g [-]','interpreter','latex','fontsize',14);
-% ylabel('ValÃ³szÃ­nÅ±sÃ©g sÅ±rÅ±sÃ©g [-]','interpreter','latex','fontsize',14);
-% xlim([1e-9,1e-1])
-% ylim([1e-1,1e8])
+ax=gca;
+ax.FontSize = 18;
+xlabel('Local vulnerability [-]','fontsize',24);
+ylabel('Probability density [-]','fontsize',24);
+% xlabel('Lokális sebezhetõség [-]','fontsize',14);
+% ylabel('Valószínûségi sûrûség [-]','fontsize',14);
+% legend(cases(idx));
+xlim([1e-9,1e0])
+ylim([1e-1,1e8])
 % set(gca,'Position',[100,100,600,400])
-% legend(cases(idx),'location','west');
+% legend('Eredeti','N szabÃ¡ly','N-1 szabÃ¡ly');
+% legend(cases,'location','southwest','FontSize',15);
+ColumnLegend(2,cases(:),'location','southwest','FontSize',16);
+rectangle('Position',[1.3e-9 7e-1 7.5e-7 5e3],'FaceColor',[1 1 1])
 % set(gca,'FontSize',14);
 % ColumnLegend(3,num2str(idx(:)));
 % ColumnLegend(3,num2str(idx(:)),'location','southwest_sf');
 % legend('Original','N rule','N-1 rule');
-% rectangle('Position',[1.3e-9 1.9e-1 3.5e-7 5e3],'FaceColor',[1 1 1])
-% saveas(gca,'Plots/GraphAbs.fig','fig');
-% saveas(gca,'Plots/GraphAbs.png','png');
-% saveas(gca,'Plots/GraphAbs.eps','epsc');
+% rectangle('Position',[1.3e-9 1.9e-1 7.5e-7 5e3],'FaceColor',[1 1 1])
+% txt1 = text(2e-8,3e3,'Ivóvízhálózat','FontSize',14,'HorizontalAlignment','center');
+% txt2 = text(2e-8,1.2e3,'sorszám','FontSize',14,'HorizontalAlignment','center');
+% txt1 = text(2e-8,3e3,'Water distribution','FontSize',14,'HorizontalAlignment','center');
+% txt2 = text(2e-8,1.2e3,'network','FontSize',14,'HorizontalAlignment','center');
+title('Failure rate: relative pipe length, N rule','FontSize',24);
+
+% set(gca,'FontSize',16);
+% title('Failure rate: pipe material');
+saveas(gca,'Plots/Vulner_ky_N.fig','fig');
+saveas(gca,'Plots/Vulner_ky_N.png','png');
+saveas(gca,'Plots/Vulner_ky_N.eps','epsc');
 
 % number of iso valves, segments
 % iso_valves = zeros(length(idx_iso),3);

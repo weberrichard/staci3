@@ -1,14 +1,15 @@
 clear;
 % close all
 
-caseFolder = '../../Networks/ky/';
+% caseFolder = '../../Networks/ky/';
+caseFolder = '../../Networks/Sopron/';
 
-% caseName = 'buk';
-caseName = 'ky3';
+% caseName = 'nagycenk';
+% caseName = 'ky14';
 % caseName = 'ky1';
 % caseName = 'agyagosszergeny';
 % caseName = 'csapod';
-% caseName = 'sanchegy';
+caseName = 'sanchegy';
 % caseName = 'acsad';
 % caseName = 'becsidomb';
 % caseName = 'villasor';
@@ -16,13 +17,13 @@ caseName = 'ky3';
 
 % plot settings
 pumpRadius = 0.001;
-presRadius = 0.008;
+presRadius = 0.01;
 presAngle = zeros(20,1);
 poolAngle = zeros(20,1);
-tankSize = 0.017;
+tankSize = 0.02;
 valveSize = 0.00005;
-lineWidth = 1;
-nodeMarkerSize = 6;
+lineWidth = 2.5;
+nodeMarkerSize = 0.1;
 backgroundColor = [1.0,1.0,1.0];
 closedColor = [1.0,0.0,0.0];
 
@@ -30,13 +31,13 @@ closedColor = [1.0,0.0,0.0];
 
 %blackBody, blackBodyExt, cividis, coolWarmBent, coolWarmSmooth, inferno, jet, kindlmann, kindlmannExt, magma, plasma, viridis
 %discrete: lines, prism
-colorMapName = 'jet'; 
-colorBarText = 'Local vulnerability';
+colorMapName = 'plasma'; 
+colorBarText = 'Lokális sebezhetőség [-]';
 margin = 0.03; % margins around plot
 colorDelta = 0.16; %space for colorbar
 colorPos = "east"; %position of colorbar (east or south)
 colorBarFontSize = 15;
-colorElement = "All"; % "Node" or "Pipe" or "All" or "None"
+colorElement = "Pipe"; % "Node" or "Pipe" or "All" or "None"
 isLogColorMap = false; % WORKS ONLY WITH NODE COLORELEMENT
 colorBarTicksNumber = 6;
 isColorBarVisible = true;
