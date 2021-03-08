@@ -113,6 +113,7 @@ void Staci::buildIndexing()
   valveISOIndex.clear();
   pipeIndex.clear();
   pipeCVIndex.clear();
+  flowMeterIndex.clear();
 
   for(int i=0; i<edges.size(); i++)
   { 
@@ -138,6 +139,10 @@ void Staci::buildIndexing()
     {
       valveIndex.push_back(i);
       valveISOIndex.push_back(i);
+    }
+    else if(typeCode == 10) // Flow Meter
+    {
+      flowMeterIndex.push_back(i);
     }
     else if(typeCode == -1) // pool
     {

@@ -92,6 +92,7 @@ public:
   double geodeticHeight;
   double demand; // independent from pressure, however it can be varying in time
   int segment=-1; // the node takes place in which segment
+  int DMAZone=-1; // the node takes place in which DMA zone
   double pdExponent = 2.5, pdDesiredPressure = 25., pdMinPressure = 10.; // in case of pressure dependent consumptions
   double leakageExponent = 1.18, leakageConstant = 0.00000003, leakageMinPressure = 10; // in case of leakage modelling
   double userOutput;

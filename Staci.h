@@ -22,6 +22,7 @@
 
 #include "BasicFileIO.h"
 #include "Edge.h"
+#include "FlowMeter.h"
 #include "Graph.h"
 #include "IOxml.h"
 #include "Node.h"
@@ -65,7 +66,7 @@ public:
 
   // indicies vector for edge types, avoiding the for cycles
   // e.g. poolIndex contains the indicies of the pools in the edges list
-  vector<int> poolIndex, presIndex, pumpIndex, valveIndex, valveISOIndex, pipeIndex, pipeCVIndex;
+  vector<int> poolIndex, presIndex, pumpIndex, valveIndex, valveISOIndex, pipeIndex, pipeCVIndex, flowMeterIndex;
 
   // Prints everything 
   void listSystem();
