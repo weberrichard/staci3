@@ -18,8 +18,8 @@ with open('Results.csv', newline='') as csvfile:
 		else:
 			Network_List.append(row[0])
 
-for i in range(1,len(Network_List)):
-	ActualNetwork = Network_List[i]
+for i in range(1,2):
+	ActualNetwork = "szakov"
 	d = {}
 	valvelist = []
 	valves = []
@@ -33,9 +33,8 @@ for i in range(1,len(Network_List)):
 			for character in line:
 				valvelist.append(character)
 				for char in character:
-					#print(char)
 					#input("Press Enter to continue...")
-					if char == "]" or char == ".":
+					if char == "]" or char == ",":
 						start_it = False
 						try:
 							stack.append(int(stack2))
@@ -60,10 +59,12 @@ for i in range(1,len(Network_List)):
 		i = 0
 		for st in stack:
 			if(i%2 == 0):
+				print(st)
 				stringR = str(st)
 				i = i + 1
 			else:
 				stringW = stringR + "," + str(st) + " "+"\n"
+				print(stringW);
 				ww.write(stringW)
 				i = i + 1
 		ww.close()

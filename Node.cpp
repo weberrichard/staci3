@@ -84,7 +84,85 @@ double Node::function(const VectorXd &pq, bool isPressureDemand, VectorXd &fDer)
   }
   return out;
 }
+//--------------Overloaded, the evade the false forest in every other cases-----------------------//
+double Node::function(const VectorXd &pq, bool isPressureDemand, bool isLeakage, VectorXd &fDer)
+// pq = [p, Qin1, Qin2, ..., Qout1, Qout2, ...]
+// fDer = [df/dp, df/dQin1, df/dQin2, ..., df/dQout1, df/dQou2, ...]
+{
+  double out = 0.0;
+  if(status) // if the node is active
+  {
+    if(isLeakage) // if the demands are depending the nodal pressure
+    {
+      if(pq(0)>leakageMinPressure)
+      {
+        consumption = demand;
+        leakageAmount = leakageConstant*pow((pq(0)-leakageMinPressure),leakageExponent);
+        out -= consumption;
+        out -= leakageAmount;
+        fDer(0) = -leakageConstant*leakageExponent*pow((pq(0)-leakageMinPressure),(leakageExponent-1));
+      }
+      else
+      {
+        out -= 0.0;
+        consumption = 0.0;
+        consumptionPercent = 0.0;
+        fDer(0) = 0.0;
+      }
+    }
+    if(isPressureDemand) // if the demands are depending the nodal pressure
+    {
+      if(pq(0)>=pdDesiredPressure)
+      {
+        out -= demand;
+        consumption = demand;
+        consumptionPercent = 100.0;
+        fDer(0) = 0.0;
+      }
+      else if(pq(0)<pdDesiredPressure && pq(0)>pdMinPressure)
+      {
+        consumption = getConsumption(pq(0));
+        consumptionPercent = consumption / demand;
+        out -= consumption;
+        fDer(0) = -consumption/(pdExponent*(pq(0)-pdMinPressure));
+      }
+      else
+      {
+        out -= 0.0;
+        consumption = 0.0;
+        consumptionPercent = 0.0;
+        fDer(0) = 0.0;
+      }
+    }
+    else // for constant demands
+    {
+      out -= demand;
+      consumption = demand;
+      consumptionPercent = 100.0;
+      fDer(0) = 0.0;
+    }
 
+    for(int i=0; i<edgeIn.size(); i++)
+    {
+      out += pq(1 + i);
+      fDer(1 + i) = 1.0;
+    }
+
+    for(int i=0; i<edgeOut.size(); i++)
+    {
+      out -= pq(1 + edgeIn.size() + i);
+      fDer(1 + edgeIn.size() + i) = -1.0;
+    }
+  }
+  else // if the node is NOT active
+  {
+    out = pq(0);
+    consumption = 0.0;
+    consumptionPercent = 0.0;
+    fDer(0) = 1.0;
+  }
+  return out;
+}
 //--------------------------------------------------------------
 double Node::functionParameterDerivative(bool isPressureDemand)
 {
@@ -174,6 +252,10 @@ double Node::getProperty(string prop)
       out = consumption;
     else
       out = 0.;
+  }
+  else if(prop == "leakage")
+  {
+    out = leakageAmount;
   }
   else if(prop == "consumptionPercent")
   {

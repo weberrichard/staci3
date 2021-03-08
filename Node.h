@@ -45,11 +45,17 @@ public:
   // In case of pressure dependent demands, df/dx i.e. dd/dp is not zero
   double function(const VectorXd &pq, bool isPressureDemand, VectorXd &fDer);
 
+  // In case of pressure dependent leakage, df/dx i.e. d(d+L)/dp is not zero
+  double function(const VectorXd &pq, bool isPressureDemand, bool isLeakage, VectorXd &fDer);
+
   // Getting the consumption in case of pressure dependent consumption
   double getConsumption(double head);
 
   // Calculating the function derivative with respect to the parameter for sensitivity calculation
   double functionParameterDerivative(bool isPressureDemand);
+
+  // Calculating the function derivative with respect to the parameter for sensitivity calculation
+  double functionParameterDerivative(bool isPressureDemand, bool isLeakage);
 
   /// Setting a certain node double property
   /// demand|head|pressure|density|height|xPosition|yPosition|user1|user2
@@ -87,11 +93,12 @@ public:
   double demand; // independent from pressure, however it can be varying in time
   int segment=-1; // the node takes place in which segment
   double pdExponent = 2.5, pdDesiredPressure = 25., pdMinPressure = 10.; // in case of pressure dependent consumptions
+  double leakageExponent = 1.18, leakageConstant = 0.00000003, leakageMinPressure = 10; // in case of leakage modelling
   double userOutput;
 
 private:
   double consumption = 0.0; // in case of presure dependent demands consumption can be smaller than demand
   double consumptionPercent = 0.0; // consumption/demand*100 [%]
-  
+  double leakageAmount = 0.0; //amount of leakage [m3/s]
 };
 #endif

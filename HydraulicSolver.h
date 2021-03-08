@@ -53,6 +53,9 @@ public:
   /// Is the demands depending on pressure
   bool isPressureDemand = false;
 
+  /// Is the leakage is modeled and dependent on pressure
+  bool isLeakage = false;
+
   // adding new pipe element
   void addNewPipe(string name, string nodeFrom, string nodeTo, double density, double length, double diameter, double roughness, double volumeFlowRate, bool isCheckVavle, int frictionModel, double relativeViscosity);
   // adding multiple new ISO Valves element

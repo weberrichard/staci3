@@ -271,7 +271,7 @@ VectorXd HydraulicSolver::getNodeFunction(int i)
 
   // calling the functions and function derivatives
   VectorXd funcDer = VectorXd::Constant(1 + nIn + nOut, 0.0);
-  f(numberEdges + i) = nodes[i]->function(pq,isPressureDemand,funcDer);
+  f(numberEdges + i) = nodes[i]->function(pq,isPressureDemand,isLeakage,funcDer);
 
   return funcDer;
 }

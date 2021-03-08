@@ -1,5 +1,5 @@
 STACI_DIR=../bin/
-FUNC=Staci_Sens_CalcV3
+FUNC=LeakageTest
 
 CXX=clang++
 CXXFLAGS= -std=c++11 -Ofast -static-libgcc -static-libstdc++ -Wall -pedantic -I/usr/include/python2.7 -I/usr/local/include/igraph
@@ -11,6 +11,7 @@ $(STACI_DIR)HydraulicSolver.d \
 $(STACI_DIR)Graph.d \
 $(STACI_DIR)IOinp.d \
 $(STACI_DIR)IOxml.d \
+$(STACI_DIR)Leakage.d \
 $(STACI_DIR)Node.d \
 $(STACI_DIR)Pipe.d \
 $(STACI_DIR)Pool.d \
