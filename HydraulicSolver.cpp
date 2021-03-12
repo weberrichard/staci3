@@ -859,7 +859,77 @@ void HydraulicSolver::addNewISOValves(vector<string> valveName, vector<int> pipe
 
   buildJacobian(); // building the Jacobian matrix
 }
+//--------------------------------------------------------------
+void HydraulicSolver::addNewPRVValves(vector<string> valveName, vector<string> pipeName, vector<bool> isStart, double density, vector<double> referenceCrossSection, vector<double> PRVSetting, vector<double> Losses, double volumeFlowRate)
+{ 
+  vector<int> pipeISO;
+  for(unsigned int i=0; i<pipeName.size(); i++)
+  {
+    int pi = edgeIDtoIndex(pipeName[i]); // pipe index
+    pipeISO.push_back(pi);
+  }
 
+  addNewPRVValves(valveName, pipeISO, isStart, density, referenceCrossSection, PRVSetting, Losses, volumeFlowRate);
+}
+
+//--------------------------------------------------------------
+void HydraulicSolver::addNewPRVValves(vector<string> valveName, vector<int> pipeISO, vector<bool> isStart, double density, vector<double> referenceCrossSection, vector<double> PRVSetting, vector<double> Losses, double volumeFlowRate)
+{
+
+  for(unsigned int i=0; i<valveName.size(); i++)
+  {
+    int pi = pipeISO[i]; // pipe index
+    int ns = nodeIDtoIndex(edges[pi]->startNodeName); // start node index
+    int ne = nodeIDtoIndex(edges[pi]->startNodeName); // end node index
+    double x = nodes[ns]->xPosition + nodes[ne]->xPosition; // coordinates of additional node
+    double y = nodes[ns]->yPosition + nodes[ne]->yPosition;
+    string newNode = valveName[i] + "_N";
+    if(isStart[i])
+    {
+      string sn = edges[pi]->startNodeName;
+      edges[pi]->startNodeName = newNode;
+      nodes.push_back(new Node(newNode, x, y, edges[pi]->startHeight, 0.0, 0.0, density));
+      edges.push_back(new ValvePRV(valveName[i], sn, newNode, density, referenceCrossSection[i], PRVSetting[i], Losses[i], volumeFlowRate));
+      int n=edges.size();
+      edges[n-1]->startHeight = edges[pi]->startHeight;
+      edges[n-1]->endHeight = edges[pi]->startHeight;
+      numberEdges++;
+      numberNodes++;
+    }
+    else
+    {
+      string en = edges[pi]->endNodeName;
+      edges[pi]->endNodeName = newNode;
+      nodes.push_back(new Node(newNode, x, y, edges[pi]->endHeight, 0.0, 0.0, density));
+      edges.push_back(new ValvePRV(valveName[i], en, newNode, density, referenceCrossSection[i], PRVSetting[i], Losses[i], volumeFlowRate));
+      int n=edges.size();
+      edges[n-1]->startHeight = edges[pi]->endHeight;
+      edges[n-1]->endHeight = edges[pi]->endHeight;
+      numberEdges++;
+      numberNodes++;
+    }
+  }
+
+  numberEquations = numberEdges + numberNodes;
+
+  buildSystem();
+  buildIndexing();
+
+  // giving initial values to head and volume flow rates
+  initialization();
+
+  // resizing Eigen vectors
+  x.resize(numberEquations);
+  f.resize(numberEquations);
+
+  // Setting initial conditions to x vector
+  for(int i=0; i<numberEdges; i++)
+    x(i) = edges[i]->volumeFlowRate;
+  for(int i=0; i<numberNodes; i++)
+    x(numberEdges + i) = nodes[i]->head;
+
+  buildJacobian(); // building the Jacobian matrix
+}
 //--------------------------------------------------------------
 void HydraulicSolver::deleteISOValves(vector<string> valveName)
 {
@@ -875,6 +945,105 @@ void HydraulicSolver::deleteISOValves(vector<string> valveName)
 
 //--------------------------------------------------------------
 void HydraulicSolver::deleteISOValves(vector<int> valveIndex)
+{
+  vector<string> nodesToDelete;
+  vector<string> changeToNodes;
+  vector<double> nodeHeight;
+  for(unsigned int i=0; i<valveIndex.size(); i++)
+  { 
+    int idx = valveIndex[i];
+    nodesToDelete.push_back(edges[idx]->endNodeName);
+    changeToNodes.push_back(edges[idx]->startNodeName);
+    idx = nodeIDtoIndex(nodesToDelete[i]);
+    nodeHeight.push_back(nodes[idx]->geodeticHeight);
+    if(nodes[idx]->demand != 0.)
+    {
+      cout << endl << " !WARNING! Node " << nodes[idx]->name << " is to be deleted, while having " << nodes[idx]->demand << " demand" << endl;
+    }
+  }
+
+  // deleting edges
+  for(unsigned int i=0; i<edges.size(); i++)
+  {
+    for(unsigned int j=0; j<valveIndex.size(); j++)
+    {
+      if(i == valveIndex[j])
+      {
+        edges.erase(edges.begin()+i);
+        i--;
+      }
+    }
+  }
+
+  // deleting unnecessary nodes
+  for(unsigned int i=0; i<nodes.size(); i++)
+  {
+    for(unsigned int j=0; j<nodesToDelete.size(); j++)
+    {
+      if(nodes[i]->name == nodesToDelete[j])
+      {
+        nodes.erase(nodes.begin()+i);
+        i--;
+      }
+    }
+  }
+
+  // changing deleted nodes
+  for(unsigned int i=0; i<edges.size(); i++)
+  {
+    for(unsigned int j=0; j<nodesToDelete.size(); j++)
+    {
+      if(edges[i]->startNodeName == nodesToDelete[j])
+      {
+        edges[i]->startNodeName = changeToNodes[j];
+        edges[i]->startHeight = nodeHeight[j];
+      }
+      if(edges[i]->endNodeName == nodesToDelete[j])
+      {
+        edges[i]->endNodeName = changeToNodes[j];
+        edges[i]->endHeight = nodeHeight[j];
+      }
+    }
+  }
+
+  numberNodes = nodes.size();
+  numberEdges = edges.size();
+  numberEquations = numberEdges + numberNodes;
+
+  buildSystem();
+
+  buildIndexing();
+
+  // giving initial values to head and volume flow rates
+  initialization();
+
+  // resizing Eigen vectors
+  x.resize(numberEquations);
+  f.resize(numberEquations);
+
+  // Setting initial conditions to x vector
+  for(int i=0; i<numberEdges; i++)
+    x(i) = edges[i]->volumeFlowRate;
+  for(int i=0; i<numberNodes; i++)
+    x(numberEdges + i) = nodes[i]->head;
+
+  buildJacobian(); // building the Jacobian matrix
+}
+//--------------------------------------------------------------
+void HydraulicSolver::deletePRVValves(vector<string> valveName)
+{
+  vector<int> valveIndex;
+  for(unsigned int i=0; i<valveName.size(); i++)
+  { 
+    int idx = edgeIDtoIndex(valveName[i]);
+    valveIndex.push_back(idx);
+  }
+
+  deleteISOValves(valveIndex);
+}
+
+//--------------------------------------------------------------
+void HydraulicSolver::deletePRVValves(vector<int> valveIndex)
 {
   vector<string> nodesToDelete;
   vector<string> changeToNodes;

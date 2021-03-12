@@ -1,5 +1,5 @@
 STACI_DIR=../bin/
-FUNC=LeakageTest
+FUNC=LeakageCalculator
 
 CXX=clang++
 CXXFLAGS= -std=c++11 -Ofast -static-libgcc -static-libstdc++ -Wall -pedantic -I/usr/include/python2.7 -I/usr/local/include/igraph
