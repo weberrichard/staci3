@@ -23,10 +23,10 @@ int main(int argc, char* argv[])
 
    vector<string> everyCase;
    everyCase.push_back("villasor");
-   //everyCase.push_back("ferto");
-   //everyCase.push_back("sanchegy");
-   //everyCase.push_back("buk");
-   /*everyCase.push_back("lovo");
+   everyCase.push_back("ferto");
+   everyCase.push_back("sanchegy");
+   everyCase.push_back("buk");
+   everyCase.push_back("lovo");
    everyCase.push_back("nagycenk");
    everyCase.push_back("vashegy");
    everyCase.push_back("varis");
@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
    everyCase.push_back("gloriette");
    everyCase.push_back("alomhegy");
    everyCase.push_back("ohermes");
-   everyCase.push_back("ujhermes");*/
+   everyCase.push_back("ujhermes");
 
    int nCases = everyCase.size();
    cout << endl << "   CASES\n***********\n";
@@ -235,7 +235,7 @@ int main(int argc, char* argv[])
       //          N RULE
       // ------------------------
       // adding iso valves at intersections according to N rule
-      cout << "\n\n N rule vulnerability calculation";
+      /*cout << "\n\n N rule vulnerability calculation";
       cout << "\n------------------------------------";
       int counter=0;
       vector<string> addISOName;
@@ -404,7 +404,7 @@ int main(int argc, char* argv[])
       //         N-1 RULE
       // ------------------------
 
-      vulner.clear();
+      /*vulner.clear();
       // placing iso valves numberN1 times
       for(unsigned int I=0; I<numberN1; I++)
       {

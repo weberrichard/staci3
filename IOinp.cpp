@@ -10,7 +10,7 @@ void Staci::loadSystem()
 	vector<double> elev, demand, xcoord, ycoord;
 
 	// FOR PIPES
-	vector<string> pipe_name, node_from, node_to, pipe_status;
+	vector<string> pipe_name, node_from, node_to, pipe_status, material;
 	vector<double> l, D, roughness;
 
 	// FOR PRES
@@ -170,6 +170,10 @@ void Staci::loadSystem()
 							pipe_status.push_back(sv[7]);
 						else
 							pipe_status.push_back("Open");
+						if(sv.size() > 8)
+							material.push_back(sv[8]);
+						else
+							material.push_back("unkown");
 					}
 				}
 			}
@@ -688,7 +692,7 @@ void Staci::loadSystem()
 		else
 			isCheckValve = false;
 
-  	edges.push_back(new Pipe(pipe_name[i], node_from[i], node_to[i], density, l[i], D[i], roughness[i], 0.0, isCheckValve, friction_model, relativeViscosity));
+  		edges.push_back(new Pipe(pipe_name[i], node_from[i], node_to[i], density, l[i], D[i], roughness[i], 0.0, isCheckValve, friction_model, relativeViscosity));
 
    	if(pipe_status[i] == "Open")
    		edges[edges.size()-1]->status = 1;
@@ -698,6 +702,8 @@ void Staci::loadSystem()
    		edges[edges.size()-1]->status = 1;
    	else
    		edges[edges.size()-1]->status = 1;
+
+   	edges[edges.size()-1]->setStringProperty("material",material[i]);
 	}
 
 	for(int i=0; i<pump_name.size(); i++)
@@ -756,6 +762,10 @@ void Staci::loadSystem()
 				setting = valve_set[i];
 
 			edges.push_back(new ValvePSV(valve_name[i], valve_node_from[i], valve_node_to[i], density, valve_d[i]*valve_d[i]*M_PI/4., setting, valve_minor[i], 0.0));
+		}
+		else if(valve_type[i] == "FM") // FLOW METER
+		{
+			edges.push_back(new FlowMeter(valve_name[i], valve_node_from[i], valve_node_to[i], density, valve_d[i]*valve_d[i]*M_PI/4., 0.0));
 		}
 		else
 		{

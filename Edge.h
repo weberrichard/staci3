@@ -62,18 +62,19 @@ public:
   int status;
 
   /* typeCode values for edges
-  -2: pool
-  -1: pressure point
-  0:  pipe with check valve
-  1:  normal pipe
-  2:  pump
-  3:  pressure reduction valve (PRV)
-  4:  pressure sustaining valve (PSV)
-  5:  pressure breaker valve (PBV)
-  6:  flow control valve (FCV)
-  7:  throttle control valve (TCV)
-  8:  general purpose valve (GPV)
-  9:  isolation valve (ISO)*/
+  -2:  pool
+  -1:  pressure point
+   0:  pipe with check valve
+   1:  normal pipe
+   2:  pump
+   3:  pressure reduction valve (PRV)
+   4:  pressure sustaining valve (PSV)
+   5:  pressure breaker valve (PBV)
+   6:  flow control valve (FCV)
+   7:  throttle control valve (TCV)
+   8:  general purpose valve (GPV)
+   9:  isolation valve (ISO)
+  10:  flow meter (FM)*/
   int typeCode;
 
   // Used only mainly in active Valves(PRV,FCV...)
@@ -96,6 +97,7 @@ public:
   int startNodeIndex, endNodeIndex;
   int numberNode;
   int segment=-1; // the edge takes place in which segment
+  int DMAZone=-1; // the edge takes place in which DMA zone
   string startNodeName, endNodeName;
   string name;
   string type; // Pipe, pool, pump, etc.
