@@ -1,0 +1,167 @@
+[TITLE]
+Converted from Epanet to Staci, case name: ujhermes.spr
+
+
+[JUNCTIONS]
+;ID              	Elev        	Demand      	Pattern         
+ NODE_1336420    	489.2929    	0.003333    	                	;
+ NODE_1336314    	501.1844    	0.011042    	                	;
+ NODE_1331808    	501.2677    	0.010421    	                	;
+ NODE_1334006    	489.0697    	0.000000    	                	;
+ NODE_1331810    	495.3124    	0.006667    	                	;
+ NODE_1331809    	501.2124    	0.003696    	                	;
+ NODE_1316758    	501.3660    	0.002083    	                	;
+ NODE_1333501    	497.7919    	0.002500    	                	;
+ NODE_1331807    	501.3427    	0.004167    	                	;
+ NODE_1335238    	484.5529    	0.002083    	                	;
+ NODE_1316759    	500.1249    	0.005417    	                	;
+ NODE_1331806    	502.6153    	0.001250    	                	;
+ NODE_1336480    	491.1066    	0.002500    	                	;
+ NODE_1347159    	499.5647    	0.012083    	                	;
+ NODE_1338800    	500.1952    	0.009008    	                	;
+ NODE_1331805    	502.7132    	0.016667    	                	;
+ NODE_1334009    	502.9137    	0.000000    	                	;
+ NODE_1347149    	483.6416    	0.000000    	                	;
+ NODE_4734       	499.5632    	0.000000    	                	;
+ NODE_4734_1     	499.5485    	0.000000    	                	;
+ NODE_4725       	483.6687    	0.000000    	                	;
+ NODE_4725_1     	483.7867    	0.000000    	                	;
+ NODE_1347234    	483.6887    	0.000000    	                	;
+ NODE_4737       	489.0739    	0.000000    	                	;
+ NODE_4737_1     	489.0592    	0.000000    	                	;
+ NODE_4726       	483.6660    	0.000000    	                	;
+ NODE_4726_1     	483.7840    	0.000000    	                	;
+
+[RESERVOIRS]
+;ID              	Head        	Pattern         
+ PRESS_651       	544.9832    	                
+
+[TANKS]
+;ID             	Elevation   	InitLevel   	MinLevel    	MaxLevel    	Diameter    	MinVol      	VolCurve
+
+[PIPES]
+;ID             	Node1           	Node2           	Length      	Diameter    	Roughness   	MinorLoss   	Status
+ PIPE_1368449    	NODE_1336420    	NODE_1336480    	23.4857     	110.0000    	0.0200     	0.0000      	Open  ;
+ PIPE_1386044    	NODE_1333501    	NODE_1347159    	24.5475     	110.0000    	0.0200     	0.0000      	Open  ;
+ PIPE_1389305    	NODE_1347234    	NODE_1335238    	9.9577      	110.0000    	0.0200     	0.0000      	Open  ;
+ PIPE_1389306    	NODE_1335238    	NODE_1334006    	53.8897     	110.0000    	0.0200     	0.0000      	Open  ;
+ PIPE_1389901    	NODE_1316759    	NODE_1338800    	1.7763      	110.0000    	0.0200     	0.0000      	Open  ;
+ PIPE_2813553    	NODE_1334006    	NODE_4737_1     	0.3008      	110.0000    	0.0200     	0.0000      	Open  ;
+ PIPE_2813554    	NODE_4737       	NODE_1336420    	6.0730      	110.0000    	0.0200     	0.0000      	Open  ;
+ PIPE_2813575    	NODE_1347159    	NODE_4734_1     	0.3002      	110.0000    	0.0200     	0.0000      	Open  ;
+ PIPE_2813576    	NODE_4734       	NODE_1316759    	38.3898     	110.0000    	0.0200     	0.0000      	Open  ;
+ PIPE_2813838    	NODE_1347149    	NODE_4726_1     	0.2631      	110.0000    	0.0200     	0.0000      	Open  ;
+ PIPE_2813839    	NODE_4726       	NODE_1347234    	0.2433      	110.0000    	0.0200     	0.0000      	Open  ;
+ PIPE_2813844    	PRESS_651       	NODE_4725_1     	1.7441      	110.0000    	0.0200     	0.0000      	Open  ;
+ PIPE_2813845    	NODE_4725       	NODE_1347234    	0.4455      	110.0000    	0.0200     	0.0000      	Open  ;
+ PIPE_6274761    	NODE_1331805    	NODE_1334009    	4.5078      	110.0000    	0.0200     	0.0000      	Open  ;
+ PIPE_6274767    	NODE_1331806    	NODE_1331805    	1.8303      	110.0000    	0.0200     	0.0000      	Open  ;
+ PIPE_6274784    	NODE_1338800    	NODE_1331809    	36.2790     	110.0000    	0.0200     	0.0000      	Open  ;
+ PIPE_6274785    	NODE_1331809    	NODE_1331808    	2.3200      	110.0000    	0.0200     	0.0000      	Open  ;
+ PIPE_6274790    	NODE_1336480    	NODE_1331810    	59.2566     	110.0000    	0.0200     	0.0000      	Open  ;
+ PIPE_6274791    	NODE_1331810    	NODE_1333501    	37.9040     	110.0000    	0.0200     	0.0000      	Open  ;
+ PIPE_6274796    	NODE_1331807    	NODE_1316758    	4.5673      	110.0000    	0.0200     	0.0000      	Open  ;
+ PIPE_6274797    	NODE_1316758    	NODE_1331806    	28.0958     	110.0000    	0.0200     	0.0000      	Open  ;
+ PIPE_6274826    	NODE_1331808    	NODE_1336314    	30.3365     	110.0000    	0.0200     	0.0000      	Open  ;
+ PIPE_6274827    	NODE_1336314    	NODE_1331807    	20.2138     	110.0000    	0.0200     	0.0000      	Open  ;
+
+[PUMPS]
+;ID             	Node1           	Node2           	Parameters
+
+[VALVES]
+;ID             	Node1           	Node2           	Diameter    	Type	Setting     	MinorLoss   
+ VALVE_4737      	NODE_4737       	NODE_4737_1     	100.0000    	ISO 	0.0000      	0.0000      
+ VALVE_4726      	NODE_4726       	NODE_4726_1     	100.0000    	ISO 	0.0000      	0.0000      
+ VALVE_4725      	NODE_4725       	NODE_4725_1     	100.0000    	ISO 	0.0000      	0.0000      
+ VALVE_4734      	NODE_4734       	NODE_4734_1     	100.0000    	ISO 	0.0000      	0.0000      
+
+[TAGS]
+
+[DEMANDS]
+;Junction       	Demand      	Pattern         	Category
+
+[STATUS]
+;ID              	Status/Setting
+
+[PATTERNS]
+;ID             	Multipliers
+
+[CURVES]
+;ID             	X-Value     	Y-Value
+
+[CONTROLS]
+
+[RULES]
+
+[ENERGY]
+
+[EMITTERS]
+
+[QUALITY]
+
+[SOURCES]
+
+[REACTIONS]
+
+[MIXING]
+
+[TIMES]
+
+[REPORT]
+
+[OPTIONS]
+ Units              	LPS
+ Headloss           	C-F
+ Specific Gravity   	1.0
+ Viscosity          	1.0
+ Trials             	40
+ Accuracy           	0.001
+ CHECKFREQ          	2
+ MAXCHECK           	10
+ DAMPLIMIT          	0
+ Unbalanced         	Continue 10
+ Pattern            	1
+ Demand Multiplier  	1.0
+ Emitter Exponent   	0.5
+ Quality            	Chlorine mg/L
+ Diffusivity        	1.0
+ Tolerance          	0.01
+
+[COORDINATES]
+;Node           	X-Coord         	Y-Coord
+ NODE_1336420    	259870.0632     	456705.6424     
+ NODE_1336314    	259954.5201     	456519.0554     
+ NODE_1331808    	259927.4742     	456532.7465     
+ NODE_1334006    	259865.6600     	456708.8600     
+ NODE_1331810    	259887.0868     	456625.8896     
+ NODE_1331809    	259925.2990     	456533.5532     
+ NODE_1316758    	259976.5910     	456507.7893     
+ NODE_1333501    	259869.7181     	456592.3765     
+ NODE_1331807    	259972.5473     	456509.9126     
+ NODE_1335238    	259881.0156     	456759.1159     
+ NODE_1316759    	259902.5051     	456561.0491     
+ NODE_1331806    	259996.3831     	456488.5760     
+ NODE_1336480    	259873.7030     	456682.4632     
+ NODE_1347159    	259869.2400     	456568.1400     
+ NODE_1338800    	259903.1867     	456559.4097     
+ NODE_1331805    	259997.8027     	456487.4328     
+ NODE_1334009    	260001.4381     	456484.7674     
+ NODE_1347149    	259880.4800     	456769.4900     
+ NODE_4734       	259869.5400     	456568.1300     
+ NODE_4734_1     	259871.5400     	456568.1300     
+ PRESS_651       	259878.8000     	456767.7800     
+ NODE_4725       	259880.1200     	456768.9200     
+ NODE_4725_1     	259882.1200     	456768.9200     
+ NODE_1347234    	259880.5600     	456768.9900     
+ NODE_4737       	259865.9500     	456708.7800     
+ NODE_4737_1     	259867.9500     	456708.7800     
+ NODE_4726       	259880.5200     	456769.2300     
+ NODE_4726_1     	259882.5200     	456769.2300     
+
+[VERTICES]
+
+[LABELS]
+
+[BACKDROP]
+
+[END]
