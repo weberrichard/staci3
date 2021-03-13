@@ -1,7 +1,7 @@
 STACI_DIR=../bin/
-FUNC=LeakageCalculator
+FUNC=TopologyGenerator
 
-CXX=clang++
+CXX=i686-w64-mingw32-g++
 CXXFLAGS= -std=c++11 -Ofast -static-libgcc -static-libstdc++ -Wall -pedantic -I/usr/include/python2.7 -I/usr/local/include/igraph
 
 OBJS += \
