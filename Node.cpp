@@ -21,7 +21,7 @@ void Node::initialization(int mode, double value)
     head = 50.;
   else
     head = value - geodeticHeight;
-}
+} 
 
 //--------------------------------------------------------------
 double Node::function(const VectorXd &pq, bool isPressureDemand, VectorXd &fDer)

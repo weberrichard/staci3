@@ -17,8 +17,8 @@ int main(int argc, char *argv[])
     string caseFolder = "Networks/";
     ofstream wFile("results.txt");
 
-    double nominalISODiameter = 0.2;
-    double refA = nominalISODiameter*nominalISODiameter*M_PI/4.;
+    double nominalPRVDiameter = 0.2;
+    double refA = nominalPRVDiameter*nominalPRVDiameter*M_PI/4.;
     double setting = 10.;
     double minorLoss = 0.02;
     string caseName = argv[1];
@@ -37,13 +37,16 @@ int main(int argc, char *argv[])
     		}
     	}
 	    wFile << to_string(counter) << '\n';
+	    wds->calculateLeakage(); 
+	    double summarizedLoss = wds->getSummarizedLeakage();
+	    cout << summarizedLoss << '\n';
 	}
     else
 	{		
 		vector<string> fileData = readVectorString(inFileName);
-		vector<int> addISOPipe;
+		vector<int> addPRVPipe;
 		vector<bool> isStart;
-		vector<string> addISOName;
+		vector<string> addPRVName;
 		vector<double> refCros;
 		for(int i=0; i<fileData.size(); i++)
 		{
@@ -57,18 +60,19 @@ int main(int argc, char *argv[])
 		    sv.push_back(substr);
 		 }
 
-		 addISOPipe.push_back(stoi(sv[0]));
+		 addPRVPipe.push_back(stoi(sv[0]));
 		 isStart.push_back(stoi(sv[1]));
-		 addISOName.push_back("PRV_" + to_string(i));
+		 addPRVName.push_back("PRV_" + to_string(i));
 		 refCros.push_back(refA);
 		 settings.push_back(setting);
 		 minorLosses.push_back(minorLoss);
 		}
 
-		// adding the new iso valves
-		wds->addNewPRVValves(addISOName, addISOPipe, isStart, 1000., refCros, settings, minorLosses, 0.);
-	    wds->calculateLeakage();
+		// adding the new PRV valves
+		wds->addNewPRVValves(addPRVName, addPRVPipe, isStart, 1000., refCros, settings, minorLosses, 0.);
+	    wds->calculateLeakage(); 
 	    double summarizedLoss = wds->getSummarizedLeakage();
-	    wFile << summarizedLoss << '\n';
+	    double unservedDemands = wds->calculateUnservedDemands();
+	    wFile << summarizedLoss << "," << unservedDemands << '\n';
 	}
 }

@@ -21,3 +21,22 @@ void Leakage::calculateLeakage()
 	cout << "summarized leakage: " << summarizedLeakage << endl;
 	cout << "summarized demand: " << summarizedDemand << endl;
 }
+
+double Leakage::calculateUnservedDemands()
+{
+	double sumd=0.; // in m3/s
+	for(int i=0; i<numberNodes; i++)
+	{
+		sumd += nodes[i]->demand;
+	}
+	isPressureDemand = true;
+	solveSystem();
+
+	double b = 0., bi = 0.;
+	for(int j=0; j<numberNodes; j++)
+	{
+		b += nodes[j]->getProperty("consumption");
+	}
+	bi = (sumd - b)/sumd;
+	return bi;
+}

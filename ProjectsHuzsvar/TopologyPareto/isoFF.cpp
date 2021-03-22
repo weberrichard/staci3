@@ -18,6 +18,7 @@ int main(int argc, char* argv[])
    string caseFolder = "../../Networks/Sopron/";
    ofstream wFile("results.txt");
 
+
    double nominalISODiameter = 0.2;
    double refA = nominalISODiameter*nominalISODiameter*M_PI/4.;
 
@@ -29,7 +30,7 @@ int main(int argc, char* argv[])
 
    string caseName = argv[1];
    string runType = argv[2];
-
+   
    Vulnerability *wds = new Vulnerability(caseFolder + caseName + ".inp");
 
    // simple stuff for input data
@@ -48,11 +49,23 @@ int main(int argc, char* argv[])
       double n = wds->valveISOIndex.size();
       wFile << n << '\n';
    }
-
+   else if(runType == "GetOriginalGamma")
+   {
+      wds->buildSegmentGraph();
+      wds->calculateVulnerability();
+      ofstream wFile2("results/results_"+caseName+"_originalGammaDistribution.txt");
+      for (int i = 0; i < wds->getNumberSegment(); ++i)
+      {
+         wFile2 << wds->localGamma.at(i) << '\n';
+         cout << wds->localGamma.at(i) << '\n';
+      }
+      wFile2.close();  
+   }
    // fitness functions //
    // ----------------- //
-
-   if(runType == "Topology" || runType == "Gamma" || runType == "Sigma_gamma")
+   double n = wds->valveISOIndex.size();
+   cout << n << endl;
+   if(runType == "Topology" || runType == "Gamma" || runType == "Sigma_gamma" || runType == "gamma_distribution" || runType == "get_Topology")
    {
       // deleting every existing 
       vector<int> ISOValvesToDelete;
@@ -74,14 +87,14 @@ int main(int argc, char* argv[])
       {
          stringstream ss(fileData[i]);
          vector<string> sv;
-
+         cout << fileData[i] << endl;
          while(ss.good())
          {
             string substr;
             getline(ss,substr,',');
             sv.push_back(substr);
          }
-
+         cout << sv[0] << "," << sv[1] << endl;
          addISOPipe.push_back(stoi(sv[0]));
          isStart.push_back(stoi(sv[1]));
          addISOName.push_back("ISO_" + to_string(i));
@@ -120,7 +133,6 @@ int main(int argc, char* argv[])
          double Lmax = 0.;
          for(int i=0; i<ns; i++)
          {  
-            cout << wds->absolutePipeLength[i] << endl;
             double Li = wds->absolutePipeLength[i];
             if(Lmax<Li)
             {
@@ -153,9 +165,51 @@ int main(int argc, char* argv[])
          double sigma = standardDeviation(wds->localGamma);
          wFile << sigma << '\n';
       }
-   }
-   wFile.close();
+      else if(runType == "gamma_distribution")
+      {  
+         wds->calculateVulnerability();
+         double counter = 0;
+         ofstream wFile3("results/results_"+caseName+"_modifiedGammaDistribution.txt");
+         for (int i = 0; i < wds->getNumberSegment(); ++i)
+         {
+            wFile3 << wds->localGamma[i] << '\n';
+            cout << wds->localGamma[i] << '\n';
+         }
+         wFile3.close();
+      }
+      else if(runType == "get_Topology")
+      {  
+         wds->calculateVulnerability();
+         double ns = wds->numberSegment;
+         double f1 = 1./ns;
+         ofstream wFile3("results/results_"+caseName+"_"+argv[4]+"_TopologyFitnessFunction.txt");
+         // finding Lmax
+         double Lmax = 0.;
+         for(int i=0; i<ns; i++)
+         {  
+            double Li = wds->absolutePipeLength[i];
+            if(Lmax<Li)
+            {
+               Lmax = Li;
+            }
+         }
 
+         // calculating lamda for fitness function
+         double f2=0.;
+         for(int i=0; i<ns; i++)
+         {
+            double Li = wds->absolutePipeLength[i];
+            f2 -= Li/Lmax;
+         }
+         f2 += ns;
+         // write to file
+         double lambda = f1 + f2;
+         wFile3 << f1 << "," << f2 << "," << wds->globalGamma << "," << stod(argv[4])*n << '\n';
+         wFile3.close();
+      }
+
+   }
+   wFile.close();   
    cout << endl << endl;
    return 0;
 }

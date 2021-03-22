@@ -32,6 +32,8 @@ public:
 		return summarizedLeakage;
 	}
 
+	double calculateUnservedDemands();
+
 	// relative demand loss in case of the loss of the segment
 	double summarizedLeakage;
 };

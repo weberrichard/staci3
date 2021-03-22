@@ -94,7 +94,7 @@ public:
   int segment=-1; // the node takes place in which segment
   int DMAZone=-1; // the node takes place in which DMA zone
   double pdExponent = 2.5, pdDesiredPressure = 25., pdMinPressure = 10.; // in case of pressure dependent consumptions
-  double leakageExponent = 1.18, leakageConstant = 0.000005, leakageMinPressure = 10; // in case of leakage modelling
+  double leakageExponent = 1.18, leakageConstant = 0.00000003, leakageMinPressure = 10; // in case of leakage modelling
   double userOutput;
 
 private:

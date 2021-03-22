@@ -9,7 +9,7 @@ cases= ["villasor","ferto","sanchegy","buk","lovo","nagycenk","vashegy","varis",
     "nyarliget","meszlen","fertoujlak","gorbehalom","tozeggyarmajor","ebergoc","csillahegy","jerevan","gloriette",...
     "ohermes","ujhermes"];
 
-idx = 10;
+idx = 2;
 idx_iso = 1:27;
 idx_net = 1:27;
 
@@ -20,9 +20,9 @@ colorMapName = 'plasma';
 colorMap = importdata(['../../Plot/ColorMaps/',colorMapName,'.col']);
 
 for I=idx
-    data{1} = importdata(join(['results/results_tomalom_originalGammaDistribution.txt'],''));
-    data{2} = importdata(join(['results/results_tomalom_mGammaDistribution.txt'],''));
-    %data{3} = importdata(join(['Network Data/',cases(I),'/vulner_Nm1.txt'],''));
+    data{1} = importdata(join(['Network Data/',cases(I),'/vulner_orig.txt'],''));
+    data{2} = importdata(join(['Network Data/',cases(I),'/vulner_N.txt'],''));
+    data{3} = importdata(join(['Network Data/',cases(I),'/vulner_Nm1.txt'],''));
     fig = figure('Position',[200 200 900 600]);
     hold on; grid on;
     set(gca,'XScale','log','YScale','log');
@@ -106,33 +106,34 @@ for I=idx
 end
 
 % number of iso valves, segments
-% iso_valves = zeros(length(idx_iso),3);
-% no_segments = zeros(length(idx_iso),3);
-% for i=idx_iso
-%     data = importdata(join(['Network Data/',cases(i),'/number_of_valves.txt'],''));
-%     iso_valves(i,:) = data(:,1);
-%     no_segments(i,:) = data(:,2);
-% end
-% 
-% fig2 = figure('Position',[250 200 1500 500]);
-% bar(iso_valves);
-% title('Number of ISO valves');
-% legend('Original','N rule','N-1 rule');
-% 
-% fig3 = figure('Position',[300 200 1500 500]);
-% bar(no_segments);
-% title('Number of segments');
-% legend('Original','N rule','N-1 rule');
+iso_valves = zeros(length(idx_iso),3);
+no_segments = zeros(length(idx_iso),3);
+for i=idx_iso
+    data = importdata(join(['Network Data/',cases(i),'/number_of_valves.txt'],''));
+    iso_valves(i,:) = data(:,1);
+    no_segments(i,:) = data(:,2);
+end
+
+fig2 = figure('Position',[250 200 1500 500]);
+bar(iso_valves);
+title('Number of ISO valves');
+legend('Original','N rule','N-1 rule');
+
+fig3 = figure('Position',[300 200 1500 500]);
+bar(no_segments);
+title('Number of segments');
+legend('Original','N rule','N-1 rule');
 
 % network vulnerability
 
 network_vulner=zeros(length(idx_net),3);
 for i=idx_net
-    data2{1} = importdata(join(['results/results_tomalom_originalGammaDistribution.txt'],''));
-    data2{2} = importdata(join(['results/results_tomalom_modifiedGammaDistribution.txt'],''));
-    %data2{3} = importdata(join(['Network Data/',cases(i),'/vulner_Nm1.txt'],''));
+    data2{1} = importdata(join(['Network Data/',cases(i),'/vulner_orig.txt'],''));
+    data2{2} = importdata(join(['Network Data/',cases(i),'/vulner_N.txt'],''));
+    data2{3} = importdata(join(['Network Data/',cases(i),'/vulner_Nm1.txt'],''));
     network_vulner(i,1) = sum(data2{1});
     network_vulner(i,2) = sum(data2{2});
+    network_vulner(i,3) = sum(data2{3});
 end
 
 fig4 = figure('Position',[350 200 1500 500]);
