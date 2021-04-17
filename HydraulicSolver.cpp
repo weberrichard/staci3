@@ -112,6 +112,7 @@ bool HydraulicSolver::solveSystem()
   {
     iterInfo(iter, e_mp, e_p, changedIndex);
     iterInfoDetail();
+    isConv == false;
   }
   else
   {

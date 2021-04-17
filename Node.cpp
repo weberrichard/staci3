@@ -232,6 +232,12 @@ void Node::setProperty(string prop, double value)
     xPosition = value;
   else if(prop == "yPosition")
     yPosition = value;
+  else if(prop == "leakageExponent")
+    leakageExponent = value;
+  else if(prop == "leakageConstant")
+    leakageConstant = value;
+  else if(prop == "leakageMinPressure")
+    leakageMinPressure = value;
   else
   {
     cout << endl << endl << "Node::getProperty() wrong argument:" << prop;
@@ -282,6 +288,12 @@ double Node::getProperty(string prop)
     out = (double)segment;
   else if(prop == "status")
     out = (double)status;
+  else if(prop == "leakageExponent")
+    out = leakageExponent;
+  else if(prop == "leakageConstant")
+    out = leakageConstant;
+  else if(prop == "leakageMinPressure")
+    out = leakageMinPressure;
   else
   {
     cout << endl << endl << "Node::getProperty() wrong argument:" << prop;

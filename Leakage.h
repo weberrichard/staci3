@@ -24,8 +24,7 @@ public:
 	~Leakage();
 
 	// it calculates the nodal leakage for the whole network
-	void calculateLeakage();
-
+	bool calculateLeakage();
 
 	double getSummarizedLeakage()
 	{
@@ -33,6 +32,10 @@ public:
 	}
 
 	double calculateUnservedDemands();
+
+	void setLeakageConstant(double C);
+
+	//void setLeakageConstant(vector<int> ID, vector<double> C);
 
 	// relative demand loss in case of the loss of the segment
 	double summarizedLeakage;

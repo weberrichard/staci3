@@ -9,7 +9,7 @@ caseFolder = '../../Networks/Sopron/';
 % caseName = 'ky1';
 % caseName = 'agyagosszergeny';
 % caseName = 'csapod';
-caseName = 'Balf';
+caseName = 'becsidomb';
 % caseName = 'acsad';
 % caseName = 'becsidomb';
 % caseName = 'villasor';
@@ -21,7 +21,7 @@ presRadius = 0.01;
 presAngle = zeros(20,1);
 poolAngle = zeros(20,1);
 tankSize = 0.02;
-valveSize = 0.01;
+valveSize = 0.0015;
 lineWidth = 2.5;
 nodeMarkerSize = 0.1;
 backgroundColor = [1.0,1.0,1.0];
@@ -37,9 +37,9 @@ margin = 0.03; % margins around plot
 colorDelta = 0.16; %space for colorbar
 colorPos = "east"; %position of colorbar (east or south)
 colorBarFontSize = 15;
-colorElement = "All"; % "Node" or "Pipe" or "All" or "None"
+colorElement = "Pipe"; % "Node" or "Pipe" or "All" or "None"
 isLogColorMap = false; % WORKS ONLY WITH NODE COLORELEMENT
-colorBarTicksNumber = 6;
+colorBarTicksNumber = 10;
 isColorBarVisible = true;
 
 addpath('../../Plot');
@@ -59,6 +59,7 @@ LoadINP;
 LoadColors;
 
 fig=figure;
+fig.Renderer = 'Painters';
 hold on;
 % adjusting the size of the plot window
 if(colorPos == "east")

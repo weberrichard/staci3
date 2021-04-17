@@ -2,7 +2,7 @@ STACI_DIR=../bin/
 FUNC=NetworkPlotter
 
 CXX=clang++
-CXXFLAGS= -std=c++11 -Ofast -static-libgcc -static-libstdc++ -Wall -pedantic -I/usr/include/python2.7
+CXXFLAGS= -std=c++11 -Ofast -static-libgcc -static-libstdc++ -Wall -pedantic -I/usr/include/python2.7 -I/usr/local/include/igraph
 
 OBJS += \
 $(STACI_DIR)BasicFileIO.d \

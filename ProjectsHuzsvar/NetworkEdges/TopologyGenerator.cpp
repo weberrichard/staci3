@@ -24,17 +24,22 @@ int main(int argc, char *argv[])
     string inFileName = argv[2];
 
     ofstream wFile(caseName+"_edgelist.txt");
+    ofstream wFile2(caseName+"_valvelist.txt");
     vector<double> settings, minorLosses;
     cout << "[*]Network: " << caseFolder << caseName << ".inp" << endl;
     wds = new Leakage(caseFolder +caseName + ".inp");
     if(inFileName == "EdgeList")
     {
-    	for (int i = 0; i < wds->edges.size(); ++i)
-    	{
-    		if (wds->edges.at(i)->getEdgeStringProperty("type") != "Pool" || wds->edges.at(i)->getEdgeStringProperty("type") == "Pressure")
-    		{
- 				wFile << wds->edges.at(i)->getEdgeIntProperty("startNodeIndex") << "," << wds->edges.at(i)->getEdgeIntProperty("endNodeIndex") << '\n';
-    		}
-    	}
-	}
+        for (int i = 0; i < wds->edges.size(); ++i)
+        {
+            if (wds->edges.at(i)->getEdgeStringProperty("type") != "Pool" || wds->edges.at(i)->getEdgeStringProperty("type") == "Pressure")
+            {
+                wFile << wds->edges.at(i)->getEdgeIntProperty("startNodeIndex") << "," << wds->edges.at(i)->getEdgeIntProperty("endNodeIndex") << '\n';
+            }
+            if (wds->edges.at(i)->getEdgeStringProperty("type") == "ValveISO")
+            {
+                wFile2 << wds->edges.at(i)->getEdgeIntProperty("startNodeIndex") << "," << wds->edges.at(i)->getEdgeIntProperty("endNodeIndex") << '\n';
+            }
+        }
+    }
 }

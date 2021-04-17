@@ -30,16 +30,16 @@ int main(int argc, char *argv[])
     wds = new Leakage(caseFolder +caseName + ".inp");
     if(inFileName == "EdgeList")
     {
-        for (int i = 0; i < wds->edges.size(); ++i)
-        {
-            if (wds->edges.at(i)->getEdgeStringProperty("type") != "Pool" || wds->edges.at(i)->getEdgeStringProperty("type") == "Pressure")
-            {
-                wFile << wds->edges.at(i)->getEdgeIntProperty("startNodeIndex") << "," << wds->edges.at(i)->getEdgeIntProperty("endNodeIndex") << '\n';
-            }
-            if (wds->edges.at(i)->getEdgeStringProperty("type") == "ValveISO")
+    	for (int i = 0; i < wds->edges.size(); ++i)
+    	{
+    		if (wds->edges.at(i)->getEdgeStringProperty("type") != "Pool" || wds->edges.at(i)->getEdgeStringProperty("type") == "Pressure")
+    		{
+ 				wFile << wds->edges.at(i)->getEdgeIntProperty("startNodeIndex") << "," << wds->edges.at(i)->getEdgeIntProperty("endNodeIndex") << '\n';
+    		}
+            if (wds->edges.at(i)->getEdgeStringProperty("type") == "ISOValve")
             {
                 wFile2 << wds->edges.at(i)->getEdgeIntProperty("startNodeIndex") << "," << wds->edges.at(i)->getEdgeIntProperty("endNodeIndex") << '\n';
             }
-        }
-    }
+    	}
+	}
 }
