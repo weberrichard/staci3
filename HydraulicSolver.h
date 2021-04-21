@@ -64,7 +64,8 @@ public:
   // adding multiple new PRV Valves element
   void addNewPRVValves(vector<string> valveName, vector<string> pipeName, vector<bool> isStart, double density, vector<double> referenceCrossSection, vector<double> PRVSetting, vector<double> Losses, double volumeFlowRate);
   void addNewPRVValves(vector<string> valveName, vector<int> pipeIndex, vector<bool> isStart, double density, vector<double> referenceCrossSection, vector<double> PRVSetting, vector<double> Losses, double volumeFlowRate);
-
+  // adding new pressure source
+  void addNewPressurePoint(string name, double referenceCrossSection, string startNodeName, double density, double head, double totalHead, double volumeFlowRate);
   // deleting multiple ISO valves
   void deleteISOValves(vector<string> valveName);
   void deleteISOValves(vector<int> valveIndex);

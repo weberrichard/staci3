@@ -932,6 +932,38 @@ void HydraulicSolver::addNewPRVValves(vector<string> valveName, vector<int> pipe
   buildJacobian(); // building the Jacobian matrix
 }
 //--------------------------------------------------------------
+void HydraulicSolver::addNewPressurePoint(string name, double referenceCrossSection, string startNodeName, double density, double head, double totalHead, double volumeFlowRate)
+{
+  edges.push_back(new PressurePoint(name, referenceCrossSection, startNodeName, density, head, totalHead, volumeFlowRate));
+
+  numberNodes = nodes.size();
+  numberEdges = edges.size();
+  numberEquations = numberEdges + numberNodes;
+  
+  buildSystem();
+  buildIndexing();
+  int n=edges.size();
+  edges[n-1]->startHeight = nodes[edges[n-1]->startNodeIndex]->geodeticHeight;
+  //edges[n-1]->endHeight = nodes[edges[n-1]->endNodeIndex]->geodeticHeight;
+  cout <<  " megvan44 " << endl;
+
+  // giving initial values to head and volume flow rates
+  initialization();
+
+  // resizing Eigen vectors
+  x.resize(numberEquations);
+  f.resize(numberEquations);
+
+  // Setting initial conditions to x vector
+  for(int i=0; i<numberEdges; i++)
+    x(i) = edges[i]->volumeFlowRate;
+  for(int i=0; i<numberNodes; i++)
+    x(numberEdges + i) = nodes[i]->head;
+
+  buildJacobian(); // building the Jacobian matrix
+}
+
+//--------------------------------------------------------------
 void HydraulicSolver::deleteISOValves(vector<string> valveName)
 {
   vector<int> valveIndex;
