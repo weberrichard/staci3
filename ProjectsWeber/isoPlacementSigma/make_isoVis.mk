@@ -1,6 +1,6 @@
 
 STACI_DIR=../bin/
-FUNC=material
+FUNC=isoVis
 
 CXX=clang++
 CXXFLAGS=-std=c++17

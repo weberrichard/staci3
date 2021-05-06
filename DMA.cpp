@@ -159,9 +159,6 @@ void DMA::addNewFlowMeter(vector<string> flowMeterName, vector<int> pipeISO, vec
     }
   }
 
-  cout << edges[numberEdges-1]->name << "  " << edges[numberEdges-1]->startNodeName << "  " << edges[numberEdges-1]->endNodeName << "  " << edges[numberEdges-1]->typeCode << endl;
-  cin.get();
-
   numberEquations = numberEdges + numberNodes;
 
   buildSystem();

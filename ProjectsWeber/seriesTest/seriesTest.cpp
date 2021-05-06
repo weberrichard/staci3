@@ -18,7 +18,7 @@ int main(int argc, char* argv[]){
   srand((unsigned int) time(0));
 
   // Name of containing folder of staci file
-  string caseFolder = "../../Networks/";
+  string caseFolder = "../../Networks/DHI/";
   //string caseFolder = "/home/rweber/0_PhD/Halozatok/sopron_halozatok/";
 
   string caseName;

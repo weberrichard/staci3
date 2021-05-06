@@ -13,7 +13,7 @@ vector<string> readVectorString(string fileName)
     { 
       if(line[0] != '/')
       {
-        string tmp = line.substr(0,line.length()-1);
+        string tmp = line.substr(0,line.length());
         M.push_back(tmp);
       }
     }

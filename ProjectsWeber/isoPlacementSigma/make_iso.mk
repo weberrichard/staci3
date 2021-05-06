@@ -1,6 +1,6 @@
 
 STACI_DIR=../bin/
-FUNC=material
+FUNC=iso
 
 CXX=clang++
 CXXFLAGS=-std=c++17
@@ -11,7 +11,6 @@ CXXFLAGS=-std=c++17
 OBJS += \
 $(STACI_DIR)BasicFileIO.o \
 $(STACI_DIR)Edge.o \
-$(STACI_DIR)FlowMeter.o \
 $(STACI_DIR)HydraulicSolver.o \
 $(STACI_DIR)Graph.o \
 $(STACI_DIR)IOinp.o \

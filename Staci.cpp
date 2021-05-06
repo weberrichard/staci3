@@ -16,12 +16,12 @@ Staci::Staci(string fileName)
   {
     loadSystem();
   }
-  //else if(fileFormat == "spr") // Old STACI spr format
-  //{
-  //  IOxml IOxmlObj(definitionFile.c_str());
-  //  IOxmlObj.loadSystem(nodes, edges);
-  //  frictionModel = "C-F";
-  //}
+  else if(fileFormat == "spr") // Old STACI spr format
+  {
+    IOxml IOxmlObj(definitionFile.c_str());
+    IOxmlObj.loadSystem(nodes, edges);
+    frictionModel = "C-F";
+  }
   else
   {
     cout << endl << "Unkown file format: " << fileFormat << endl << "Available file formats are: inp" << endl;

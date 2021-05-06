@@ -131,11 +131,18 @@ int main(int argc, char* argv[])
       }
       wFile.close();
 
+         // writing the relative demand losses to file
+      writeVectorDouble("Network Data/" + caseName + "/relativeDemandLoss.txt",wds->relativeDemandLoss);
+      wds->calculateVulnerabilityApprox();
+      writeVectorDouble("Network Data/" + caseName + "/sumSegments.txt", wds->relativeSegmentLoss);
+      writeVectorDouble("Network Data/" + caseName + "/sumPipes.txt", wds->relativeLengthLoss);
+      writeVectorDouble("Network Data/" + caseName + "/sumCons.txt", wds->relativeDemandLossApprox);
+
       // ------------------------
       //         N-1 RULE
       // ------------------------
 
-      vulner.clear();
+      /*vulner.clear();
       // placing iso valves numberN1 times
       for(unsigned int I=0; I<numberN1; I++)
       {
@@ -215,7 +222,7 @@ int main(int argc, char* argv[])
             wFile << vulner[j] << '\n';
          }
          wFile.close();
-      }
+      }*/
    }
 
    cout << endl << endl;

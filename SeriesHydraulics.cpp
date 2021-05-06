@@ -50,7 +50,10 @@ void SeriesHydraulics::seriesSolve(ssc seriesSensitivityControl)
 		time += hydraulicTimeStep;
 
 		// updating the settings, pools etc.
-		updatePool();
+		if(time<=endTime)
+		{
+			updatePool();
+		}
 
 		clockTime = time;
 		while(clockTime>=86400.)

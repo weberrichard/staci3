@@ -37,10 +37,10 @@ text(1e-1,1.2e4,'vulnerable','FontSize',14,'HorizontalAlignment','center');
 % text(1e-1,1.2e4,'sebezhető','FontSize',14,'HorizontalAlignment','center');
 for I=idx
     if(mod(I,2)==0)
-        data = importdata(join(['Network Data/',cases(I),'/vulner_Nm1.txt'],''));
+        data = importdata(join(['Network Data/',cases(I),'/vulner_N.txt'],''));
         col = 0.25;
     else
-        data = importdata(join(['Network Data/',cases(I),'/vulner_orig.txt'],''));
+        data = importdata(join(['Network Data/',cases(I),'/vulner_N.txt'],''));
         col = 0.75;
     end
 
@@ -98,8 +98,8 @@ legend('Sopron Networks','ky*','location','southwest');
 title('Failure rate: relative pipe length, ky: N-1 rule');
 set(gca,'FontSize',14);
 % title('Failure rate: pipe material');
-saveas(gca,'Plots/Vulner_all_Nm1.fig','fig');
-saveas(gca,'Plots/Vulner_all_Nm1.png','png');
-saveas(gca,'Plots/Vulner_all_Nm1.eps','epsc');
+% saveas(gca,'Plots/Vulner_all_Nm1.fig','fig');
+% saveas(gca,'Plots/Vulner_all_Nm1.png','png');
+% saveas(gca,'Plots/Vulner_all_Nm1.eps','epsc');
 
 

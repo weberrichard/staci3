@@ -14,14 +14,15 @@ using namespace Eigen;
 int main(int argc, char* argv[]){
 
   // Name of containing folder of staci file
-  string case_folder = "../../Networks/Sopron/";
+  //string case_folder = "../../Networks/Sopron/";
+  string case_folder = "";
   //string case_folder = "/home/rweber/0_PhD/Halozatok/sopron_halozatok/";
 
   string case_name;
   if(argc == 1){
     //case_name = "C-town.inp";
     //case_name = "grid_9.inp";
-    case_name = "villasor.inp";
+    case_name = "VIZ-SOPTVR-4-590-output.spr";
     //case_name = "Anytown.inp";
     //case_name =  "linear_9.inp";
     //case_name =  "grid_9.inp";

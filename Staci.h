@@ -41,6 +41,7 @@
 #include </usr/include/eigen3/Eigen/Eigen>
 
 #include <string>
+#include <chrono>
 #include <iomanip>
 #include <vector>
 #include <cmath>

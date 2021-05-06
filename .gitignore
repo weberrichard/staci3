@@ -37,6 +37,8 @@
 Networks/Sopron/*
 Networks/DHI/*
 Networks/Galambos/*
+Networks/Sopron_sigma_approx_opt/*
+Networks/Sopron_sigma_opt/*
 
 # folders
 Archive/*
@@ -63,3 +65,7 @@ ProjectsWeber/inpTest/*
 ProjectsWeber/isSegmentGraphPlanar/matlab_bgl/*
 ProjectsWeber/pressureDemandTest/*
 ProjectsWeber/pipeMaterials/Network Data/*.inp
+Networks/virtRome.inp
+ProjectsWeber/DMAtest/balf.inp
+ProjectsWeber/isoPlacementSigma/Sopron_sigma_approx_opt/*.inp
+ProjectsWeber/isoPlacementSigma/Sopron_sigma_opt/*.inp

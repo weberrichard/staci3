@@ -603,7 +603,10 @@ void Staci::loadSystem()
 	  for(int i=0; i<pipe_name.size(); i++){
   		l[i] = l[i]*headUnit; // feet to meter
   		D[i] = D[i]*0.0254; // inches to meter
-  		roughness[i] = roughness[i]*headUnit;
+  		if(frictionModel == "D-W")
+  		{
+			roughness[i] = roughness[i]/1000.*headUnit;
+  		}
   	}
 		for(int i=0; i<pres_name.size(); i++){
 		  pres_head[i] = pres_head[i]*headUnit; // feet to meter
@@ -855,7 +858,7 @@ void Staci::saveSystem(string newFileName)
   fprintf(wfile, ";ID              \tHead        \tPattern         \n");
   for(int i=0; i<edges.size(); i++){
     if(edges[i]->getEdgeStringProperty("type")=="PressurePoint"){
-      fprintf(wfile," %-16s\t%-12.4f\t%-16s\n",edges[i]->getEdgeStringProperty("name").c_str(),edges[i]->getDoubleProperty("height") + edges[i]->getDoubleProperty("head"),"");
+      fprintf(wfile," %-16s\t%-12.4f\t%-16s\n",edges[i]->getEdgeStringProperty("name").c_str(),edges[i]->getDoubleProperty("head"),"");
     }
   }
 

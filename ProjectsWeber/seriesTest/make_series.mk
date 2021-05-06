@@ -8,6 +8,7 @@ CXXFLAGS=-std=c++17 -I/usr/include/python2.7 -O3 -fopenmp -mavx
 OBJS += \
 $(STACI_DIR)BasicFileIO.o \
 $(STACI_DIR)Edge.o \
+$(STACI_DIR)FlowMeter.o \
 $(STACI_DIR)Graph.o \
 $(STACI_DIR)HydraulicSolver.o \
 $(STACI_DIR)IOinp.o \
