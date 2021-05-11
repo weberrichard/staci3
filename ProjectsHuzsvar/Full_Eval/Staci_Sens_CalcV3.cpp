@@ -458,7 +458,7 @@ int main(int argc, char *argv[])
     double Length;
     cout << "[*]Network: " << case_folder << case_name << ".inp" << endl;
     cout << "[*]Generating full evaluation...." << endl;
-    FullEvaluation(case_folder, case_name, true, 0.1);
+    FullEvaluation(case_folder, case_name, true, 0.025);
     cout << "[*]Capacity distribution calculated sucessfully...." << endl;
 }
 

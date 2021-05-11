@@ -9,7 +9,7 @@ caseFolder = '../../Networks/Sopron/';
 % caseName = 'ky1';
 % caseName = 'agyagosszergeny';
 % caseName = 'csapod';
-caseName = 'nagycenk';
+caseName = 'ky2';
 % caseName = 'acsad';
 % caseName = 'becsidomb';
 % caseName = 'villasor';
@@ -23,7 +23,7 @@ poolAngle = zeros(20,1);
 tankSize = 0.02;
 valveSize = 0.0015;
 lineWidth = 2.5;
-nodeMarkerSize = 0.1;%5;%0.1
+nodeMarkerSize = 0.05;%5;%0.1
 backgroundColor = [1.0,1.0,1.0];
 closedColor = [1.0,0.0,0.0];
 

@@ -236,7 +236,7 @@ void CalculateCapacity(string FileName, string case_folder, string case_name, bo
     }
     else
     {
-        for (int i = 0; i < wds->nodes.size(); i+=100)
+        for (int i = 0; i < wds->nodes.size(); i+=1)
         {
             hydrant_nodes.push_back(wds->nodes.at(i)->name);
         }
@@ -249,7 +249,7 @@ void CalculateCapacity(string FileName, string case_folder, string case_name, bo
     for (int i=0; i<hydrant_nodes.size(); i++)
     {
         wds = new Sensitivity(case_folder + case_name + ".inp");
-        for (int j = 0; j < wds->nodes.size(); ++j)
+        for (int j = 0; j < wds->nodes.size()-1; ++j)
         {
            if (hydrant_nodes[i] == wds->nodes[j]->name)
            {
@@ -264,10 +264,10 @@ void CalculateCapacity(string FileName, string case_folder, string case_name, bo
         zeta.push_back(0);
         zeta.push_back(dzeta);
         cout << " megvan3 " << endl;
-       /* double MaxLoss = 0., L = 0., EdgeLoss = 0.;
+        double MaxLoss = 0., L = 0., EdgeLoss = 0.;
         int StartNode = 0, EndNode = 0;
         wds->calculateSensitivity("demand");
-        for (int i = 0; i < wds->edges.size(); ++i)
+        /*for (int i = 0; i < wds->edges.size(); ++i)
         {
             if(wds->edges[i]->typeCode == 1 || wds->edges[i]->typeCode == 0) // pipe, pipeCV
             {
@@ -281,9 +281,26 @@ void CalculateCapacity(string FileName, string case_folder, string case_name, bo
                 }
             }
         }
-        cout << "SN: " << StartNode << " , EN: " << EndNode << " L: " << L << endl;
-        cin.get();*/
-        wds->addNewPipe("extra_cso", wds->nodes[6033]->name, wds->nodes[6798]->name, 1000, 40.14, 0.1, 0.02, 0.0,0,2,0.);
+        //cout << "SN: " << StartNode << " , EN: " << EndNode << " L: " << L << endl;
+        //cin.get();*/
+        for (int i = 0; i < wds->nodes.size(); ++i)
+        {
+          if(wds->nodes[i]->name == "NODE_5077_1")
+          {
+            StartNode = i;
+          }
+          else if(wds->nodes[i]->name == "NODE_4795")
+          {
+            EndNode = i;
+          }
+        }
+        L = sqrt(pow((wds->nodes.at(StartNode)->getProperty("xPosition") - wds->nodes.at(EndNode)->getProperty("xPosition")), 2) + pow((wds->nodes.at(StartNode)->getProperty("yPosition") - wds->nodes.at(EndNode)->getProperty("yPosition")), 2));
+        cout << "L: " << L << endl;
+        wds->addNewPipe("extra_cso1", "NODE_5077_1", "NODE_4795", 1000, 40.4242, 0.1, 0.02, 0.0,0,2,0.);
+        //cin.get();*/
+        //wds->addNewPipe("extra_cso1", "NODE_10532", "NODE_1315479", 1000, 40.4242, 0.1, 0.02, 0.0,0,2,0.);
+        //wds->addNewPipe("extra_cso2", "NODE_1343552", "NODE_1343578", 1000, 177.595, 0.1, 0.02, 0.0,0,2,0.);
+        //wds->addNewPipe("extra_cso3", "NODE_1344470", "NODE_1344511", 1000, 659.987, 0.1, 0.02, 0.0,0,2,0.);
         wds->addNewPressurePoint("PRESS_Cap", 1., wds->nodes[localindex]->name, 1000, wds->nodes[localindex]->getProperty("height"), wds->nodes[localindex]->getProperty("height"), 0.);
         cout << " megvan4 " << endl;
         /*for (int k = 0; k < wds->edges.size(); ++k)
@@ -409,14 +426,15 @@ void FullEvaluation(bool PlotPlease, double Diameter, string case_folder, string
           }
         }
     }
+    AverageSensitivity =  AverageSensitivity/NumberOfNodes; 
     AverageConstrainedSensitivity = AverageConstrainedSensitivity / NodesToCheck.size();
-    cout << "sajt: " << AverageConstrainedSensitivity << endl;
+    //cout << "sajt: " << AverageConstrainedSensitivity << endl;
     cin.get();
     //---------------Topology Modification full evaluation-----------------//
-    for (int i = 0; i < wds->nodes.size(); ++i)
+    for (int i = 0; i < wds->nodes.size()-5; i+=1)
     {
         cout << "1111111111111a ciklusba belep, itt tart: [" << i << "/" <<  wds->nodes.size() << "]" << endl;
-        for (int j = 0; j < wds->nodes.size(); ++j)
+        for (int j = 0; j < wds->nodes.size(); j+=1)
         {
             mehet = false;
             SqDiff = 0.;
@@ -468,7 +486,7 @@ void FullEvaluation(bool PlotPlease, double Diameter, string case_folder, string
                 PeakSensitivityDifferenceProc = (abs(PeakSensitivity) - abs(ModifiedPeakSensitivity))/abs(PeakSensitivity);
                 ConstrainedSensitivityDifference = abs(AverageConstrainedSensitivity) - abs(ModifiedAverageConstrainedSensitivity);
                 ConstrainedSensitivityDifferenceProc = ConstrainedSensitivityDifference/abs(AverageConstrainedSensitivity);
-                //cout << "checkpoint 1" << endl;
+               // cout << "checkpoint 1 AVG: " << AverageSensitivityDifferenceProc << endl;
                 if(PlotPlease == true)
                 {
                     stream1 << i  << " , " << j << " , " << wds->nodes.at(i)->name << " , " << wds->nodes.at(j)->name << " , " << AverageSensitivityDifferenceProc ;
@@ -497,6 +515,107 @@ void FullEvaluation(bool PlotPlease, double Diameter, string case_folder, string
     cout << "ez megvan..." << endl;
 }
 
+
+void CalculateAverageSensitivityDiff(bool PlotPlease, double Diameter, string case_folder, string case_name)
+{
+    wds = new Sensitivity(case_folder + case_name + ".inp");
+    wds->calculateSensitivity("demand");
+    int NumberOfNodes = wds->nodes.size();
+
+    vector< vector<int> > EdgeList;
+    vector<double> LengthList;
+    vector<double> OriginalSourceDifferences;
+    vector<double> ModifiedSourceDifferences;
+    vector<int> Sources;
+    double SqDiff,  CharacteristicCurveDifference = 0.;
+    bool mehet, PlotAll = false;
+    auto start = high_resolution_clock::now();
+    //cout << " eddig eljutott" << endl;
+    for (int i = 0; i < wds->edges.size(); ++i)
+    {
+        EdgeList.push_back(vector<int> ());
+        EdgeList[i].push_back(wds->edges.at(i)->getEdgeIntProperty("startNodeIndex"));
+        EdgeList[i].push_back(wds->edges.at(i)->getEdgeIntProperty("endNodeIndex"));
+        //LengthList.push_back(wds->edges.at(i)->getEdgeDoubleProperty("length"));
+    }
+    for (int i = 0; i < wds->edges.size(); ++i)
+    {
+        if (wds->edges.at(i)->getEdgeIntProperty("numberNode") == 1)
+        {
+            Sources.push_back(i);
+            //cout << "catched" << endl;
+        }
+    }
+    cin.get();
+    auto stop = high_resolution_clock::now(); 
+    auto duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by function: "
+    << duration.count() << " microseconds" << endl;
+    MatrixXd SensMatrix2, SensMatrix, RowSumMatrix,RowSumMatrix2;
+    vector<double> LocalSensitivity(wds->nodes.size()), ModifiedLocalSensitivity(wds->nodes.size()), NodalPressuresOriginal(wds->nodes.size());
+    double ConstrainedSensitivityDifference = 0., ConstrainedSensitivityDifferenceProc = 0., OriginalPressureDifference, PressureDifference, PeakSensitivityDifferenceProc, PeakSensitivity = 0., ModifiedPeakSensitivity, ModifiedAverageConstrainedSensitivity = 0., l, AverageSensitivity = 0., AverageConstrainedSensitivity = 0., ModifiedAverageSensitivity, LocalSensitivityDifference, ModifiedLocalSensitivityDifference, AverageSensitivityDifference, AverageSensitivityDifferenceProc;
+    ofstream stream1;
+    ofstream stream2;
+    bool Calculate = false;
+    int StartNode, EndNode;
+    stream1.open(case_name+"_sensitivity_constrained_eval.dat");
+    stream2.open(case_name+"_sensitivity_constrained_eval_critical_nodes.dat");
+    stream1 << "i" << " , " << "j" << " , " << "Node1" << " , " << "Node2"<< " , " << "AverageSensitivityDifferenceProc" << " , " << "AverageSensitivityDifference" << " , " << "PeakSensitivityDifferenceProc" << " , " << "LocalSensitivityDifference" << " , " << "ModifiedLocalSensitivityDifference" << " , " << "Pipelength" << " , " << "PressureDifference" << " , " << "OriginalPressureDifference" << " , " << "wds->nodes.at(i)->getProperty(pressure)" << " , " << "wds->nodes.at(i)->getProperty(pressure)" << " , " << "NodalPressuresOriginal[i]" << " , " << "NodalPressuresOriginal[j]" << " , " << "GH[i]" << " , " << "GH[j]" << " , " << "Flowrate" << " , " << "locsens[i]" << " , " << "locsens[j]" << "\n";
+    stream2 << "i" << " , " << "j" << " , " << "Node1" << " , " << "Node2"<< " , " << "AverageSensitivityDifferenceProc" << " , " << "AverageSensitivityDifference" << " , " << "PeakSensitivityDifferenceProc" << " , " << "LocalSensitivityDifference" << " , " << "ModifiedLocalSensitivityDifference" << " , " << "Pipelength" << " , " << "PressureDifference" << " , " << "OriginalPressureDifference" << " , " << "wds->nodes.at(i)->getProperty(pressure)" << " , " << "wds->nodes.at(i)->getProperty(pressure)" << " , " << "NodalPressuresOriginal[i]" << " , " << "NodalPressuresOriginal[j]" << " , " << "GH[i]" << " , " << "GH[j]" << " , " << "Flowrate" << " , " << "locsens[i]" << " , " << "locsens[j]" << "\n";
+    SensMatrix = wds->getPSensMatrix();
+    RowSumMatrix = SensMatrix.rowwise().sum();
+    //---------Original state sensitivity calculation------------//
+    for (int i = 0; i < wds->nodes.size(); ++i)
+    {
+        LocalSensitivity[i] = RowSumMatrix(i);
+        AverageSensitivity += RowSumMatrix(i);
+        NodalPressuresOriginal[i] = wds->nodes.at(i)->getProperty("pressure");
+        if (abs(RowSumMatrix(i)) > abs(PeakSensitivity))
+        {
+            PeakSensitivity = RowSumMatrix(i);
+        }
+        //cout << "Av. Sens: " << AverageSensitivity << endl;
+    }
+    wds = new Sensitivity(case_folder + case_name + ".inp");
+    for (int i = 0; i < wds->nodes.size(); ++i)
+    {
+      if(wds->nodes[i]->name == "NODE_10589")
+      {
+        StartNode = i;
+      }
+      else if(wds->nodes[i]->name == "NODE_1343578")
+      {
+        EndNode = i;
+      }
+    }
+    double L = 0.;
+    L = sqrt(pow((wds->nodes.at(StartNode)->getProperty("xPosition") - wds->nodes.at(EndNode)->getProperty("xPosition")), 2) + pow((wds->nodes.at(StartNode)->getProperty("yPosition") - wds->nodes.at(EndNode)->getProperty("yPosition")), 2));
+    cout << "L: " << L << endl;
+    //cin.get();
+    wds->addNewPipe("extra_cso1", "NODE_10532", "NODE_1315479", 1000, 40.4242, 0.1, 0.02, 0.0,0,2,0.);
+    wds->addNewPipe("extra_cso2", "NODE_1343552", "NODE_1343578", 1000, 177.595, 0.1, 0.02, 0.0,0,2,0.);
+    wds->addNewPipe("extra_cso3", "NODE_1344470", "NODE_1344511", 1000, 659.987, 0.1, 0.02, 0.0,0,2,0.);
+    //wds->addNewPipe("extra_cso", wds->nodes[StartNode]->name, wds->nodes[EndNode]->name, 1000, L, 0.1, 0.02, 0.0,0,2,0.);
+    //---------Modified state sensitivity calculation------------//         
+    wds->calculateSensitivity("demand");
+    SensMatrix2 = wds->getPSensMatrix();
+    RowSumMatrix2 = SensMatrix2.rowwise().sum();
+    for (int i = 0; i < wds->nodes.size(); ++i)
+    {
+        ModifiedLocalSensitivity[i] = RowSumMatrix2(i);
+        ModifiedAverageSensitivity += RowSumMatrix2(i);
+        if (abs(RowSumMatrix2(i)) > abs(ModifiedPeakSensitivity))
+        {
+            ModifiedPeakSensitivity = RowSumMatrix2(i);
+        }
+    }
+    AverageSensitivity =  AverageSensitivity/NumberOfNodes;
+    ModifiedAverageSensitivity = ModifiedAverageSensitivity / NumberOfNodes;
+    AverageSensitivityDifference = abs(AverageSensitivity) - abs(ModifiedAverageSensitivity);
+    AverageSensitivityDifferenceProc = AverageSensitivityDifference/abs(AverageSensitivity);
+    cout << "AverageSensitivityDifferenceProc: " << AverageSensitivityDifferenceProc*100 << endl;
+}
+
 int main(int argc, char *argv[])
 {
     cout << "[*]Hydraulic solver started...." << endl;
@@ -518,8 +637,9 @@ int main(int argc, char *argv[])
         }
     }*/
     cout << "[*]Generating capacity distribution...." << endl;
-    //FullEvaluation(true, 0.1, case_folder, case_name);
-    CalculateCapacity("Varis_Hydrants", case_folder, case_name, true, false);
+    FullEvaluation(true, 0.25, case_folder, case_name);
+    //CalculateAverageSensitivityDiff(true, 0.1, case_folder, case_name);
+   // CalculateCapacity("Varis_Hydrants", case_folder, case_name, true, false);
     cout << "[*]Capacity distribution calculated sucessfully...." << endl;
 }
 
