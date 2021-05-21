@@ -142,7 +142,7 @@ int main(int argc, char* argv[])
       //         N-1 RULE
       // ------------------------
 
-      /*vulner.clear();
+      vulner.clear();
       // placing iso valves numberN1 times
       for(unsigned int I=0; I<numberN1; I++)
       {
@@ -222,7 +222,7 @@ int main(int argc, char* argv[])
             wFile << vulner[j] << '\n';
          }
          wFile.close();
-      }*/
+      }
    }
 
    cout << endl << endl;

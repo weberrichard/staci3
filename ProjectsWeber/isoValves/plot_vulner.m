@@ -23,23 +23,29 @@ fig = figure('Position',[200 200 900 600]);
 hold on; grid on;
 % moderately vulnerable
 plot([1e-3,1e-3],[1e-1,1e7],'--k','linewidth',1.5,'HandleVisibility','off')
-annotation('textarrow',[0.647,0.717],[0.71,0.71],'FontSize',20,'Linewidth',1.5)
+% annotation('textarrow',[0.647,0.717],[0.71,0.71],'FontSize',20,'Linewidth',1.5)
 % text(1e-2,3e6,'Moderately','FontSize',14,'HorizontalAlignment','center');
 % text(1e-2,1.2e6,'vulnerable','FontSize',14,'HorizontalAlignment','center');
-text(1e-2,3e6,'Mérsékelten','FontSize',14,'HorizontalAlignment','center');
-text(1e-2,1.2e6,'sebezhetõ','FontSize',14,'HorizontalAlignment','center');
+annotation('textarrow',[0.672,0.722],[0.62,0.62],'FontSize',20,'Linewidth',1.5)
+text(1e-2,3e6,'Moderately','FontSize',14,'HorizontalAlignment','center');
+text(1e-2,1.2e6,'vulnerable','FontSize',14,'HorizontalAlignment','center');
+% text(1e-2,3e6,'Mérsékelten','FontSize',14,'HorizontalAlignment','center');
+% text(1e-2,1.2e6,'sebezhetõ','FontSize',14,'HorizontalAlignment','center');
 % highly vulnerable
 plot([1e-2,1e-2],[1e-1,1e5],'--k','linewidth',1.5,'HandleVisibility','off')
-annotation('textarrow',[0.732,0.802],[0.53,0.53],'FontSize',20,'Linewidth',1.5)
+% annotation('textarrow',[0.732,0.802],[0.53,0.53],'FontSize',20,'Linewidth',1.5)
 % text(1e-1,3e4,'Highly','FontSize',14,'HorizontalAlignment','center');
 % text(1e-1,1.2e4,'vulnerable','FontSize',14,'HorizontalAlignment','center');
-text(1e-1,3e4,'Kritikusan','FontSize',14,'HorizontalAlignment','center');
-text(1e-1,1.2e4,'sebezhetõ','FontSize',14,'HorizontalAlignment','center');
+annotation('textarrow',[0.75,0.8],[0.47,0.47],'FontSize',20,'Linewidth',1.5)
+text(1e-1,3e4,'Highly','FontSize',14,'HorizontalAlignment','center');
+text(1e-1,1.2e4,'vulnerable','FontSize',14,'HorizontalAlignment','center');
+% text(1e-1,3e4,'Kritikusan','FontSize',14,'HorizontalAlignment','center');
+% text(1e-1,1.2e4,'sebezhetõ','FontSize',14,'HorizontalAlignment','center');
 for I=idx
 %     data{1} = importdata(join(['Network Data/',cases(I),'/vulner_orig_rand.txt'],''));
 %     data{1} = importdata(join(['Network Data/',cases(I),'/vulner_orig.txt'],''));
-%     data{2} = importdata(join(['Network Data/',cases(I),'/vulner_N.txt'],''));
-    data{1} = importdata(join(['Network Data/',cases(I),'/vulner_Nm1.txt'],''));
+    data{1} = importdata(join(['Network Data/',cases(I),'/vulner_N.txt'],''));
+%     data{1} = importdata(join(['Network Data/',cases(I),'/vulner_Nm1.txt'],''));
     set(gca,'XScale','log','YScale','log');
     for i=1:size(data,2)
         gammaBar = data{i};
@@ -84,27 +90,28 @@ for I=idx
 end
 ax=gca;
 ax.FontSize = 14;
-% xlabel('Local vulnerability [-]','fontsize',14);
-% ylabel('Probability density [-]','fontsize',14);
-xlabel('Lokális sebezhetõség [-]','fontsize',14);
-ylabel('Valószínûségi sûrûség [-]','fontsize',14);
+xlabel('Local vulnerability [-]','fontsize',14);
+ylabel('Probability density [-]','fontsize',14);
+% xlabel('Lokális sebezhetõség [-]','fontsize',14);
+% ylabel('Valószínûségi sûrûség [-]','fontsize',14);
 % legend(cases(idx));
-xlim([1e-9,1e0])
-ylim([1e-1,1e8])
+xlim([1e-10,1e0])
+ylim([1e-1,1e9])
 
-ColumnLegend(3,num2str(idx(:)),'location','southwest');
-rectangle('Position',[1.3e-9 1.8e0 7.5e-7 5e2],'FaceColor',[1 1 1])
+% ColumnLegend(3,num2str(idx(:)),'location','southwest');
+legend(num2str(idx(:)),'location','southwest');
+% rectangle('Position',[1.3e-9 1.8e0 7.5e-7 5e2],'FaceColor',[1 1 1])
 % txt1 = text(3e-8,3e3,'Ivóvízhálózat','FontSize',14,'HorizontalAlignment','center');
 % txt2 = text(3e-8,1.2e3,'sorszám','FontSize',14,'HorizontalAlignment','center');
 % txt1 = text(3e-8,3e2,'Artificial WDNs: ky','FontSize',14,'HorizontalAlignment','center');
-txt1 = text(3e-8,3e2,'ky hálózatok','FontSize',14,'HorizontalAlignment','center');
+% txt1 = text(3e-8,3e2,'ky hálózatok','FontSize',14,'HorizontalAlignment','center');
 % txt2 = text(3e-8,1.2e3,'network','FontSize',14,'HorizontalAlignment','center');
 
 % set(gca,'FontSize',16);
 % title('Failure rate: pipe material');
-saveas(gca,'Plots/Vulner_ky_Nm1_hu.fig','fig');
-saveas(gca,'Plots/Vulner_ky_Nm1_hu.png','png');
-saveas(gca,'Plots/Vulner_ky_Nm1_hu.eps','epsc');
+saveas(gca,'Plots/Vulner_ky_N.fig','fig');
+saveas(gca,'Plots/Vulner_ky_N.png','png');
+saveas(gca,'Plots/Vulner_ky_N.eps','epsc');
 
 % number of iso valves, segments
 % iso_valves = zeros(length(idx_iso),3);
