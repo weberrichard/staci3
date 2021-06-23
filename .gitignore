@@ -59,6 +59,7 @@ Archive/*
 *.eps
 
 # unsynced projects Weber
+ProjectsWeber/*
 ProjectsWeber/darcyFriction/*
 ProjectsWeber/inpTest/*
 */Network Data/*
