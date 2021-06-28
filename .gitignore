@@ -59,14 +59,8 @@ Archive/*
 *.eps
 
 # unsynced projects Weber
+ProjectsHuzsvar/*
+ProjectsHundzsa/*
 ProjectsWeber/*
-ProjectsWeber/darcyFriction/*
-ProjectsWeber/inpTest/*
 */Network Data/*
-ProjectsWeber/isSegmentGraphPlanar/matlab_bgl/*
-ProjectsWeber/pressureDemandTest/*
-ProjectsWeber/pipeMaterials/Network Data/*.inp
 Networks/virtRome.inp
-ProjectsWeber/DMAtest/balf.inp
-ProjectsWeber/isoPlacementSigma/Sopron_sigma_approx_opt/*.inp
-ProjectsWeber/isoPlacementSigma/Sopron_sigma_opt/*.inp
