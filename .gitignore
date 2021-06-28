@@ -39,6 +39,7 @@ Networks/DHI/*
 Networks/Galambos/*
 Networks/Sopron_sigma_approx_opt/*
 Networks/Sopron_sigma_opt/*
+Networks/virtRome.inp
 
 # folders
 Archive/*
@@ -63,4 +64,3 @@ ProjectsHuzsvar/*
 ProjectsHundzsa/*
 ProjectsWeber/*
 */Network Data/*
-Networks/virtRome.inp
