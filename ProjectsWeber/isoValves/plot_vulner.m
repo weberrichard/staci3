@@ -99,7 +99,12 @@ xlim([1e-10,1e0])
 ylim([1e-1,1e9])
 
 % ColumnLegend(3,num2str(idx(:)),'location','southwest');
-legend(num2str(idx(:)),'location','southwest');
+kytext = repmat('ky',[length(idx),1]);
+kytext = [kytext,num2str(idx(:))];
+for i=1:length(kytext)
+   kytext(i) = erase(kytext(i)," "); 
+end
+legend(kytext,'location','southwest');
 % rectangle('Position',[1.3e-9 1.8e0 7.5e-7 5e2],'FaceColor',[1 1 1])
 % txt1 = text(3e-8,3e3,'Ivóvízhálózat','FontSize',14,'HorizontalAlignment','center');
 % txt2 = text(3e-8,1.2e3,'sorszám','FontSize',14,'HorizontalAlignment','center');
@@ -108,10 +113,10 @@ legend(num2str(idx(:)),'location','southwest');
 % txt2 = text(3e-8,1.2e3,'network','FontSize',14,'HorizontalAlignment','center');
 
 % set(gca,'FontSize',16);
-% title('Failure rate: pipe material');
-saveas(gca,'Plots/Vulner_ky_N.fig','fig');
-saveas(gca,'Plots/Vulner_ky_N.png','png');
-saveas(gca,'Plots/Vulner_ky_N.eps','epsc');
+% title('Artificial networks: ky');
+% saveas(gca,'Plots/Vulner_ky_N.fig','fig');
+% saveas(gca,'Plots/Vulner_ky_N.png','png');
+% saveas(gca,'Plots/Vulner_ky_N.eps','epsc');
 
 % number of iso valves, segments
 % iso_valves = zeros(length(idx_iso),3);
