@@ -811,8 +811,8 @@ void HydraulicSolver::addNewISOValves(vector<string> valveName, vector<int> pipe
     int pi = pipeISO[i]; // pipe index
     int ns = nodeIDtoIndex(edges[pi]->startNodeName); // start node index
     int ne = nodeIDtoIndex(edges[pi]->startNodeName); // end node index
-    double x = nodes[ns]->xPosition + nodes[ne]->xPosition; // coordinates of additional node
-    double y = nodes[ns]->yPosition + nodes[ne]->yPosition;
+    double x = (nodes[ns]->xPosition + nodes[ne]->xPosition)*.5; // coordinates of additional node
+    double y = (nodes[ns]->yPosition + nodes[ne]->yPosition)*.5;
     string newNode = valveName[i] + "_N";
     if(isStart[i])
     {
@@ -882,8 +882,8 @@ void HydraulicSolver::addNewPRVValves(vector<string> valveName, vector<int> pipe
     int pi = pipeISO[i]; // pipe index
     int ns = nodeIDtoIndex(edges[pi]->startNodeName); // start node index
     int ne = nodeIDtoIndex(edges[pi]->startNodeName); // end node index
-    double x = nodes[ns]->xPosition + nodes[ne]->xPosition; // coordinates of additional node
-    double y = nodes[ns]->yPosition + nodes[ne]->yPosition;
+    double x = (nodes[ns]->xPosition + nodes[ne]->xPosition)*.5; // coordinates of additional node
+    double y = (nodes[ns]->yPosition + nodes[ne]->yPosition)*.5;
     string newNode = valveName[i] + "_N";
     if(isStart[i])
     {
