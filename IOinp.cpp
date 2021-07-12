@@ -871,10 +871,10 @@ void Staci::saveSystem(string newFileName)
   }
 
   fprintf(wfile, "\n[PIPES]\n"); // diameter is in mm in INP, while it is in m in SPR
-  fprintf(wfile, ";ID             \tNode1           \tNode2           \tLength      \tDiameter    \tRoughness   \tMinorLoss   \tStatus   \tMaterial\n");
+  fprintf(wfile, ";ID             \tNode1           \tNode2           \tLength      \tDiameter    \tRoughness   \tMinorLoss   \tStatus   \tMaterial   \tYear\n");
   for(int i=0; i<edges.size(); i++){
     if(edges[i]->getEdgeStringProperty("type") == "Pipe")
-      fprintf(wfile, " %-16s\t%-16s\t%-16s\t%-12.4f\t%-12.4f\t%-11.4f\t%-12.4f\t%-6s\t%-10s;\n",edges[i]->getEdgeStringProperty("name").c_str(),edges[i]->getEdgeStringProperty("startNodeName").c_str(),edges[i]->getEdgeStringProperty("endNodeName").c_str(),edges[i]->getDoubleProperty("length"),edges[i]->getDoubleProperty("diameter")*1000.,edges[i]->getDoubleProperty("roughness"),0.0,"Open",edges[i]->getStringProperty("material").c_str());
+      fprintf(wfile, " %-16s\t%-16s\t%-16s\t%-12.4f\t%-12.4f\t%-11.4f\t%-12.4f\t%-6s\t%-10s\t%-4i;\n",edges[i]->getEdgeStringProperty("name").c_str(),edges[i]->getEdgeStringProperty("startNodeName").c_str(),edges[i]->getEdgeStringProperty("endNodeName").c_str(),edges[i]->getDoubleProperty("length"),edges[i]->getDoubleProperty("diameter")*1000.,edges[i]->getDoubleProperty("roughness"),0.0,"Open",edges[i]->getStringProperty("material").c_str(),edges[i]->getIntProperty("year"));
     //if(edges[i]->getEdgeStringProperty("type") == "PressurePoint")
     //  fprintf(wfile, " %-16s\t%-16s\t%-16s\t%-12.4f\t%-12.4f\t%-12.4f\t%-12.4f\t%-6s;\n",("PIPE_" + edges[i]->getEdgeStringProperty("name")).c_str(),edges[i]->getEdgeStringProperty("name").c_str(),edges[i]->getEdgeStringProperty("startNodeName").c_str(),0.0,1.0,0.0,0.0,"Open");
   }

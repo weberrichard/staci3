@@ -286,6 +286,8 @@ int Pipe::getIntProperty(string prop)
   int out = 0;
   if(prop == "frictionModel" || prop == "friction_model")
     out = frictionModel;
+  else if(prop == "year")
+    out = year;
   else
   {
     cout << endl << endl << "INT Pipe::getIntProperty() wrong argument:" << prop;
@@ -336,6 +338,8 @@ void Pipe::setIntProperty(string prop, int value)
 {
   if(prop == "frictionModel" || prop == "friction_model")
     frictionModel = value;
+  else if(prop == "year")
+    year = value;
   else
   {  
     cout << endl << endl << "Pipe::setIntProperty( DOUBLE ) wrong argument:" << prop;
