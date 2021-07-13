@@ -12,6 +12,7 @@ void Staci::loadSystem()
 	// FOR PIPES
 	vector<string> pipe_name, node_from, node_to, pipe_status, material;
 	vector<double> l, D, roughness;
+	vector<int> year;
 
 	// FOR PRES
 	vector<string> pres_name, pres_node_from, pres_node_to;
@@ -174,6 +175,10 @@ void Staci::loadSystem()
 							material.push_back(sv[8]);
 						else
 							material.push_back("unkown");
+						if(sv.size() > 9)
+							year.push_back(stoi(sv[9]));
+						else
+							year.push_back(0);
 					}
 				}
 			}
@@ -707,6 +712,7 @@ void Staci::loadSystem()
    		edges[edges.size()-1]->status = 1;
 
    	edges[edges.size()-1]->setStringProperty("material",material[i]);
+   	edges[edges.size()-1]->setIntProperty("year",year[i]);
 	}
 
 	for(int i=0; i<pump_name.size(); i++)
