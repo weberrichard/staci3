@@ -71,6 +71,7 @@ public:
 
   // Prints everything 
   void listSystem();
+  void listSystemShort();
 
   // Constants for hydraulics, note: there are constants in Edge.h
   const double gravity = 9.81; // [m/s2]
