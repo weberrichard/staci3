@@ -97,6 +97,16 @@ public:
   double leakageExponent = 1.18, leakageConstant = 1, leakageMinPressure = 10; // in case of leakage modelling //For Balf 0.00000003
   double userOutput;
 
+  // quality variables
+  vector <double> waterAge;
+  vector <double> chlorineConcentration;
+
+  // biofilm variables
+  vector <double> biofilmWater;
+  vector <double> biofilmWall;
+  vector <double> substratWater;
+  vector <double> substratWall;
+
 private:
   double consumption = 0.0; // in case of presure dependent demands consumption can be smaller than demand
   double consumptionPercent = 0.0; // consumption/demand*100 [%]
