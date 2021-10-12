@@ -294,6 +294,20 @@ double Node::getProperty(string prop)
     out = leakageConstant;
   else if(prop == "leakageMinPressure")
     out = leakageMinPressure;
+  else if(prop == "waterAge")
+    out = waterAge.back();
+  else if(prop == "chlorine")
+    out = chlorineConcentration.back();
+  else if(prop == "microbesWater" || prop == "Cf")
+    out = microbesWater.back();
+  else if(prop == "microbesWall" || prop == "Cb")
+    out = microbesWall.back();
+  else if(prop == "substratWater" || prop == "Sf")
+    out = substratWater.back();
+  else if(prop == "substratWall" || prop == "Sb")
+    out = substratWall.back();
+  else if(prop == "timeSteps" || prop == "TS")
+    out = TS.back();
   else
   {
     cout << endl << endl << "Node::getProperty() wrong argument:" << prop;
@@ -331,4 +345,68 @@ string Node::info(bool check_if_lonely)
   }
 
   return strstrm.str();
+}
+
+void Node::appendTimeSeries(string prop, double value)
+{
+  if (prop == "waterAge")
+  {
+    waterAge.push_back(value);
+  }
+  else if (prop == "chlorine")
+  {
+    chlorineConcentration.push_back(value);
+  }
+  else if (prop == "microbesWater" || prop == "Cf")
+  {
+    microbesWater.push_back(value);
+  }
+    else if (prop == "microbesWall" || prop == "Cb")
+  {
+    microbesWall.push_back(value);
+  }
+    else if (prop == "substratWater" || prop == "Sf")
+  {
+    substratWater.push_back(value);
+  }
+    else if (prop == "substratWall" || prop == "Sb")
+  {
+    substratWall.push_back(value);
+  }
+    else if (prop == "timeSteps" || prop == "TS")
+  {
+    TS.push_back(value);
+  }
+}
+
+vector<double> Node::getTimeSeries(string prop)
+{
+  if (prop == "waterAge")
+  {
+    return waterAge;
+  }
+  else  if (prop == "chlorine")
+  {
+    return chlorineConcentration;
+  }
+    else if (prop == "microbesWater" || prop == "Cf")
+  {
+    return microbesWater;
+  }
+    else if (prop == "microbesWall" || prop == "Cb")
+  {
+    return microbesWall;
+  }
+    else if (prop == "substratWater" || prop == "Sf")
+  {
+    return substratWater;
+  }
+    else if (prop == "substratWall" || prop == "Sb")
+  {
+    return substratWall;
+  }
+    else if (prop == "timeSteps" || prop == "TS")
+  {
+    return TS;
+  }
 }

@@ -11,16 +11,28 @@
 
 #ifndef WATERAGE_H
 #define WATERAGE_H
+#include <math.h>
+#include <iostream>
+#include <fstream>
+#include <random>
+#include <iomanip>
+#include <string>
+#include <algorithm>
 
-#include "QualitySolver.h"
+using namespace std;
 
-class WaterAge : public QualitySolver
+
+
+class WaterAge
 {
 public:
-
-  // determine water age, filling up Node waterAge variables, calling ODE45Solver
-  calculateWaterAge();
-
+  WaterAge();
+  ~WaterAge();
+  int ModelDimension = 1;
+  vector<string> listOfParameters = {"waterAge"};
+  vector<double> sourceTermWaterAge(double t, vector<double> x_actual, vector<double> x_upwind, double flow, double DX);
+  vector<double> nodeEquationWaterAge(vector< vector<double> > nodeInputs, vector<double> VolFlowRates);
+  vector<double> poolEquationWaterAge(double poolFlow, vector<double> poolActual, vector<double> poolUpstreamNode, double poolVolumeActual, double h);
 protected:
 
 private:  

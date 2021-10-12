@@ -33,6 +33,11 @@ public:
     string patternID="";
     int patternIndex=-1;
 
+    /// Added ammount of chlorine (mg/L)
+    double waterAge = 0.;
+    double addedChlorine = 0.4;
+    double Cf = 1., Cb = 0.1, Sf = 1., Sb = 0.;
+
     /// A line of F(x) = equation, rearranged to 0 in w.c.m.
     double function(const VectorXd &ppq, VectorXd &fDer);
 

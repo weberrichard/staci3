@@ -38,7 +38,7 @@ public:
   // deciding between solveSystem and calculateSensitivity basd on series sensitivity control parameters
   bool isSensitivityCalculation(ssc seriesSensitivityControl);
   // saving the important part of the sensitivity matrix in seriesSensitivity
-  void saveSensitivityMatrix(ssc seriesSensitivityControl);
+ // void saveSensitivityMatrix(ssc seriesSensitivityControl);
 
   // storing the sensitivity matrices in memory, only important part
   vector<MatrixXd> seriesSensitivity;

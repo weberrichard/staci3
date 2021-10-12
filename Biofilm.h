@@ -9,32 +9,45 @@
     https://github.com/weberrichard/staci3
 \*==================================================================*/
 
-#ifndef BIOFILM_H
-#define BIOFILM_H
+#ifndef biofilm_H
+#define biofilm_H
+#include <math.h>
+#include <iostream>
+#include <fstream>
+#include <random>
+#include <iomanip>
+#include <string>
+#include <algorithm>
 
-#include "Chlorine.h"
+using namespace std;
 
-class Biofilm : public Chlorine
+class biofilm
 {
 public:
+  biofilm();
+  ~biofilm();
+  // determine water age, filling up Node biofilm variables, calling ODE45Solver
+  vector<double> sourceTermBiofilm(double t, vector<double> x_actual, vector<double> x_upwind, double flow, double DX);
 
-  // determine biofilm distribution
-  calculateBiofilm();
+  void setParameters(std::string which, double value);
 
+  double Diff = 0.05;
+  double Dcs = 1;
+  double W = 0.01;
+  double mu_f = 2017/3600;
+  double mu_b = 7117/3600;
+  double Ycs = 0.35;
+  double Kf = 30.82;
+  double Kb = 265.7;
+  double C_fm = 6.775;
+  double C_bm = 5737/1000;
+  double Yf = 2.607*pow(10,5);
+  double Yb = 1.729*pow(10,8);
+
+  int ModelDimension = 4;
 protected:
 
-private:
-
-  // additional source terms for simplifying if necessary
-  double S1();
-  double S2();
-  double S3();
-  // ...
-
-
-  // list of parameters
-  double p1,p2,p3; // ....
-
+private:  
 };
 
 #endif

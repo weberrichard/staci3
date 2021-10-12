@@ -28,13 +28,15 @@ int main(int argc, char *argv[])
     vector<double> settings, minorLosses;
     cout << "[*]Network: " << caseFolder << caseName << ".inp" << endl;
     wds = new Leakage(caseFolder +caseName + ".inp");
+    wds->solveSystem();
     if(inFileName == "EdgeList")
     {
         for (int i = 0; i < wds->edges.size(); ++i)
         {
             if (wds->edges.at(i)->getEdgeStringProperty("type") != "Pool" || wds->edges.at(i)->getEdgeStringProperty("type") == "Pressure")
             {
-                wFile << wds->edges.at(i)->getEdgeIntProperty("startNodeIndex") << "," << wds->edges.at(i)->getEdgeIntProperty("endNodeIndex") << '\n';
+                wFile << wds->edges.at(i)->getEdgeIntProperty("startNodeIndex") << "," << wds->edges.at(i)->getEdgeIntProperty("endNodeIndex") << "," << i;
+                wFile << "," << wds->nodes.at(wds->edges.at(i)->getEdgeIntProperty("startNodeIndex"))->getProperty("pressure")- << '\n'
             }
             if (wds->edges.at(i)->getEdgeStringProperty("type") == "ValveISO")
             {

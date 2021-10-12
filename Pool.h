@@ -25,6 +25,8 @@ public:
   double minLevel;
   double maxLevel;
   double initLevel;
+  double waterAge;
+  double chlorine;
 
   Pool(const string a_name, const string a_startNodeName, const double a_density, const double a_referenceCrossSection, const double a_bottomLevel, const double a_waterLevel, const double a_massFlowRate);
   ~Pool();

@@ -9,7 +9,7 @@ caseFolder = '../../Networks/Sopron/';
 % caseName = 'ky1';
 % caseName = 'agyagosszergeny';
 % caseName = 'csapod';
-caseName = 'nagycenk';
+caseName = 'balf';
 % caseName = 'acsad';
 % caseName = 'becsidomb';
 % caseName = 'villasor';
@@ -21,7 +21,7 @@ presRadius = 0.01;
 presAngle = zeros(20,1);
 poolAngle = zeros(20,1);
 tankSize = 0.02;
-valveSize = 0.0015;
+valveSize = 0.015;
 lineWidth = 2.5;
 nodeMarkerSize = 0.1;%5;%0.1
 backgroundColor = [1.0,1.0,1.0];
@@ -31,7 +31,7 @@ closedColor = [1.0,0.0,0.0];
 
 %blackBody, blackBodyExt, cividis, coolWarmBent, coolWarmSmooth, inferno, jet, kindlmann, kindlmannExt, magma, plasma, viridis
 %discrete: lines, prism
-colorMapName = 'jet'; 
+colorMapName = 'lines'; 
 colorBarText = 'Lokális sebezhet?ség [-]';
 margin = 0.03; % margins around plot
 colorDelta = 0.16; %space for colorbar

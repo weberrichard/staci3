@@ -890,7 +890,14 @@ void HydraulicSolver::addNewPRVValves(vector<string> valveName, vector<int> pipe
       string sn = edges[pi]->startNodeName;
       edges[pi]->startNodeName = newNode;
       nodes.push_back(new Node(newNode, x, y, edges[pi]->startHeight, 0.0, 0.0, density));
-      edges.push_back(new ValvePRV(valveName[i], sn, newNode, density, referenceCrossSection[i], PRVSetting[i], Losses[i], volumeFlowRate));
+      if (edges[pi]->getEdgeDoubleProperty("velocity") > 0)
+      {
+        edges.push_back(new ValvePRV(valveName[i], sn, newNode, density, referenceCrossSection[i], PRVSetting[i], Losses[i], volumeFlowRate));
+      }
+      else
+      {
+        edges.push_back(new ValvePRV(valveName[i], newNode, sn, density, referenceCrossSection[i], PRVSetting[i], Losses[i], volumeFlowRate));
+      }
       int n=edges.size();
       edges[n-1]->startHeight = edges[pi]->startHeight;
       edges[n-1]->endHeight = edges[pi]->startHeight;
@@ -902,7 +909,14 @@ void HydraulicSolver::addNewPRVValves(vector<string> valveName, vector<int> pipe
       string en = edges[pi]->endNodeName;
       edges[pi]->endNodeName = newNode;
       nodes.push_back(new Node(newNode, x, y, edges[pi]->endHeight, 0.0, 0.0, density));
-      edges.push_back(new ValvePRV(valveName[i], en, newNode, density, referenceCrossSection[i], PRVSetting[i], Losses[i], volumeFlowRate));
+      if (edges[pi]->getEdgeDoubleProperty("velocity") > 0)
+      {
+        edges.push_back(new ValvePRV(valveName[i], en, newNode, density, referenceCrossSection[i], PRVSetting[i], Losses[i], volumeFlowRate));
+      }
+      else
+      {
+        edges.push_back(new ValvePRV(valveName[i], newNode, en, density, referenceCrossSection[i], PRVSetting[i], Losses[i], volumeFlowRate));
+      }
       int n=edges.size();
       edges[n-1]->startHeight = edges[pi]->endHeight;
       edges[n-1]->endHeight = edges[pi]->endHeight;

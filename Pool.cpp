@@ -86,6 +86,10 @@ double Pool::getDoubleProperty(string prop)
     out = density;
   else if(prop == "referenceCrossSection" || prop == "Aref")
     out = referenceCrossSection;
+  else if(prop == "waterAge")
+    out = waterAge;
+  else if(prop == "chlorine")
+    out = chlorine;
   else
   {
     cout << endl << endl << "DOUBLE Pool::getDoubleProperty() wrong argument:" << prop;
@@ -103,7 +107,7 @@ void Pool::setDoubleProperty(string prop, double value)
     bottomLevel = value;
   else if(prop == "minLevel")
     minLevel = value;
-  else if(prop == "maxLevel")
+  else if(prop == "maxLevel") 
     maxLevel = value;
   else if(prop == "initLevel")
     initLevel = value;
@@ -115,6 +119,10 @@ void Pool::setDoubleProperty(string prop, double value)
     referenceCrossSection = value;
   else if(prop == "startHeight")
     startHeight = value;
+  else if(prop == "waterAge")
+    waterAge = value;
+  else if(prop == "chlorine")
+    chlorine = value;
   else
   {  
     cout << endl << endl << "Pool::setProperty( DOUBLE ) wrong argument:" << prop;

@@ -13,7 +13,7 @@ bool Sensitivity::calculateSensitivity(string parameter)
     if(parameter == "diameter" || parameter == "roughness")
     {
       int parNumber;
-      if(parameter == "roughness")
+      if(parameter == "roughness") 
         parNumber = 0;
       else if(parameter == "diameter")
         parNumber = 1;

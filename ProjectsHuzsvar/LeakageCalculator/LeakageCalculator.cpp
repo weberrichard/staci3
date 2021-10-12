@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
 		cout << summarizedLoss << '\n';
     }
     else
-	{		
+	{
 		vector<string> fileData = readVectorString(inFileName);
 		vector<int> addPRVPipe;
 		vector<bool> isStart;
@@ -108,11 +108,24 @@ int main(int argc, char *argv[])
 				isStart.push_back(stoi(sv[1]));
 				addPRVName.push_back("PRV_" + to_string(i));
 				refCros.push_back(refA);
-				settings.push_back(setting);
+				if(sv.size() > 2)
+				{
+					settings.push_back(stod(sv[2]));
+					cout << "at pipe: " << stoi(sv[0]) << " setting is modified to: " << stod(sv[2]) << endl;
+				}
+				else
+				{
+					settings.push_back(setting);
+					cout << "at pipe: " << stoi(sv[0]) << " setting value was not found, set to default which is: " << setting << endl;
+				}
 				minorLosses.push_back(minorLoss);
 			}
 		}
 		wds->addNewPRVValves(addPRVName, addPRVPipe, isStart, 1000., refCros, settings, minorLosses, 0.);
+		vector<string> fileData_L = readVectorString(CalculateLoss);
+		cout << fileData_L[0] << endl;
+		double C = stod(fileData_L[0]);
+		wds->setLeakageConstant(C);
 		bool succesfulConvergence = wds->calculateLeakage();
 		cout << "succesfulConvergence: " << succesfulConvergence << endl;
 	    if(succesfulConvergence == true)

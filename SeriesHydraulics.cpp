@@ -34,7 +34,7 @@ void SeriesHydraulics::seriesSolve(ssc seriesSensitivityControl)
 		if(isSensitivityCalculation(seriesSensitivityControl))
 		{			
 			convOk = calculateSensitivity(seriesSensitivityControl.parameter);
-			saveSensitivityMatrix(seriesSensitivityControl);
+			//saveSensitivityMatrix(seriesSensitivityControl);
 			if(printLevel > 1)
 				cout << endl << " Sensitivity calculation was done. " << endl;
 		}
@@ -85,7 +85,7 @@ bool SeriesHydraulics::isSensitivityCalculation(ssc seriesSensitivityControl)
 }
 
 //-------------------------------------------------------------------
-void SeriesHydraulics::saveSensitivityMatrix(ssc seriesSensitivityControl)
+/*void SeriesHydraulics::saveSensitivityMatrix(ssc seriesSensitivityControl)
 {	
 	MatrixXd SM;
 	int rowSize = seriesSensitivityControl.rowIndex.size();
@@ -130,7 +130,7 @@ void SeriesHydraulics::saveSensitivityMatrix(ssc seriesSensitivityControl)
 	}
 	seriesSensitivity.push_back(SM);
 }
-
+*/
 //-------------------------------------------------------------------
 void SeriesHydraulics::saveOutput()
 {
