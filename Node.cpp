@@ -18,7 +18,7 @@ Node::~Node(){}
 void Node::initialization(int mode, double value)
 {
   if(mode == 0)
-    head = 50.;
+    head = 50.; 
   else
     head = value - geodeticHeight;
 } 
@@ -357,7 +357,7 @@ void Node::appendTimeSeries(string prop, double value)
   {
     chlorineConcentration.push_back(value);
   }
-  else if (prop == "microbesWater" || prop == "Cf")
+  else if (prop == "microbesWater" || prop == "Cf") 
   {
     microbesWater.push_back(value);
   }

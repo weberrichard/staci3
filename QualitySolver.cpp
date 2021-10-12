@@ -5,7 +5,7 @@ QualitySolver::QualitySolver(string spr_filename) : SeriesHydraulics(spr_filenam
 QualitySolver::~QualitySolver(){}                                           // 
 //--------------------------------------------------------------------------//
 
-int QualitySolver::Embedded_Prince_Dormand_solver(double t, double h, double tmax, double tolerance, double DX, string WhichSolver)
+int QualitySolver::solveQuality(double t, double h, double tmax, double tolerance, double DX, string WhichSolver)
 {
   int i;
   int last_interval = 0, edgeCounter = 0;
@@ -22,7 +22,7 @@ int QualitySolver::Embedded_Prince_Dormand_solver(double t, double h, double tma
 
   double h_min_old = 0., h_min_new = 0.;
   vector<int> numberOfIntervals;
-  vector < vector< vector<double> > > x;
+  static vector < vector< vector<double> > > x;
   vector< vector<double> > h_actual;
 
   //--- Check for missdefined parameters ---//
@@ -36,11 +36,8 @@ int QualitySolver::Embedded_Prince_Dormand_solver(double t, double h, double tma
 
   //----------------- Initialization phase--------------------// 
   x = initializeWithStartingCondition(numberOfIntervals);
-  
-  //updateNodeVariables(x, WhichSolver, 0.);
-
-  //----------------------------------------------------------//
   h_actual = updateInitializeTimestep(h_actual, h, numberOfIntervals);
+  //----------------------------------------------------------//
   while ( t <= tmax ) 
   {
     repeat = true;
@@ -56,11 +53,11 @@ int QualitySolver::Embedded_Prince_Dormand_solver(double t, double h, double tma
           {
             if (edges.at(i)->getDoubleProperty("velocity") < 0) 
             {
-              x[edgeCounter][0][j] = nodes.at(edges.at(i)->getEdgeIntProperty("endNodeIndex"))->getProperty(ParameterList[j]);
+              x[edgeCounter][0][j] = nodes.at(edges.at(i)->endNodeIndex)->getProperty(ParameterList[j]);
             }
             else
             {
-              x[edgeCounter][0][j] = nodes.at(edges.at(i)->getEdgeIntProperty("startNodeIndex"))->getProperty(ParameterList[j]);
+              x[edgeCounter][0][j] = nodes.at(edges.at(i)->startNodeIndex)->getProperty(ParameterList[j]);
             }
           }
           counter = 0;
@@ -89,7 +86,7 @@ int QualitySolver::Embedded_Prince_Dormand_solver(double t, double h, double tma
                   {
                     maxError = abs(err[k]);
                   }
-                  xx = (temp_x[0][0] == 0.0) ? tolerance : fabs(temp_x[0][k]);
+                  xx = (temp_x[0][k] == 0.0) ? tolerance : fabs(temp_x[0][k]);
                   if(xx > xx_min)
                   { 
                     xx_min = xx;
@@ -135,10 +132,10 @@ int QualitySolver::Embedded_Prince_Dormand_solver(double t, double h, double tma
         repeat = false; 
         h = h_min_new; 
       }
-    } 
+    }
     updateNodeVariables(x, WhichSolver, h);
     t += h;
-    cout << "  Elapsed time: " << t << " velocity: " << edges.at(1)->getEdgeDoubleProperty("velocity") <<  endl;
+    //cout << "  Elapsed time: " << t << " velocity: " << edges.at(1)->getEdgeDoubleProperty("velocity") <<  endl;
     h *= scale;
     if ( last_interval ) break;
     if (  t + h > tmax ) { last_interval = 1; h = tmax - t; }
@@ -262,7 +259,7 @@ vector < vector< vector<double> > > QualitySolver::initializeWithStartingConditi
   }
   for (int i = 0; i < nodes.size(); ++i)
   {
-    nodes.at(i)->appendTimeSeries("timeSteps", 0);
+    nodes.at(i)->appendTimeSeries("timeSteps", 0.);
     for (int j = 0; j < SourceDimension; ++j)
     {
       nodes.at(i)->appendTimeSeries(ParameterList[j],startingCondition[j]);
@@ -285,7 +282,7 @@ vector< vector<double> > QualitySolver::updateInitializeTimestep(vector< vector<
     }
   }
   else
-  {
+  { 
     for (int i = 0; i < out.size(); ++i)
     {
       for (int j = 0; j < out[i].size(); ++j)
@@ -325,13 +322,14 @@ double QualitySolver::getSmallestTimestep(vector< vector<double> > input)
   return out;  
 }
 
-void QualitySolver::updateNodeVariables(vector< vector< vector<double> > > x, string WhichSolver, double h)
+void QualitySolver::updateNodeVariables(vector< vector< vector<double> > > &x, string WhichSolver, double h)
 {
   int counter = 0, counterOffset = 0, elementIndex = 0;
-  double poolFlow, poolVolumeActual;
+  double localNodalOutput, poolFlow, poolVolumeActual;
   bool pump = false, pool = false, press = false, valve = false, valveISO = false, begin = false, stopCount = false;
-  vector<double> VolFlowRates, poolActual(SourceDimension), poolUpstreamNode(SourceDimension), temporal_value_2, nodalValue(SourceDimension);
-  vector< vector<double> > temporal_value, NodeInputs;
+  vector<double> VolFlowRates, poolActual(SourceDimension), poolUpstreamNode(SourceDimension), temporal_value_2, temporal_value_4;
+  vector< vector<double> > temporal_value, temporal_value_3, NodeInputs;
+  static vector<double> nodalValue(SourceDimension);
   //---------------------------------------- Count the offset, for the calculated elements ------------------------------------//
   for (int i = 0; i < edges.size(); ++i)
   {
@@ -349,17 +347,17 @@ void QualitySolver::updateNodeVariables(vector< vector< vector<double> > > x, st
   {
     for (int j = 0; j < SourceDimension; ++j)
     {
-      nodalValue[j] = 0;
+      nodalValue[j] = 0.;
     }
     for (int j = 0; j < poolIndex.size(); ++j)
     {
-      if (i == edges.at(poolIndex[j])->getEdgeIntProperty("startNodeIndex"))
+      if (i == edges.at(poolIndex[j])->startNodeIndex)
       {
         pool = true;
         begin = true;
         elementIndex = j;
       }
-      else if(i == edges.at(poolIndex[j])->getEdgeIntProperty("endNodeIndex"))
+      else if(i == edges.at(poolIndex[j])->endNodeIndex)
       {
         pool = true;
         elementIndex = j;
@@ -367,13 +365,13 @@ void QualitySolver::updateNodeVariables(vector< vector< vector<double> > > x, st
     }
     for (int j = 0; j < presIndex.size(); ++j)
     {
-      if (i == edges.at(presIndex[j])->getEdgeIntProperty("startNodeIndex"))
+      if (i == edges.at(presIndex[j])->startNodeIndex)
       {
         press = true;
         begin = true;
         elementIndex = j;
       }
-      else if(i == edges.at(presIndex[j])->getEdgeIntProperty("endNodeIndex"))
+      else if(i == edges.at(presIndex[j])->endNodeIndex)
       {
         press = true;
         elementIndex = j;
@@ -381,13 +379,13 @@ void QualitySolver::updateNodeVariables(vector< vector< vector<double> > > x, st
     }
     for (int j = 0; j < pumpIndex.size(); ++j)
     {
-      if (i == edges.at(pumpIndex[j])->getEdgeIntProperty("startNodeIndex"))
+      if (i == edges.at(pumpIndex[j])->startNodeIndex)
       {
         pump = true;
         begin = true;
         elementIndex = j;
       }
-      else if(i == edges.at(pumpIndex[j])->getEdgeIntProperty("endNodeIndex"))
+      else if(i == edges.at(pumpIndex[j])->endNodeIndex)
       {
         pump = true;
         elementIndex = j;
@@ -395,13 +393,13 @@ void QualitySolver::updateNodeVariables(vector< vector< vector<double> > > x, st
     }
     for (int j = 0; j < valveIndex.size(); ++j)
     {
-      if (i == edges.at(valveIndex[j])->getEdgeIntProperty("startNodeIndex"))
+      if (i == edges.at(valveIndex[j])->startNodeIndex)
       {
         valve = true;
         begin = true;
         elementIndex = j;
       }
-      else if(i == edges.at(valveIndex[j])->getEdgeIntProperty("endNodeIndex"))
+      else if(i == edges.at(valveIndex[j])->endNodeIndex)
       {
         valve = true;
         elementIndex = j;
@@ -409,13 +407,13 @@ void QualitySolver::updateNodeVariables(vector< vector< vector<double> > > x, st
     }
     for (int j = 0; j < valveISOIndex.size(); ++j)
     {
-      if (i == edges.at(valveISOIndex[j])->getEdgeIntProperty("startNodeIndex"))
+      if (i == edges.at(valveISOIndex[j])->startNodeIndex)
       {
         begin = true;
         valveISO = true;
         elementIndex = j;
       }
-      else if(i == edges.at(valveISOIndex[j])->getEdgeIntProperty("endNodeIndex"))
+      else if(i == edges.at(valveISOIndex[j])->endNodeIndex)
       {
         valveISO = true;
         elementIndex = j;
@@ -430,14 +428,12 @@ void QualitySolver::updateNodeVariables(vector< vector< vector<double> > > x, st
         if (edges.at(nodes.at(i)->edgeIn[j])->getEdgeStringProperty("type") == "Pipe" && (edges.at(nodes.at(i)->edgeIn[j])->getEdgeDoubleProperty("velocity") > 0))
         {
           NodeInputs.push_back(vector<double>());
-          temporal_value = x[nodes.at(i)->edgeIn[j]-counterOffset];
-          temporal_value_2 = temporal_value.back(); 
           for (int k = 0; k < SourceDimension; ++k)
           {
-            NodeInputs[counter].push_back(temporal_value_2[k]);
-            VolFlowRates.push_back(edges.at(nodes.at(i)->edgeIn[j])->getDoubleProperty("volumeFlowRate"));
-            counter += 1;
+            NodeInputs[counter].push_back(x[nodes.at(i)->edgeIn[j]-counterOffset].back()[k]);
           }
+          VolFlowRates.push_back(edges.at(nodes.at(i)->edgeIn[j])->volumeFlowRate);
+          counter += 1;
         }
       }
       for (int j = 0; j < nodes.at(i)->edgeOut.size(); ++j)
@@ -445,14 +441,12 @@ void QualitySolver::updateNodeVariables(vector< vector< vector<double> > > x, st
         if (edges.at(nodes.at(i)->edgeOut[j])->getEdgeStringProperty("type") == "Pipe" && (edges.at(nodes.at(i)->edgeOut[j])->getEdgeDoubleProperty("velocity") < 0))
         {
           NodeInputs.push_back(vector<double>());
-          temporal_value = x[nodes.at(i)->edgeIn[j]-counterOffset];
-          temporal_value_2 = temporal_value.back();
           for (int k = 0; k < SourceDimension; ++k)
           {
-            NodeInputs[counter].push_back(temporal_value_2[k]);
-            VolFlowRates.push_back(edges.at(nodes.at(i)->edgeIn[j])->getDoubleProperty("volumeFlowRate"));
-            counter += 1;
+            NodeInputs[counter].push_back(x[nodes.at(i)->edgeOut[j]-counterOffset].back()[k]);
           }
+          VolFlowRates.push_back(edges.at(nodes.at(i)->edgeOut[j])->volumeFlowRate);
+          counter += 1;
         }
       }
       if(NodeInputs.size() == 0)
@@ -462,7 +456,14 @@ void QualitySolver::updateNodeVariables(vector< vector< vector<double> > > x, st
           pump = false;
           for (int j = 0; j < SourceDimension; ++j)
           {
-            nodalValue[j] = nodes.at(edges.at(elementIndex)->getEdgeIntProperty("endNodeIndex"))->getProperty(ParameterList[j]);
+            if (edges.at(elementIndex)->endNodeIndex == -1)
+            {
+              nodalValue[j] = nodalValue[j] + h;
+            }
+            else
+            {
+              nodalValue[j] = nodes.at(edges.at(elementIndex)->endNodeIndex)->getProperty(ParameterList[j]);
+            }
           }
         }
         else if (pump == true && begin == false)
@@ -470,7 +471,14 @@ void QualitySolver::updateNodeVariables(vector< vector< vector<double> > > x, st
           pump = false;
           for (int j = 0; j < SourceDimension; ++j)
           {
-            nodalValue[j] = nodes.at(edges.at(elementIndex)->getEdgeIntProperty("startNodeIndex"))->getProperty(ParameterList[j]);
+            if (edges.at(elementIndex)->startNodeIndex == -1)
+            {
+              nodalValue[j] = nodalValue[j] + h;
+            }
+            else
+            {
+              nodalValue[j] = nodes.at(edges.at(elementIndex)->startNodeIndex)->getProperty(ParameterList[j]);
+            }
           }
         }
         else if (valve == true && begin == true)
@@ -478,7 +486,14 @@ void QualitySolver::updateNodeVariables(vector< vector< vector<double> > > x, st
           valve = false;
           for (int j = 0; j < SourceDimension; ++j)
           {
-            nodalValue[j] = nodes.at(edges.at(elementIndex)->getEdgeIntProperty("endNodeIndex"))->getProperty(ParameterList[j]);
+            if (edges.at(elementIndex)->endNodeIndex == -1)
+            {
+              nodalValue[j] = nodalValue[j] + h;
+            }
+            else
+            {
+              nodalValue[j] = nodes.at(edges.at(elementIndex)->endNodeIndex)->getProperty(ParameterList[j]);
+            }
           }
         }
         else if (valve == true && begin == false)
@@ -486,7 +501,14 @@ void QualitySolver::updateNodeVariables(vector< vector< vector<double> > > x, st
           valve = false;
           for (int j = 0; j < SourceDimension; ++j)
           {
-            nodalValue[j] = nodes.at(edges.at(elementIndex)->getEdgeIntProperty("startNodeIndex"))->getProperty(ParameterList[j]);
+            if (edges.at(elementIndex)->startNodeIndex == -1)
+            {
+              nodalValue[j] = nodalValue[j] + h;
+            }
+            else
+            {
+              nodalValue[j] = nodes.at(edges.at(elementIndex)->startNodeIndex)->getProperty(ParameterList[j]);
+            }
           }
         }
         else if (valveISO == true && begin == true)
@@ -494,7 +516,14 @@ void QualitySolver::updateNodeVariables(vector< vector< vector<double> > > x, st
           valveISO = false;
           for (int j = 0; j < SourceDimension; ++j)
           {
-            nodalValue[j] = nodes.at(edges.at(elementIndex)->getEdgeIntProperty("endNodeIndex"))->getProperty(ParameterList[j]);
+            if (edges.at(elementIndex)->endNodeIndex == -1)
+            {
+              nodalValue[j] = nodalValue[j] + h;
+            }
+            else
+            {
+              nodalValue[j] = nodes.at(edges.at(elementIndex)->endNodeIndex)->getProperty(ParameterList[j]);
+            }
           }
         }
         else if (valveISO == true && begin == false)
@@ -502,7 +531,14 @@ void QualitySolver::updateNodeVariables(vector< vector< vector<double> > > x, st
           valveISO = false;
           for (int j = 0; j < SourceDimension; ++j)
           {
-            nodalValue[j] = nodes.at(edges.at(elementIndex)->getEdgeIntProperty("startNodeIndex"))->getProperty(ParameterList[j]);
+            if (edges.at(elementIndex)->startNodeIndex == -1)
+            {
+              nodalValue[j] = nodalValue[j] + h;
+            }
+            else
+            {
+              nodalValue[j] = nodes.at(edges.at(elementIndex)->startNodeIndex)->getProperty(ParameterList[j]);
+            }
           }
         }
       }
@@ -510,15 +546,26 @@ void QualitySolver::updateNodeVariables(vector< vector< vector<double> > > x, st
       {
         if (WhichSolver == "waterAge")
         {
-          nodalValue = wa->nodeEquationWaterAge(NodeInputs, VolFlowRates);
+          for (int j = 0; j < SourceDimension; ++j)
+          {
+            nodalValue[j] = wa->nodeEquationWaterAge(nodalValue, NodeInputs, VolFlowRates)[j];
+            NodeInputs.clear();
+            VolFlowRates.clear();
+          }
         }
         else if (WhichSolver == "chlorine")
         {
-          nodalValue = wa->nodeEquationWaterAge(NodeInputs, VolFlowRates);
+          for (int j = 0; j < SourceDimension; ++j)
+          {
+            nodalValue[j] = wa->nodeEquationWaterAge(nodalValue, NodeInputs, VolFlowRates)[j];//
+          }
         }
         else if(WhichSolver == "biofilm")
         {
-          nodalValue = wa->nodeEquationWaterAge(NodeInputs, VolFlowRates);
+          for (int j = 0; j < SourceDimension; ++j)
+          {
+            nodalValue[j] = wa->nodeEquationWaterAge(nodalValue, NodeInputs, VolFlowRates)[j];//
+          }
         }
       }
     }
@@ -527,11 +574,11 @@ void QualitySolver::updateNodeVariables(vector< vector< vector<double> > > x, st
       if (pool == true)
       {
         pool = false;
-        poolFlow = edges.at(elementIndex)->getDoubleProperty("volumeFlowRate");
+        poolFlow = edges.at(elementIndex)->volumeFlowRate;
         for (int j = 0; j < SourceDimension; ++j)
         {
           poolActual[j] = edges.at(elementIndex)->getDoubleProperty(ParameterList[j]);
-          poolUpstreamNode[j] = nodes.at(edges.at(elementIndex)->getEdgeIntProperty("startNodeIndex"))->getProperty(ParameterList[j]);
+          poolUpstreamNode[j] = nodes.at(edges.at(elementIndex)->startNodeIndex)->getProperty(ParameterList[j]);
         }
         poolVolumeActual = edges.at(elementIndex)->getDoubleProperty("waterLevel")*edges.at(elementIndex)->getDoubleProperty("referenceCrossSection");
         if (WhichSolver == "waterAge")
@@ -594,14 +641,14 @@ void QualitySolver::solveQuality(string WhichSolver)
     ParameterList = wa->listOfParameters;
     SourceDimension = wa->ModelDimension;
     cout << "------------ WaterAge solver initialized -------------" << endl;
-    cout << "The return value of the solver: " << Embedded_Prince_Dormand_solver(time_start, step_time, time_max, tolerance, step_X, WhichSolver) << endl;
+    cout << "The return value of the solver: " << solveQuality(time_start, step_time, time_max, tolerance, step_X, WhichSolver) << endl;
     cout << "------------------------------------------------------" << endl;
   } 
   else if (WhichSolver == "chlorine") 
   {
     SourceDimension = ch->ModelDimension;
     cout << "------------ chlorine solver initialized -------------" << endl;
-    cout << Embedded_Prince_Dormand_solver(time_start, step_time, time_max, tolerance, step_X, WhichSolver);
+    cout << solveQuality(time_start, step_time, time_max, tolerance, step_X, WhichSolver);
     cout << "------------------------------------------------------" << endl;
   }
   else if (WhichSolver == "biofilm")
@@ -616,7 +663,7 @@ void QualitySolver::solveQuality(string WhichSolver)
     ParameterList.push_back("Cf");
     ParameterList.push_back("Cb");
     cout << "------------ biofilm solver initialized --------------" << endl;
-    cout << Embedded_Prince_Dormand_solver(time_start, step_time, time_max, tolerance, step_X, WhichSolver);
+    cout << solveQuality(time_start, step_time, time_max, tolerance, step_X, WhichSolver);
     cout << "------------------------------------------------------" << endl;
   }
   else

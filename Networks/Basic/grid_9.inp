@@ -22,18 +22,18 @@ Converted from Epanet to Staci, case name: grid_9.spr
 
 [PIPES]
 ;ID             	Node1           	Node2           	Length      	Diameter    	Roughness   	MinorLoss   	Status
- pipe_0          	pres_0          	node_1          	10.0000     	200.0000    	-0.0200     	0.0000      	Open  ;
- pipe_1          	node_1          	node_2          	10.0000     	200.0000    	-0.0200     	0.0000      	Open  ;
- pipe_2          	node_3          	node_4          	10.0000     	200.0000    	-0.0200     	0.0000      	Open  ;
- pipe_3          	node_4          	node_5          	10.0000     	200.0000    	-0.0200     	0.0000      	Open  ;
- pipe_4          	node_6          	node_7          	10.0000     	200.0000    	-0.0200     	0.0000      	Open  ;
- pipe_5          	node_7          	node_8          	10.0000     	200.0000    	-0.0200     	0.0000      	Open  ;
- pipe_6          	pres_0          	node_3          	10.0000     	200.0000    	-0.0200     	0.0000      	Open  ;
- pipe_7          	node_1          	node_4          	10.0000     	200.0000    	-0.0200     	0.0000      	Open  ;
- pipe_8          	node_2          	node_5          	10.0000     	200.0000    	-0.0200     	0.0000      	Open  ;
- pipe_9          	node_3          	node_6          	10.0000     	200.0000    	-0.0200     	0.0000      	Open  ;
- pipe_10         	node_4          	node_7          	10.0000     	200.0000    	-0.0200     	0.0000      	Open  ;
- pipe_11         	node_5          	node_8          	10.0000     	200.0000    	-0.0200     	0.0000      	Open  ;
+ pipe_0          	pres_0          	node_1          	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_1          	node_1          	node_2          	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_2          	node_3          	node_4          	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_3          	node_4          	node_5          	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_4          	node_6          	node_7          	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_5          	node_7          	node_8          	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_6          	pres_0          	node_3          	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_7          	node_1          	node_4          	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_8          	node_2          	node_5          	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_9          	node_3          	node_6          	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_10         	node_4          	node_7          	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_11         	node_5          	node_8          	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
 
 [PUMPS]
 ;ID             	Node1           	Node2           	Parameters

@@ -31,7 +31,7 @@ public:
   int ModelDimension = 1;
   vector<string> listOfParameters = {"waterAge"};
   vector<double> sourceTermWaterAge(double t, vector<double> x_actual, vector<double> x_upwind, double flow, double DX);
-  vector<double> nodeEquationWaterAge(vector< vector<double> > nodeInputs, vector<double> VolFlowRates);
+  vector<double> nodeEquationWaterAge(vector<double> &returnNodalValue, vector< vector<double> > nodeInputs, vector<double> VolFlowRates);
   vector<double> poolEquationWaterAge(double poolFlow, vector<double> poolActual, vector<double> poolUpstreamNode, double poolVolumeActual, double h);
 protected:
 

@@ -29,30 +29,30 @@ Converted from Epanet to Staci, case name: racs_alap_16.spr
 
 [PIPES]
 ;ID             	Node1           	Node2           	Length      	Diameter    	Roughness   	MinorLoss   	Status
- pipe_node.0.0_to_node.0.1	PRES            	node.0.1        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
- pipe_node.0.1_to_node.0.2	node.0.1        	node.0.2        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
- pipe_node.0.2_to_node.0.3	node.0.2        	node.0.3        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
- pipe_node.1.0_to_node.1.1	node.1.0        	node.1.1        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
- pipe_node.1.1_to_node.1.2	node.1.1        	node.1.2        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
- pipe_node.1.2_to_node.1.3	node.1.2        	node.1.3        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
- pipe_node.2.0_to_node.2.1	node.2.0        	node.2.1        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
- pipe_node.2.1_to_node.2.2	node.2.1        	node.2.2        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
- pipe_node.2.2_to_node.2.3	node.2.2        	node.2.3        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
- pipe_node.3.0_to_node.3.1	node.3.0        	node.3.1        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
- pipe_node.3.1_to_node.3.2	node.3.1        	node.3.2        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
- pipe_node.3.2_to_node.3.3	node.3.2        	node.3.3        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
- pipe_node.0.0_to_node.1.0	PRES            	node.1.0        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
- pipe_node.0.1_to_node.1.1	node.0.1        	node.1.1        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
- pipe_node.0.2_to_node.1.2	node.0.2        	node.1.2        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
- pipe_node.0.3_to_node.1.3	node.0.3        	node.1.3        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
- pipe_node.1.0_to_node.2.0	node.1.0        	node.2.0        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
- pipe_node.1.1_to_node.2.1	node.1.1        	node.2.1        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
- pipe_node.1.2_to_node.2.2	node.1.2        	node.2.2        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
- pipe_node.1.3_to_node.2.3	node.1.3        	node.2.3        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
- pipe_node.2.0_to_node.3.0	node.2.0        	node.3.0        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
- pipe_node.2.1_to_node.3.1	node.2.1        	node.3.1        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
- pipe_node.2.2_to_node.3.2	node.2.2        	node.3.2        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
- pipe_node.2.3_to_node.3.3	node.2.3        	node.3.3        	10.0000     	200.0000    	0.0200     	0.0000      	Open  ;
+ pipe_node.0.0_to_node.0.1	PRES            	node.0.1        	10.0000     	200.0000    	120     	0.0000      	Open  ;
+ pipe_node.0.1_to_node.0.2	node.0.1        	node.0.2        	10.0000     	200.0000    	120     	0.0000      	Open  ;
+ pipe_node.0.2_to_node.0.3	node.0.2        	node.0.3        	10.0000     	200.0000    	120     	0.0000      	Open  ;
+ pipe_node.1.0_to_node.1.1	node.1.0        	node.1.1        	10.0000     	200.0000    	120     	0.0000      	Open  ;
+ pipe_node.1.1_to_node.1.2	node.1.1        	node.1.2        	10.0000     	200.0000    	120     	0.0000      	Open  ;
+ pipe_node.1.2_to_node.1.3	node.1.2        	node.1.3        	10.0000     	200.0000    	120     	0.0000      	Open  ;
+ pipe_node.2.0_to_node.2.1	node.2.0        	node.2.1        	10.0000     	200.0000    	120     	0.0000      	Open  ;
+ pipe_node.2.1_to_node.2.2	node.2.1        	node.2.2        	10.0000     	200.0000    	120     	0.0000      	Open  ;
+ pipe_node.2.2_to_node.2.3	node.2.2        	node.2.3        	10.0000     	200.0000    	120     	0.0000      	Open  ;
+ pipe_node.3.0_to_node.3.1	node.3.0        	node.3.1        	10.0000     	200.0000    	120     	0.0000      	Open  ;
+ pipe_node.3.1_to_node.3.2	node.3.1        	node.3.2        	10.0000     	200.0000    	120     	0.0000      	Open  ;
+ pipe_node.3.2_to_node.3.3	node.3.2        	node.3.3        	10.0000     	200.0000    	120     	0.0000      	Open  ;
+ pipe_node.0.0_to_node.1.0	PRES            	node.1.0        	10.0000     	200.0000    	120     	0.0000      	Open  ;
+ pipe_node.0.1_to_node.1.1	node.0.1        	node.1.1        	10.0000     	200.0000    	120     	0.0000      	Open  ;
+ pipe_node.0.2_to_node.1.2	node.0.2        	node.1.2        	10.0000     	200.0000    	120     	0.0000      	Open  ;
+ pipe_node.0.3_to_node.1.3	node.0.3        	node.1.3        	10.0000     	200.0000    	120     	0.0000      	Open  ;
+ pipe_node.1.0_to_node.2.0	node.1.0        	node.2.0        	10.0000     	200.0000    	120     	0.0000      	Open  ;
+ pipe_node.1.1_to_node.2.1	node.1.1        	node.2.1        	10.0000     	200.0000    	120     	0.0000      	Open  ;
+ pipe_node.1.2_to_node.2.2	node.1.2        	node.2.2        	10.0000     	200.0000    	120     	0.0000      	Open  ;
+ pipe_node.1.3_to_node.2.3	node.1.3        	node.2.3        	10.0000     	200.0000    	120     	0.0000      	Open  ;
+ pipe_node.2.0_to_node.3.0	node.2.0        	node.3.0        	10.0000     	200.0000    	120     	0.0000      	Open  ;
+ pipe_node.2.1_to_node.3.1	node.2.1        	node.3.1        	10.0000     	200.0000    	120     	0.0000      	Open  ;
+ pipe_node.2.2_to_node.3.2	node.2.2        	node.3.2        	10.0000     	200.0000    	120     	0.0000      	Open  ;
+ pipe_node.2.3_to_node.3.3	node.2.3        	node.3.3        	10.0000     	200.0000    	120     	0.0000      	Open  ;
 
 [PUMPS]
 ;ID             	Node1           	Node2           	Parameters
@@ -96,7 +96,7 @@ Converted from Epanet to Staci, case name: racs_alap_16.spr
 
 [OPTIONS]
  Units              	LPS
- Headloss           	C-F
+ Headloss           	H-W
  Specific Gravity   	1.0
  Viscosity          	1.0
  Trials             	40

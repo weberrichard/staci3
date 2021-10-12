@@ -28,7 +28,7 @@ public:
   // setting spatial parameters
   void setAdaptiveParameters(double e_min, double e_max, int modAttempts, double dt_inc, double timeMax);
 
-  int Embedded_Prince_Dormand_solver(double t, double h, double tmax, double tolerance, double DX, string whichSolver);
+  int solveQuality(double t, double h, double tmax, double tolerance, double DX, string whichSolver);
 
   vector<int> generateNumberOfIntervals(double DX);
 
@@ -38,7 +38,7 @@ public:
 
   vector< vector<double> > updateInitializeTimestep(vector< vector<double> > out, double initTimestep, vector<int> numberOfIntervals);
 
-  void updateNodeVariables(vector < vector< vector<double> > > x, string WhichSolver, double h);
+  void updateNodeVariables(vector < vector< vector<double> > > &x, string WhichSolver, double h);
 
   void solveQuality(string WhichSolver);
 
@@ -71,7 +71,7 @@ private:
   double time_max = 2*3600;
   double step_time = 300;
   double length_max = 0.;
-  double tolerance = 0.0001;
+  double tolerance = 0.1;
   // spacial division
   double step_X = 10.;
 
