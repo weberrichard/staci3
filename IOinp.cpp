@@ -21,6 +21,7 @@ void Staci::loadSystem()
 	// FOR POOLS
 	vector<string> pool_name, pool_node_from, pool_node_to;
 	vector<double> pool_botlev, pool_watlev, pool_aref, pool_minlev, pool_maxlev;
+	vector<bool> pool_overflow;
 
 	// FOR PUMPS
 	vector<string> pump_name, pump_node_from, pump_node_to, pump_type, pump_par;
@@ -139,6 +140,21 @@ void Staci::loadSystem()
 						xcoord.push_back(-1.);ycoord.push_back(-1.);
 						pool_node_to.push_back(node_name.back()+"_END");
 						pool_node_from.push_back(node_name.back());
+						if(sv.size()>8)
+						{
+							if(sv[8] == "YES" || sv[8] == "Yes" || sv[8] == "yes")
+							{
+								pool_overflow.push_back(true);
+							}
+							else
+							{
+								pool_overflow.push_back(false);
+							}
+						}
+						else
+						{
+							pool_overflow.push_back(false);
+						}
 					}
 				}
 			}
@@ -662,7 +678,6 @@ void Staci::loadSystem()
 	  for(int i=0; i<valve_name.size(); i++)
   		valve_d[i] /= 1000.; // mm to meter
   }
-
 	for(int i=0; i<pres_name.size(); i++){
 		int idx=-1;
 		for(int j=0; j<node_name.size(); j++)
@@ -671,7 +686,6 @@ void Staci::loadSystem()
 
 		pres_head[i] = pres_head[i]-elev[idx]; // meter to Pascal minus elevation
 	}
-	
 	// ########################
 	// CREATING THE NODES/PIPES
 	// ########################
@@ -684,14 +698,13 @@ void Staci::loadSystem()
 	{	
 	  edges.push_back(new PressurePoint(pres_name[i], 1.0, pres_node_from[i], density, pres_head[i], pres_totalHead[i], 0.0));
 	}
-
 	for(int i=0; i<pool_name.size(); i++)
 	{
 	  edges.push_back(new Pool(pool_name[i], pool_node_from[i], density, pool_aref[i], pool_botlev[i], pool_watlev[i], 0.0));
 	  edges[edges.size()-1]->setDoubleProperty("minLevel",pool_minlev[i]);
 	  edges[edges.size()-1]->setDoubleProperty("maxLevel",pool_maxlev[i]);
+	  edges[edges.size()-1]->setBoolProperty("doOverflow",pool_overflow[i]);
 	}
-
 	for(int i=0; i<pipe_name.size(); i++)
 	{
 		bool isCheckValve;
@@ -699,13 +712,14 @@ void Staci::loadSystem()
 			isCheckValve = true;
 		else
 			isCheckValve = false;
+		
 
-  		edges.push_back(new Pipe(pipe_name[i], node_from[i], node_to[i], density, l[i], D[i], roughness[i], 0.0, isCheckValve, friction_model, relativeViscosity));
+  	edges.push_back(new Pipe(pipe_name[i], node_from[i], node_to[i], density, l[i], D[i], roughness[i], 0.0, isCheckValve, friction_model, relativeViscosity));
 
    	if(pipe_status[i] == "Open")
    		edges[edges.size()-1]->status = 1;
    	else if(pipe_status[i] == "Closed")
-   		edges[edges.size()-1]->status = 0;
+   		edges[edges.size()-1]->status = -1;
    	else if(pipe_status[i] == "cv")
    		edges[edges.size()-1]->status = 1;
    	else
@@ -793,7 +807,15 @@ void Staci::loadSystem()
 			if(edges[j]->name == status_id[i])
 			{
 				if(status_setting[i] == "CLOSED" || status_setting[i] == "Closed") // there might be more options
-					edges[j]->status = -1;
+				{
+					edges[j]->status = 0;
+					edges[j]->status_fix = true;
+				}
+				else if(status_setting[i] == "OPEN" || status_setting[i] == "Open") // there might be more options
+				{
+					edges[j]->status = 1;
+					edges[j]->status_fix = true;
+				}
 				break;
 			}
 			if(j==edges.size()-1)

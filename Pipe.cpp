@@ -88,6 +88,11 @@ double Pipe::function(const VectorXd &ppq, VectorXd &fDer)// ppq = [Pstart, Pend
    }
    else // CLOSED, status is 0 or -1
    {
+      // slightly unstable
+      //out = ppq(2); 
+      //fDer(2) = 1.0;
+
+      // robust
       out = ppq(1) - ppq(0) + (endHeight-startHeight) + 1e8 * ppq(2);
       fDer(0) = -1.0;
       fDer(1) =  1.0;

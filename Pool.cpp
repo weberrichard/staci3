@@ -129,3 +129,34 @@ void Pool::setDoubleProperty(string prop, double value)
     cout << ", right values: head | volumeFlowRate | velocity | density | referenceCrossSection | user1 | user2" << endl << endl;
   }
 }
+
+//--------------------------------------------------------------
+bool Pool::getBoolProperty(string prop)
+{
+  double out = false;
+  if(prop == "doOverflow")
+  {
+    out = doOverflow;
+  }
+  else
+  {  
+    cout << endl << endl << "Pool::setBoolProperty( BOOL ) wrong argument:" << prop;
+    cout << ", right values: doOverflow" << endl << endl;
+  }
+  return out;
+}
+
+//--------------------------------------------------------------
+void Pool::setBoolProperty(string prop, bool value)
+{
+  if(prop == "doOverflow")
+  {
+    doOverflow = value;
+  }
+  else
+  {
+    cout << endl << endl << "BOOL Pool::getBoolProperty() wrong argument:" << prop;
+    cout << ", right values: doOverflow" << endl << endl;
+  }
+}
+

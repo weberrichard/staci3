@@ -288,6 +288,8 @@ double Node::getProperty(string prop)
     out = (double)segment;
   else if(prop == "status")
     out = (double)status;
+  else if(prop == "DMAZone")
+    out = (double)DMAZone;
   else if(prop == "leakageExponent")
     out = leakageExponent;
   else if(prop == "leakageConstant")

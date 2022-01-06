@@ -58,8 +58,9 @@ public:
   /// Setting the fricition model: DW (Darcy-Weisbach) | HW (Hazen-Williams)
   virtual void setFrictionModel(string friction_model){};
 
-  /// Containing the status of the edge, 0: closed, 1: open, 2: active (in case of active edges)
+  /// Containing the status of the edge, -1: manually closed, 0: closed, 1: open, 2: active (in case of active edges)
   int status;
+  bool status_fix=false; // mannually can be prescribed the status
 
   /* typeCode values for edges
   -2:  pool
@@ -113,10 +114,12 @@ public:
   virtual double getDoubleProperty(string prop) {cout << "\nERROR, prop: " << prop << endl; exit(0); return 0.; }
   virtual vector<double> getVectorProperty(string prop) {cout << "\nERROR, prop: " << prop << endl; exit(0); vector<double> x; return x; }
   virtual int getIntProperty(string prop) {cout << "\nERROR, prop: " << prop << endl; exit(0);  return 0; }
-  virtual string getStringProperty(string prop) {cout << "\nERROR, prop: " << prop << endl; exit(0);  return ""; };
-  virtual void setDoubleProperty(string prop, double value) {cout << "\nERROR, prop: " << prop << endl; exit(0); };
-  virtual void setIntProperty(string prop, int value) {cout << "\nERROR, prop: " << prop << endl; exit(0); };
-  virtual void setStringProperty(string prop, string value) {cout << "\nERROR, prop: " << prop << endl; exit(0); };
+  virtual string getStringProperty(string prop) {cout << "\nERROR, prop: " << prop << endl; exit(0);  return ""; }
+  virtual bool getBoolProperty(string prop) {cout << "\nERROR, prop: " << prop << endl; exit(0); return false; }
+  virtual void setDoubleProperty(string prop, double value) {cout << "\nERROR, prop: " << prop << endl; exit(0); }
+  virtual void setIntProperty(string prop, int value) {cout << "\nERROR, prop: " << prop << endl; exit(0); }
+  virtual void setStringProperty(string prop, string value) {cout << "\nERROR, prop: " << prop << endl; exit(0); }
+  virtual void setBoolProperty(string prop, bool value){cout << "\nERROR, prop: " << prop << endl; exit(0); }
 
 };
 #endif

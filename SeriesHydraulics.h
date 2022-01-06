@@ -51,6 +51,9 @@ public:
   // saving heads, consumtions for nodes and flow rate for edges in file
   void saveToFile(vector<string> edgeID, vector<string> nodeID, string qUnit, string hUnit);
 
+  void addToPipeCVIndex(int idx);
+  void deleteFromPipeCVIndex(int idx);
+
 protected:
   // updating stuffs
   void updateDemand();
@@ -103,6 +106,7 @@ private:
   double patternTimeStep, hydraulicTimeStepOriginal = 60.;
 
   // demand patterns
+  string basePattern;
   vector<string> patternID;
   vector<vector<double> > patternValue;
 

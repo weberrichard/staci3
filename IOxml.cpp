@@ -45,7 +45,8 @@ void IOxml::loadSystem(vector<Node *> &nodes, vector<Edge *> &edges) {
       demand = stod(nodeNodes.getChildNode("node", i).getChildNode("demand").getText());
       pressure = stod(nodeNodes.getChildNode("node", i).getChildNode("pressure").getText());
       density = stod(nodeNodes.getChildNode("node", i).getChildNode("density").getText());
-      demand = demand / 3.6; // SPR stores in m^3/h, handeld in l/s in STACI
+      //demand = demand / 3.6; // SPR stores in m^3/h, handeld in l/s in STACI
+      demand = demand / 3600.; // SPR stores in m^3/h, handeld in m3/s in STACI
       nodes.push_back(new Node(id, xcoord, ycoord, height, demand, pressure, density));
 
       if(debug)
