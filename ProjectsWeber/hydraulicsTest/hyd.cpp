@@ -14,8 +14,8 @@ using namespace Eigen;
 int main(int argc, char* argv[]){
 
   // Name of containing folder of staci file
-  string case_folder = "../../Networks/ky/";
-  //string case_folder = "/home/rweber/0_PhD/Halozatok/sopron_halozatok/";
+  //string case_folder = "../../Networks/ky/";
+  string case_folder = "../../Networks/Sopron/";
 
   string case_name;
   if(argc == 1){

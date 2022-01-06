@@ -15,6 +15,7 @@ $(STACI_DIR)HydraulicSolver.o \
 $(STACI_DIR)Graph.o \
 $(STACI_DIR)IOinp.o \
 $(STACI_DIR)IOxml.o \
+$(STACI_DIR)FlowMeter.o \
 $(STACI_DIR)Node.o \
 $(STACI_DIR)Pipe.o \
 $(STACI_DIR)Pool.o \

@@ -24,7 +24,8 @@ int main(int argc, char* argv[])
    string caseFolder = "../../Networks/Sopron/";
 
    vector<string> everyCase;
-   everyCase.push_back("villasor");
+   everyCase.push_back("buk_2021");
+   /*everyCase.push_back("villasor");
    everyCase.push_back("ferto");
    everyCase.push_back("sanchegy");
    everyCase.push_back("buk");
@@ -65,7 +66,7 @@ int main(int argc, char* argv[])
    everyCase.push_back("gloriette");
    everyCase.push_back("alomhegy");
    everyCase.push_back("ohermes");
-   everyCase.push_back("ujhermes");
+   everyCase.push_back("ujhermes");*/
 
    int nCases = everyCase.size();
    cout << endl << "   CASES\n***********\n";
