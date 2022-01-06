@@ -64,7 +64,7 @@ Archive/*
 # unsynced projects Weber
 ProjectsHuzsvar/*
 ProjectsHundzsa/*
-ProjectsWeber/*
+ProjectsWeber/
 ProjectsWeber/*/*
 */Network Data/*
 Documentation/ClassHiearchy.svg
