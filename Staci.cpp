@@ -177,6 +177,31 @@ void Staci::listSystem()
   }
 }
 
+//--------------------------------------------------------------
+void Staci::listSystemShort()
+{
+   cout << "\n\n Nodes:\n--------------------------\n";
+   for(int i=0; i<numberNodes; i++)
+   {
+      printf("%10s\n",nodes[i]->name.c_str());
+   }
+   cout << "\n\n Edges:\n--------------------------\n";
+   for(int i=0; i<numberEdges; i++)
+   {
+      int is = edges[i]->startNodeIndex;
+      int ie = edges[i]->endNodeIndex;
+      if(ie == -1)
+      {
+         printf("%10s, %10s\n", edges[i]->name.c_str(), nodes[is]->name.c_str());
+      }
+      else
+      {
+         printf("%10s, %10s-%10s\n", edges[i]->name.c_str(), nodes[is]->name.c_str(), nodes[ie]->name.c_str());
+      }
+   }
+   cout << endl;
+}
+
 
 //--------------------------------------------------------------
 /*vector<int> Staci::ID2Index(const vector<string> &id){

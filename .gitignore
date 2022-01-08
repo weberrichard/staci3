@@ -35,10 +35,13 @@
 
 # models
 Networks/Sopron/*
+Networks/Sopron_2021/*
+Networks/BIWS/*
 Networks/DHI/*
 Networks/Galambos/*
 Networks/Sopron_sigma_approx_opt/*
 Networks/Sopron_sigma_opt/*
+Networks/virtRome.inp
 
 # folders
 Archive/*
@@ -59,13 +62,9 @@ Archive/*
 *.eps
 
 # unsynced projects Weber
-ProjectsWeber/darcyFriction/*
-ProjectsWeber/inpTest/*
+ProjectsHuzsvar/*
+ProjectsHundzsa/*
+ProjectsWeber/*
+ProjectsWeber/*/*
 */Network Data/*
-ProjectsWeber/isSegmentGraphPlanar/matlab_bgl/*
-ProjectsWeber/pressureDemandTest/*
-ProjectsWeber/pipeMaterials/Network Data/*.inp
-Networks/virtRome.inp
-ProjectsWeber/DMAtest/balf.inp
-ProjectsWeber/isoPlacementSigma/Sopron_sigma_approx_opt/*.inp
-ProjectsWeber/isoPlacementSigma/Sopron_sigma_opt/*.inp
+Documentation/ClassHiearchy.svg

@@ -1,12 +1,6 @@
 /*===================================================================*\
                             SeriesHydraulics
                             ----------------
-  TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-  TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-  TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-  TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-  TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-  TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
  
   staci3 is using Eigen, see http://eigen.tuxfamily.org
 
@@ -44,7 +38,7 @@ public:
   // deciding between solveSystem and calculateSensitivity basd on series sensitivity control parameters
   bool isSensitivityCalculation(ssc seriesSensitivityControl);
   // saving the important part of the sensitivity matrix in seriesSensitivity
-  void saveSensitivityMatrix(ssc seriesSensitivityControl);
+ // void saveSensitivityMatrix(ssc seriesSensitivityControl);
 
   // storing the sensitivity matrices in memory, only important part
   vector<MatrixXd> seriesSensitivity;
@@ -56,6 +50,9 @@ public:
   void timeTableEdge(vector<int> idx, string unit);
   // saving heads, consumtions for nodes and flow rate for edges in file
   void saveToFile(vector<string> edgeID, vector<string> nodeID, string qUnit, string hUnit);
+
+  void addToPipeCVIndex(int idx);
+  void deleteFromPipeCVIndex(int idx);
 
 protected:
   // updating stuffs
@@ -109,6 +106,7 @@ private:
   double patternTimeStep, hydraulicTimeStepOriginal = 60.;
 
   // demand patterns
+  string basePattern;
   vector<string> patternID;
   vector<vector<double> > patternValue;
 

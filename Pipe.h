@@ -69,6 +69,9 @@ public:
   // info about the material of the pipe, default is unkown
   string material = "unkown";
 
+  // year of laying down the pipe
+  int year = 0;
+
 private:
   // setting the pipeConst value
   void setPipeConst();

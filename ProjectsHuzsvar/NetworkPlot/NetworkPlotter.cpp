@@ -86,6 +86,8 @@ int main(int argc, char *argv[])
     cout << "[*]Hydraulic solver started...." << endl;
     stringstream ss;
     string Network = argv[1];
+    double nominalISODiameter = 0.2;
+    double refA = nominalISODiameter*nominalISODiameter*M_PI/4.;
     //------------------------------------------------------------------------Staci init----------------------------------------------------------------//
     string case_folder = "../../Networks/Sopron/";
     string case_name = Network;
@@ -93,15 +95,72 @@ int main(int argc, char *argv[])
     cout << "[*]Network: " << case_folder << case_name << ".inp" << endl;
     cout << "[*]Generating plots...." << endl;
     wds = new Vulnerability(case_folder + case_name + ".inp");
+    vector<int> ISOValvesToDelete;
+    for(unsigned int i=0; i<wds->valveISOIndex.size(); i++)
+    {
+     ISOValvesToDelete.push_back(wds->valveISOIndex[i]);
+    }
+    wds->deleteISOValves(ISOValvesToDelete);
+    // todo string helyett index
+
+    // loading iso valve positions
+    string inFileName = argv[3];
+    vector<string> fileData = readVectorString(inFileName);
+    vector<int> addISOPipe;
+    vector<bool> isStart;
+    vector<string> addISOName;
+    vector<double> refCros;
+    for(int i=0; i<fileData.size(); i++)
+    {
+     stringstream ss(fileData[i]);
+     vector<string> sv;
+     cout << fileData[i] << endl;
+     while(ss.good())
+     {
+        string substr;
+        getline(ss,substr,',');
+        sv.push_back(substr);
+     }
+     cout << sv[0] << "," << sv[1] << endl;
+     addISOPipe.push_back(stoi(sv[0]));
+     isStart.push_back(stoi(sv[1]));
+     addISOName.push_back("ISO_" + to_string(i));
+     refCros.push_back(refA);
+    }
+
+    // adding the new iso valves
+    wds->addNewISOValves(addISOName, addISOPipe, isStart, 1000., refCros, 0.);
     wds->buildSegmentGraph();
+    //wds->buildSegmentGraph();
+    wds->solveSystem();
+    double sum_PL = 0.;
     for (int i = 0; i < wds->edges.size(); ++i)
     {
         if(wds->edges[i]->typeCode == 1 || wds->edges[i]->typeCode == 0) // pipe, pipeCV
         {
+            sum_PL += wds->edges.at(i)->getDoubleProperty("length");
             wds->edges.at(i)->setEdgeDoubleProperty("userOutput",wds->edges.at(i)->segment);
             cout << "segment" << wds->edges.at(i)->getEdgeDoubleProperty("userOutput") << endl; 
         }
     }
+    int numberofvalves = 0;
+    for (int i = 0; i < wds->edges.size(); ++i)
+    {
+        if(wds->edges[i]->typeCode == 9) // pipe, pipeCV
+        {
+            numberofvalves += 1;
+            //cout << "segment" << wds->edges.at(i)->getEdgeDoubleProperty("userOutput") << endl; 
+        }
+    }
+    double consumption = 0.;
+    for (int i = 0; i < wds->nodes.size(); ++i)
+    {
+        consumption += wds->nodes.at(i)->getProperty("consumption");
+    }
+    cout << "number of nodes: " << wds->nodes.size() << endl;
+    cout << "Sum. length: " << sum_PL << endl;
+    cout << "Sum. consumption: " << consumption << endl;
+    cout << "Number of valves: " << numberofvalves << endl;
     wds->saveResult("userOutput", "Pipe");
     cout << "[*]Plot generation ended succesfully...." << endl;
 }

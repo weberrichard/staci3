@@ -85,7 +85,7 @@ xlim([1e-9,1e0])
 ylim([1e-1,1e8])
 % set(gca,'Position',[100,100,600,400])
 % legend('Eredeti','N szabĂˇly','N-1 szabĂˇly');
-legend('Sopron Networks','ky*','location','southwest');
+legend('Real-life WDNs: SN*','Artificial WDNs: ky*','location','southwest');
 % set(gca,'FontSize',14);
 % ColumnLegend(3,num2str(idx(:)));
 % ColumnLegend(3,num2str(idx(:)),'location','southwest_sf');
@@ -95,11 +95,11 @@ legend('Sopron Networks','ky*','location','southwest');
 % txt2 = text(2e-8,1.2e3,'sorszám','FontSize',14,'HorizontalAlignment','center');
 % txt1 = text(2e-8,3e3,'Water distribution','FontSize',14,'HorizontalAlignment','center');
 % txt2 = text(2e-8,1.2e3,'network','FontSize',14,'HorizontalAlignment','center');
-title('Failure rate: relative pipe length, ky: N-1 rule');
+% title('Failure rate: relative pipe length, ky: N-1 rule');
 set(gca,'FontSize',14);
 % title('Failure rate: pipe material');
-% saveas(gca,'Plots/Vulner_all_Nm1.fig','fig');
-% saveas(gca,'Plots/Vulner_all_Nm1.png','png');
-% saveas(gca,'Plots/Vulner_all_Nm1.eps','epsc');
+saveas(gca,'Plots/Vulner_all_N.fig','fig');
+saveas(gca,'Plots/Vulner_all_N.png','png');
+saveas(gca,'Plots/Vulner_all_N.eps','epsc');
 
 

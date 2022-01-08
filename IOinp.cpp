@@ -12,6 +12,7 @@ void Staci::loadSystem()
 	// FOR PIPES
 	vector<string> pipe_name, node_from, node_to, pipe_status, material;
 	vector<double> l, D, roughness;
+	vector<int> year;
 
 	// FOR PRES
 	vector<string> pres_name, pres_node_from, pres_node_to;
@@ -20,6 +21,7 @@ void Staci::loadSystem()
 	// FOR POOLS
 	vector<string> pool_name, pool_node_from, pool_node_to;
 	vector<double> pool_botlev, pool_watlev, pool_aref, pool_minlev, pool_maxlev;
+	vector<bool> pool_overflow;
 
 	// FOR PUMPS
 	vector<string> pump_name, pump_node_from, pump_node_to, pump_type, pump_par;
@@ -138,6 +140,21 @@ void Staci::loadSystem()
 						xcoord.push_back(-1.);ycoord.push_back(-1.);
 						pool_node_to.push_back(node_name.back()+"_END");
 						pool_node_from.push_back(node_name.back());
+						if(sv.size()>8)
+						{
+							if(sv[8] == "YES" || sv[8] == "Yes" || sv[8] == "yes")
+							{
+								pool_overflow.push_back(true);
+							}
+							else
+							{
+								pool_overflow.push_back(false);
+							}
+						}
+						else
+						{
+							pool_overflow.push_back(false);
+						}
 					}
 				}
 			}
@@ -174,6 +191,10 @@ void Staci::loadSystem()
 							material.push_back(sv[8]);
 						else
 							material.push_back("unkown");
+						if(sv.size() > 9)
+							year.push_back(stoi(sv[9]));
+						else
+							year.push_back(0);
 					}
 				}
 			}
@@ -657,7 +678,6 @@ void Staci::loadSystem()
 	  for(int i=0; i<valve_name.size(); i++)
   		valve_d[i] /= 1000.; // mm to meter
   }
-
 	for(int i=0; i<pres_name.size(); i++){
 		int idx=-1;
 		for(int j=0; j<node_name.size(); j++)
@@ -666,7 +686,6 @@ void Staci::loadSystem()
 
 		pres_head[i] = pres_head[i]-elev[idx]; // meter to Pascal minus elevation
 	}
-	
 	// ########################
 	// CREATING THE NODES/PIPES
 	// ########################
@@ -679,14 +698,13 @@ void Staci::loadSystem()
 	{	
 	  edges.push_back(new PressurePoint(pres_name[i], 1.0, pres_node_from[i], density, pres_head[i], pres_totalHead[i], 0.0));
 	}
-
 	for(int i=0; i<pool_name.size(); i++)
 	{
 	  edges.push_back(new Pool(pool_name[i], pool_node_from[i], density, pool_aref[i], pool_botlev[i], pool_watlev[i], 0.0));
 	  edges[edges.size()-1]->setDoubleProperty("minLevel",pool_minlev[i]);
 	  edges[edges.size()-1]->setDoubleProperty("maxLevel",pool_maxlev[i]);
+	  edges[edges.size()-1]->setBoolProperty("doOverflow",pool_overflow[i]);
 	}
-
 	for(int i=0; i<pipe_name.size(); i++)
 	{
 		bool isCheckValve;
@@ -694,19 +712,21 @@ void Staci::loadSystem()
 			isCheckValve = true;
 		else
 			isCheckValve = false;
+		
 
-  		edges.push_back(new Pipe(pipe_name[i], node_from[i], node_to[i], density, l[i], D[i], roughness[i], 0.0, isCheckValve, friction_model, relativeViscosity));
+  	edges.push_back(new Pipe(pipe_name[i], node_from[i], node_to[i], density, l[i], D[i], roughness[i], 0.0, isCheckValve, friction_model, relativeViscosity));
 
    	if(pipe_status[i] == "Open")
    		edges[edges.size()-1]->status = 1;
    	else if(pipe_status[i] == "Closed")
-   		edges[edges.size()-1]->status = 0;
+   		edges[edges.size()-1]->status = -1;
    	else if(pipe_status[i] == "cv")
    		edges[edges.size()-1]->status = 1;
    	else
    		edges[edges.size()-1]->status = 1;
 
    	edges[edges.size()-1]->setStringProperty("material",material[i]);
+   	edges[edges.size()-1]->setIntProperty("year",year[i]);
 	}
 
 	for(int i=0; i<pump_name.size(); i++)
@@ -787,7 +807,15 @@ void Staci::loadSystem()
 			if(edges[j]->name == status_id[i])
 			{
 				if(status_setting[i] == "CLOSED" || status_setting[i] == "Closed") // there might be more options
-					edges[j]->status = -1;
+				{
+					edges[j]->status = 0;
+					edges[j]->status_fix = true;
+				}
+				else if(status_setting[i] == "OPEN" || status_setting[i] == "Open") // there might be more options
+				{
+					edges[j]->status = 1;
+					edges[j]->status_fix = true;
+				}
 				break;
 			}
 			if(j==edges.size()-1)
@@ -871,10 +899,10 @@ void Staci::saveSystem(string newFileName)
   }
 
   fprintf(wfile, "\n[PIPES]\n"); // diameter is in mm in INP, while it is in m in SPR
-  fprintf(wfile, ";ID             \tNode1           \tNode2           \tLength      \tDiameter    \tRoughness   \tMinorLoss   \tStatus   \tMaterial\n");
+  fprintf(wfile, ";ID             \tNode1           \tNode2           \tLength      \tDiameter    \tRoughness   \tMinorLoss   \tStatus   \tMaterial   \tYear\n");
   for(int i=0; i<edges.size(); i++){
     if(edges[i]->getEdgeStringProperty("type") == "Pipe")
-      fprintf(wfile, " %-16s\t%-16s\t%-16s\t%-12.4f\t%-12.4f\t%-11.4f\t%-12.4f\t%-6s\t%-10s;\n",edges[i]->getEdgeStringProperty("name").c_str(),edges[i]->getEdgeStringProperty("startNodeName").c_str(),edges[i]->getEdgeStringProperty("endNodeName").c_str(),edges[i]->getDoubleProperty("length"),edges[i]->getDoubleProperty("diameter")*1000.,edges[i]->getDoubleProperty("roughness"),0.0,"Open",edges[i]->getStringProperty("material").c_str());
+      fprintf(wfile, " %-16s\t%-16s\t%-16s\t%-12.4f\t%-12.4f\t%-11.4f\t%-12.4f\t%-6s\t%-10s\t%-4i;\n",edges[i]->getEdgeStringProperty("name").c_str(),edges[i]->getEdgeStringProperty("startNodeName").c_str(),edges[i]->getEdgeStringProperty("endNodeName").c_str(),edges[i]->getDoubleProperty("length"),edges[i]->getDoubleProperty("diameter")*1000.,edges[i]->getDoubleProperty("roughness"),0.0,"Open",edges[i]->getStringProperty("material").c_str(),edges[i]->getIntProperty("year"));
     //if(edges[i]->getEdgeStringProperty("type") == "PressurePoint")
     //  fprintf(wfile, " %-16s\t%-16s\t%-16s\t%-12.4f\t%-12.4f\t%-12.4f\t%-12.4f\t%-6s;\n",("PIPE_" + edges[i]->getEdgeStringProperty("name")).c_str(),edges[i]->getEdgeStringProperty("name").c_str(),edges[i]->getEdgeStringProperty("startNodeName").c_str(),0.0,1.0,0.0,0.0,"Open");
   }

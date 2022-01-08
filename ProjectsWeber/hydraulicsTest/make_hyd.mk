@@ -1,6 +1,6 @@
 
 STACI_DIR=../bin/
-FUNC=hyd
+FUNC=hyd2
 
 CXX=clang++
 CXXFLAGS=-g -std=c++17 -Wall -pedantic -I/usr/include/python2.7
@@ -19,6 +19,7 @@ $(STACI_DIR)Pipe.o \
 $(STACI_DIR)Pool.o \
 $(STACI_DIR)PressurePoint.o \
 $(STACI_DIR)Pump.o \
+$(STACI_DIR)Shutdown.o \
 $(STACI_DIR)Sensitivity.o \
 $(STACI_DIR)SeriesHydraulics.o \
 $(STACI_DIR)Staci.o \
@@ -29,6 +30,7 @@ $(STACI_DIR)ValveISO.o \
 $(STACI_DIR)ValvePRV.o \
 $(STACI_DIR)ValvePSV.o \
 $(STACI_DIR)ValveTCV.o \
+$(STACI_DIR)Vulnerability.o \
 $(STACI_DIR)xmlParser.o \
 $(FUNC).o
 

@@ -9,7 +9,7 @@ cases= ["villasor","ferto","sanchegy","buk","lovo","nagycenk","vashegy","varis",
     "nyarliget","meszlen","fertoujlak","gorbehalom","tozeggyarmajor","ebergoc","csillahegy","jerevan","gloriette",...
     "ohermes","ujhermes"];
 
-idx = 2;
+idx = 10;
 idx_iso = 1:27;
 idx_net = 1:27;
 

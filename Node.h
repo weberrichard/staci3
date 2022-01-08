@@ -65,6 +65,10 @@ public:
   /// demand|head|pressure|density|height|xPosition|yPosition|user1|user2
   double getProperty(string mit);
 
+  void appendTimeSeries(string prop, double value);
+
+  vector<double> getTimeSeries(string prop);
+
   /// Printing basic information about the node to console and log file
   string info(bool check_if_lonely);
 
@@ -96,6 +100,19 @@ public:
   double pdExponent = 2.5, pdDesiredPressure = 25., pdMinPressure = 10.; // in case of pressure dependent consumptions
   double leakageExponent = 1.18, leakageConstant = 1, leakageMinPressure = 10; // in case of leakage modelling //For Balf 0.00000003
   double userOutput;
+
+  // Quality timeseries
+  vector <double> TS;
+
+  // quality variables
+  vector <double> waterAge;
+  vector <double> chlorineConcentration;
+
+  // biofilm variables
+  vector <double> microbesWater;
+  vector <double> microbesWall;
+  vector <double> substratWater;
+  vector <double> substratWall;
 
 private:
   double consumption = 0.0; // in case of presure dependent demands consumption can be smaller than demand
