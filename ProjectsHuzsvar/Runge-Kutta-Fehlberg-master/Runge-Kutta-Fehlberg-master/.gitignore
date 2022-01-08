@@ -1,0 +1,8 @@
+/.convert.defaults
+*.dat
+*.eps
+*.pdf
+*.pyc
+bin
+data/
+test

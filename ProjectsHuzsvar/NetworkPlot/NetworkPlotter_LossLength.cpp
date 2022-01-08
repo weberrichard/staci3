@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
     string ID1 = argv[2];
     string ID2 = argv[3];
     //------------------------------------------------------------------------Staci init----------------------------------------------------------------//
-    string case_folder = "../../Networks/Sopron/";
+    string case_folder = "../../Networks/ky/";
     string case_name = Network;
     //-----------------------------------------------------------------------Staci init End-------------------------------------------------------------//
     cout << "[*]Network: " << case_folder << case_name << ".inp" << endl;
@@ -154,6 +154,6 @@ int main(int argc, char *argv[])
         }
         cout << "Edge loss: " << LossLength[i] << " , " << IndexList[i] << endl; 
     }*/
-    wds->saveResult("userOutput", "All");
+    wds->saveResult("head", "All");
     cout << "[*]Plot generation ended succesfully...." << endl;
 }

@@ -23,10 +23,15 @@ int main(int argc, char *argv[])
     double minorLoss = 0.02;
     string caseName = argv[1];
     string inFileName = argv[2];
+    string inLossConstantFile;
     string CalculateLoss;
-    if (argc > 3)
+    if (argc > 3 && string(argv[3]) == "Calculate_Loss")
     {
     	CalculateLoss = string(argv[3]);
+    }
+    else if(argc > 3 && string(argv[3]) == "Modify_C")
+    {
+    	inLossConstantFile = string(argv[3]);
     }
     cout << " cl: " << CalculateLoss << endl;
     bool duplicate = false;
@@ -74,7 +79,14 @@ int main(int argc, char *argv[])
 		cout << summarizedLoss << '\n';
     }
     else
-	{		
+	{	
+		else if(argc > 3 && string(argv[3]) == "Modify_C")
+	    {
+	    	vector<string> fileData = readVectorString(inLossConstantFile);
+			cout << fileData[0] << endl;
+			double C = stod(fileData[0]);
+			wds->setLeakageConstant(C);
+	    }
 		vector<string> fileData = readVectorString(inFileName);
 		vector<int> addPRVPipe;
 		vector<bool> isStart;
