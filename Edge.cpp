@@ -48,6 +48,33 @@ string Edge::info(){
 }
 
 //--------------------------------------------------------------
+void Edge::saveTimeResult(string folderName, string qUnit)
+{
+   FILE *wFile;
+   string fileName = folderName + "/" + name + ".txt";
+   wFile = fopen(fileName.c_str(),"w");
+
+   double qConvert = 1000.;
+   if(qUnit == "gpm")
+      qConvert = 1/0.06309*1000.;
+   else
+      qUnit = "lps";
+
+   // writing the header
+   fprintf(wFile,"      status [ - ],");
+   fprintf(wFile,"%s",("   flow rate [" + qUnit + "],").c_str());
+   fprintf(wFile,"    velocity [mps],");
+   fprintf(wFile,"\n");
+
+   for(int i=0; i<vectorVolumeFlowRate.size(); i++)
+   {
+      double v = vectorVolumeFlowRate[i]/referenceCrossSection;
+      fprintf(wFile, "%18i, %17.7e, %17.7e\n", vectorStatus[i], vectorVolumeFlowRate[i], v);
+   }
+   fclose(wFile);
+}
+
+//--------------------------------------------------------------
 double Edge::getEdgeDoubleProperty(string prop)
 {
   double out = 0.;

@@ -58,6 +58,9 @@ public:
   // revolution of the pump, if equal one it is the nominal (that is also the default value)
   double revolutionNumber = 1.; 
 
+  // efficiency at optimal point (BEP)
+  double efficiencyNominal = 0.65;
+
   //========================
   //GETSETGETSETGETSETGETSET
   //========================

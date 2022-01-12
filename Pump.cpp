@@ -186,7 +186,7 @@ double Pump::characteristicCurve(double Q)
   }
   else if(curveType == 0) // a+bq^2
   {
-    H = coeffCurve[0] + coeffCurve[1] * Q*Q;
+    H = coeffCurve[0]*pow(revolutionNumber,2) + coeffCurve[1] * Q*Q;
   }
   else if(curveType == 1) // linear interpolation
   {
@@ -230,6 +230,8 @@ double Pump::getDoubleProperty(string prop)
     out = characteristicCurve(volumeFlowRate);
   else if(prop == "revolutionNumber")
     out = revolutionNumber;
+  else if(prop == "efficiencyNominal")
+    out = efficiencyNominal;
   else if(prop == "startHeight")
     out = startHeight;
   else if(prop == "endHeight")
@@ -259,6 +261,8 @@ void Pump::setDoubleProperty(string prop, double value)
     density = value;
   else if(prop == "revolutionNumber")
     revolutionNumber = value;
+  else if(prop == "efficiencyNominal")
+    efficiencyNominal = value;
   else if(prop == "referenceCrossSection" || prop == "reference_cross_section")
     referenceCrossSection = value;
   else if(prop == "startHeight")
