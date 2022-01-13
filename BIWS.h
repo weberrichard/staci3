@@ -34,7 +34,7 @@ public:
 	~BIWS();
 
 	// main STACI case
-	SeriesHydraulics *wds;
+	vector<SeriesHydraulics*> wds;
 
 	// calculating fitness functions: ff and I
 	void evaluate();
