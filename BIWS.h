@@ -78,10 +78,10 @@ private:
 	// leakge constants
 	double leakageExponent = 1.0;
 	double leakageMinPressure = 0.0;
-	vector<string> leakageEdgeID;
-	vector<double> leakageEdgeLength;
-	vector<double> leakageCoefficient;
-	vector<double> k0; // for saving initial leakage const
+	vector<vector<string> > leakageEdgeID;
+	vector<vector<double> > leakageEdgeLength;
+	vector<vector<double> > leakageCoefficient;
+	vector<vector<double> > k0; // for saving initial leakage const
 };
 
 #endif

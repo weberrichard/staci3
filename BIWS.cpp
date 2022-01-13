@@ -8,13 +8,23 @@ BIWS::BIWS(string fileName)
 	ff.resize(9, vector<double>(6,0.));
 
 	// loading leakage data
-	leakageEdgeID = readVectorString("Leakages_edge_id.csv");
-	leakageEdgeLength = readVectorDouble("Leakages_edge_length.csv");
-	leakageCoefficient = readVectorDouble("Leakages_coefficient.csv");
+	leakageEdgeID.resize(nYear);
+	leakageEdgeLength.resize(nYear);
+	leakageCoefficient.resize(nYear);
+	k0.resize(nYear);
+	leakageEdgeID[0] = readVectorString("Leakages_edge_id.csv");
+	leakageEdgeLength[0] = readVectorDouble("Leakages_edge_length.csv");
+	leakageCoefficient[0] = readVectorDouble("Leakages_coefficient.csv");
+	for(int i=1; i<nYear; i++)
+	{
+		leakageEdgeID[i] = leakageEdgeID[0];
+		leakageEdgeLength[i] = leakageEdgeLength[0];
+		leakageCoefficient[i] = leakageCoefficient[0];
+	}
 
-	//
+	// resizing STACI vector
 	wds.resize(nYear);
-	
+
 	for(int i=0; i<nYear; i++)
 	{
 		// loading the INP file
@@ -69,25 +79,25 @@ void BIWS::evaluate()
 		cout << " [*] year: " << i << endl;
 
 		// resizing leakage constant vector
-		k0.clear();
-		k0.resize(wds[i]->nodes.size(),.0);
+		k0[i].clear();
+		k0[i].resize(wds[i]->nodes.size(),.0);
 
 		// setting leakage model coefficients
-		for(int j=0; j<leakageEdgeID.size(); j++)
+		for(int j=0; j<leakageEdgeID[i].size(); j++)
 		{
-			int edge_idx = wds[i]->edgeIDtoIndex(leakageEdgeID[j]);
+			int edge_idx = wds[i]->edgeIDtoIndex(leakageEdgeID[i][j]);
 			int sn_idx = wds[i]->edges[edge_idx]->startNodeIndex;
 			int en_idx = wds[i]->edges[edge_idx]->endNodeIndex;
 			double l = wds[i]->edges[edge_idx]->getDoubleProperty("length");
 
-			k0[sn_idx] += (l-leakageEdgeLength[j])/l*leakageCoefficient[j];
-			k0[en_idx] += leakageEdgeLength[j]/l*leakageCoefficient[j];
+			k0[i][sn_idx] += (l-leakageEdgeLength[i][j])/l*leakageCoefficient[i][j];
+			k0[i][en_idx] += leakageEdgeLength[i][j]/l*leakageCoefficient[i][j];
 		}
 
 		// leakage growth over years
 		for(int j=0; j<wds[i]->nodes.size(); j++)
 		{
-			wds[i]->nodes[j]->leakageConstant = k0[j]*exp(0.25*(double)i*52./260.);
+			wds[i]->nodes[j]->leakageConstant = k0[i][j]*exp(0.25*(double)i*52./260.);
 		}
 
 		// hydraulic solver
