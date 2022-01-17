@@ -1002,96 +1002,16 @@ void HydraulicSolver::deleteISOValves(vector<string> valveName)
       valveIndex.push_back(idx);
    }
 
+   valveIndex = unique(valveIndex);
    deleteISOValves(valveIndex);
 }
 
 //--------------------------------------------------------------
 void HydraulicSolver::deleteISOValves(vector<int> valveIndex)
 {
-   vector<string> nodesToDelete;
-   vector<string> changeToNodes;
-   vector<double> nodeHeight;
-   for(unsigned int i=0; i<valveIndex.size(); i++)
-   { 
-      int idx = valveIndex[i];
-      nodesToDelete.push_back(edges[idx]->endNodeName);
-      changeToNodes.push_back(edges[idx]->startNodeName);
-      idx = nodeIDtoIndex(nodesToDelete[i]);
-      nodeHeight.push_back(nodes[idx]->geodeticHeight);
-      if(nodes[idx]->demand != 0.)
-      {
-         cout << endl << " !WARNING! Node " << nodes[idx]->name << " is to be deleted, while having " << nodes[idx]->demand << " demand" << endl;
-      }
-   }
-
-   // deleting edges
-   for(unsigned int i=0; i<edges.size(); i++)
-   {
-      for(unsigned int j=0; j<valveIndex.size(); j++)
-      {
-         if(i == valveIndex[j])
-         {
-            edges.erase(edges.begin()+i);
-            //i--;
-         }
-      }
-   }
-
-   // deleting unnecessary nodes
-   for(unsigned int i=0; i<nodes.size(); i++)
-   {
-      for(unsigned int j=0; j<nodesToDelete.size(); j++)
-      {
-         if(nodes[i]->name == nodesToDelete[j])
-         {
-            nodes.erase(nodes.begin()+i);
-            //i--;
-         }
-      }
-   }
-
-   // changing deleted nodes
-   for(unsigned int i=0; i<edges.size(); i++)
-   {
-      for(unsigned int j=0; j<nodesToDelete.size(); j++)
-      {
-         if(edges[i]->startNodeName == nodesToDelete[j])
-         {
-            edges[i]->startNodeName = changeToNodes[j];
-            edges[i]->startHeight = nodeHeight[j];
-         }
-         if(edges[i]->endNodeName == nodesToDelete[j])
-         {
-            edges[i]->endNodeName = changeToNodes[j];
-            edges[i]->endHeight = nodeHeight[j];
-         }
-      }
-   }
-
-   numberNodes = nodes.size();
-   numberEdges = edges.size();
-   numberEquations = numberEdges + numberNodes;
-
-   buildSystem();
-
-   buildIndexing();
-
-   // giving initial values to head and volume flow rates
-   initialization();
-
-   // resizing Eigen vectors
-   x.resize(numberEquations);
-   f.resize(numberEquations);
-
-
-   // Setting initial conditions to x vector
-   for(int i=0; i<numberEdges; i++)
-      x(i) = edges[i]->volumeFlowRate;
-   for(int i=0; i<numberNodes; i++)
-      x(numberEdges + i) = nodes[i]->head;
-
-   buildJacobian(); // building the Jacobian matrix
+   deleteEdge(valveIndex);
 }
+
 //--------------------------------------------------------------
 void HydraulicSolver::deletePRVValves(vector<string> valveName)
 {
@@ -1102,11 +1022,12 @@ void HydraulicSolver::deletePRVValves(vector<string> valveName)
       valveIndex.push_back(idx);
    }
 
+   valveIndex = unique(valveIndex);
    deleteISOValves(valveIndex);
 }
 
 //--------------------------------------------------------------
-void HydraulicSolver::deletePRVValves(vector<int> valveIndex)
+void HydraulicSolver::deleteEdge(vector<int> valveIndex)
 {
    vector<string> nodesToDelete;
    vector<string> changeToNodes;
@@ -1125,35 +1046,33 @@ void HydraulicSolver::deletePRVValves(vector<int> valveIndex)
    }
 
    // deleting edges
-   for(unsigned int i=0; i<edges.size(); i++)
+   for(int i=edges.size()-1; i>=0; i--)
    {
-      for(unsigned int j=0; j<valveIndex.size(); j++)
+      for(int j=valveIndex.size()-1; j>=0; j--)
       {
          if(i == valveIndex[j])
          {
-            edges.erase(edges.begin()+i);
-            i--;
+            edges.erase(edges.begin() + i);
          }
       }
    }
 
    // deleting unnecessary nodes
-   for(unsigned int i=0; i<nodes.size(); i++)
+   for(int i=nodes.size()-1; i>=0; i--)
    {
-      for(unsigned int j=0; j<nodesToDelete.size(); j++)
+      for(int j=nodesToDelete.size()-1; j>=0; j--)
       {
          if(nodes[i]->name == nodesToDelete[j])
          {
             nodes.erase(nodes.begin()+i);
-            i--;
          }
       }
    }
 
    // changing deleted nodes
-   for(unsigned int i=0; i<edges.size(); i++)
+   for(int i=0; i<edges.size(); i++)
    {
-      for(unsigned int j=0; j<nodesToDelete.size(); j++)
+      for(int j=0; j<nodesToDelete.size(); j++)
       {
          if(edges[i]->startNodeName == nodesToDelete[j])
          {
@@ -1190,4 +1109,10 @@ void HydraulicSolver::deletePRVValves(vector<int> valveIndex)
       x(numberEdges + i) = nodes[i]->head;
 
    buildJacobian(); // building the Jacobian matrix
+}
+
+//--------------------------------------------------------------
+void HydraulicSolver::deletePRVValves(vector<int> valveIndex)
+{
+   deleteEdge(valveIndex);
 }
