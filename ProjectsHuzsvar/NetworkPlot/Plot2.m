@@ -9,7 +9,7 @@ caseFolder = '../../Networks/Sopron/';
 % caseName = 'ky1';
 % caseName = 'agyagosszergeny';
 % caseName = 'csapod';
-caseName = 'balf';
+caseName = 'ivan';
 % caseName = 'acsad';
 % caseName = 'becsidomb';
 % caseName = 'villasor';
@@ -21,9 +21,9 @@ presRadius = 0.01;
 presAngle = zeros(20,1);
 poolAngle = zeros(20,1);
 tankSize = 0.02;
-valveSize = 0.015;
+valveSize = 0.0015;
 lineWidth = 2.5;
-nodeMarkerSize = 0.1;%5;%0.1
+nodeMarkerSize = 0.1;%6;%5;%0.1
 backgroundColor = [1.0,1.0,1.0];
 closedColor = [1.0,0.0,0.0];
 
@@ -31,8 +31,8 @@ closedColor = [1.0,0.0,0.0];
 
 %blackBody, blackBodyExt, cividis, coolWarmBent, coolWarmSmooth, inferno, jet, kindlmann, kindlmannExt, magma, plasma, viridis
 %discrete: lines, prism
-colorMapName = 'lines'; 
-colorBarText = 'Lokális sebezhet?ség [-]';
+colorMapName = 'prism'; 
+colorBarText = 'Szegmens sorszáma, 1';
 margin = 0.03; % margins around plot
 colorDelta = 0.16; %space for colorbar
 colorPos = "east"; %position of colorbar (east or south)
@@ -117,7 +117,6 @@ elseif(colorPos == "east")
 else
     disp('!!! WARNING !!! available colorPos: south | east'); 
 end
-
 % colorbar off
 if(colorElement == "Node" || colorElement == "None")
    pipeData = zeros(size(pipe));

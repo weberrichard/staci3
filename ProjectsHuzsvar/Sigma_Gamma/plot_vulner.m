@@ -20,8 +20,8 @@ colorMapName = 'plasma';
 colorMap = importdata(['../../Plot/ColorMaps/',colorMapName,'.col']);
 
 for I=idx
-    data{1} = importdata(join(['results/results_szakov_originalGammaDistribution.txt'],''));
-    data{2} = importdata(join(['results/results_szakov_modifiedGammaDistribution.txt'],''));
+    data{1} = importdata(join(['results/results_ivan_originalGammaDistribution.txt'],''));
+    data{2} = importdata(join(['results/results_ivan_modifiedGammaDistribution.txt'],''));
     %data{3} = importdata(join(['Network Data/',cases(I),'/vulner_Nm1.txt'],''));
     fig = figure('Position',[200 200 900 600]);
     hold on; grid on;
@@ -128,8 +128,8 @@ end
 
 network_vulner=zeros(length(idx_net),3);
 for i=idx_net
-    data2{1} = importdata(join(['results/results_tomalom_originalGammaDistribution.txt'],''));
-    data2{2} = importdata(join(['results/results_tomalom_modifiedGammaDistribution.txt'],''));
+    data2{1} = importdata(join(['results/results_ivan_originalGammaDistribution.txt'],''));
+    data2{2} = importdata(join(['results/results_ivan_modifiedGammaDistribution.txt'],''));
     %data2{3} = importdata(join(['Network Data/',cases(i),'/vulner_Nm1.txt'],''));
     network_vulner(i,1) = sum(data2{1});
     network_vulner(i,2) = sum(data2{2});

@@ -108,6 +108,7 @@ if(colorElement == "All")
         denom = max(allColor);
     else
         denom = max(allColor)-min(allColor);
+        %denom = 1-min(allColor);
     end
     nodeColor = (nodeColor-min(allColor))/denom;
     pipeColor = (pipeColor-min(allColor))/denom;
@@ -119,6 +120,7 @@ if(colorElement == "Node" || colorElement == "Both")
     if((max(nodeColor)-min(nodeColor)) == 0)
         denom = max(nodeColor);
     else
+        %denom = 1-min(nodeColor);
         denom = max(nodeColor)-min(nodeColor);
     end
     nodeColor = (nodeColor-min(nodeColor))/denom;

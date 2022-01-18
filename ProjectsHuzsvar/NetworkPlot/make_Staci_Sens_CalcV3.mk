@@ -1,5 +1,5 @@
 STACI_DIR=../bin/
-FUNC=NetworkPlotter
+FUNC=Staci_Sens_CalcV3
 
 CXX=clang++
 CXXFLAGS= -std=c++11 -Ofast -static-libgcc -static-libstdc++ -Wall -pedantic -I/usr/include/python2.7

@@ -1,5 +1,5 @@
 STACI_DIR=../bin/
-FUNC=Staci_Sensitivity_Constrained_Space
+FUNC=Staci_Capacity_Calculator
 
 CXX=clang++
 CXXFLAGS= -std=c++11 -O3 -static-libgcc -static-libstdc++ -Wall -pedantic -I/usr/include/python2.7 -I/usr/local/include/igraph

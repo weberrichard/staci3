@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 HydraulicSolver::HydraulicSolver(string spr_filename) : Staci(spr_filename)
 {
-  maxIterationNumber = 100;
+  maxIterationNumber = 1000;
   maxPressureError = 1.524e-4*5.;
   maxMassFlowError = 2.832e-5*5.;
   relaxationFactor = 1.0;
@@ -761,7 +761,7 @@ void HydraulicSolver::checkJacobianMatrix()
 void HydraulicSolver::addNewPipe(string name, string nodeFrom, string nodeTo, double density, double length, double diameter, double roughness, double volumeFlowRate, bool isCheckVavle, int frictionModel, double relativeViscosity)
 {
   edges.push_back(new Pipe(name, nodeFrom, nodeTo, density, length, diameter, roughness, volumeFlowRate, isCheckVavle, frictionModel, relativeViscosity));
-
+  cout << "nodeFrom: " << nodeFrom << endl;
   numberNodes = nodes.size();
   numberEdges = edges.size();
   numberEquations = numberEdges + numberNodes;

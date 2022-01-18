@@ -46,6 +46,9 @@ public:
 
   double getSmallestTimestep(vector< vector<double> > input);
 
+  double time_start = 0.;
+  double time_max = 2*3600;
+
 protected:
 
   vector<double> Runge_Kutta(vector< vector<double> >& x, double t, double h, vector<double> x_previous, double flow, double DX, string WhichSolver);
@@ -67,8 +70,6 @@ private:
   string solverType = "waterAge";
   // actual timestep
   double dt;
-  double time_start = 0.;
-  double time_max = 2*3600;
   double step_time = 300;
   double length_max = 0.;
   double tolerance = 0.1;
