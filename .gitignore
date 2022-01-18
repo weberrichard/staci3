@@ -35,6 +35,8 @@
 
 # models
 Networks/Sopron/*
+Networks/Sopron_2021/*
+Networks/BIWS/*
 Networks/DHI/*
 Networks/Galambos/*
 Networks/Sopron_sigma_approx_opt/*
@@ -63,5 +65,6 @@ Archive/*
 ProjectsHuzsvar/*
 ProjectsHundzsa/*
 ProjectsWeber/*
+ProjectsWeber/*/*
 */Network Data/*
 Documentation/ClassHiearchy.svg

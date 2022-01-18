@@ -32,6 +32,9 @@ public:
     bool isPressure; // true if pressureSensitivity, false if massFlowRateSensitivity
   };
 
+  // collecting the time stamps where calculations were made
+  vector<double> vectorTime;
+
   // calculating the hydraulics in time
   void seriesSolve(ssc seriesSensitivityControl);
   void seriesSolve();
@@ -49,7 +52,10 @@ public:
   void timeTableEdge(vector<string> ID, string unit);
   void timeTableEdge(vector<int> idx, string unit);
   // saving heads, consumtions for nodes and flow rate for edges in file
-  void saveToFile(vector<string> edgeID, vector<string> nodeID, string qUnit, string hUnit);
+  void saveTimeResult(vector<string> edgeID, vector<string> nodeID, string qUnit, string hUnit);
+
+  void addToPipeCVIndex(int idx);
+  void deleteFromPipeCVIndex(int idx);
 
 protected:
   // updating stuffs
@@ -66,9 +72,6 @@ protected:
 
   // Calculating new time step based on controls and rules (tank filling etc.)
   double newHydraulicTimeStep();
-
-  // collecting the time stamps where calculations were made
-  vector<double> vectorTime;
 
   // controlling the series calculations
   double endTime=0., startTime=0.;
@@ -103,6 +106,7 @@ private:
   double patternTimeStep, hydraulicTimeStepOriginal = 60.;
 
   // demand patterns
+  string basePattern;
   vector<string> patternID;
   vector<vector<double> > patternValue;
 

@@ -3,7 +3,7 @@
 //-------------------------------------------------------------------
 SeriesHydraulics::SeriesHydraulics(string fileName) : Sensitivity(fileName)
 {
-  loadTimeSettings();  
+  loadTimeSettings();
   patternIDtoIndex(); // FILLING THE PATTERNS TO THE NODES
 }
 
@@ -48,12 +48,13 @@ void SeriesHydraulics::seriesSolve(ssc seriesSensitivityControl)
 
 		hydraulicTimeStep = newHydraulicTimeStep();
 		time += hydraulicTimeStep;
+		updatePool();
 
 		// updating the settings, pools etc.
-		if(time<=endTime)
-		{
-			updatePool();
-		}
+		//if(time<=endTime)
+		//{
+		//	updatePool();
+		//}
 
 		clockTime = time;
 		while(clockTime>=86400.)
@@ -138,8 +139,10 @@ void SeriesHydraulics::saveOutput()
 	for(int i=0; i<numberNodes; i++)
 	{
 		nodes[i]->vectorHead.push_back(nodes[i]->head);
-		nodes[i]->vectorConsumption.push_back(nodes[i]->demand);
+		nodes[i]->vectorConsumption.push_back(nodes[i]->getProperty("consumption"));
+		nodes[i]->vectorDemand.push_back(nodes[i]->demand);
 		nodes[i]->vectorStatus.push_back(nodes[i]->status);
+		nodes[i]->vectorLeakage.push_back(nodes[i]->getProperty("leakage"));
 	}
 	for(int i=0; i<numberEdges; i++)
 	{
@@ -156,7 +159,9 @@ void SeriesHydraulics::clearOutput()
 	{
 		nodes[i]->vectorHead.clear();
 		nodes[i]->vectorConsumption.clear();
+		nodes[i]->vectorDemand.clear();
 		nodes[i]->vectorStatus.clear();
+		nodes[i]->vectorLeakage.clear();
 	}
 	for(int i=0; i<numberEdges; i++)
 	{
@@ -179,8 +184,21 @@ void SeriesHydraulics::seriesInitialization()
 }
 
 //-------------------------------------------------------------------
-void SeriesHydraulics::saveToFile(vector<string> edgeID, vector<string> nodeID, string qUnit, string hUnit)
+void SeriesHydraulics::saveTimeResult(vector<string> edgeID, vector<string> nodeID, string qUnit, string hUnit)
 {
+	// saving time
+  mkdir(caseName.c_str(),0777);
+	FILE* wFile;
+	string fn = caseName + "/time.txt";
+	wFile = fopen(fn.c_str(),"w");
+	fprintf(wFile, " time [s]\n");
+	for(int i=0; i<vectorTime.size(); i++)
+	{
+		fprintf(wFile,"%8.3f\n",vectorTime[i]);
+	}
+	fclose(wFile);
+
+	// converting units
 	double hConvert = 1.;
 	if(hUnit == "psi")
 		hConvert = 1/0.7032;
@@ -193,6 +211,7 @@ void SeriesHydraulics::saveToFile(vector<string> edgeID, vector<string> nodeID, 
 	else
 		qUnit = "lps";
 
+	// ID to indecies
 	vector<int> idxNode, idxEdge;
 	for(int i=0; i<nodeID.size(); i++)
 	{	
@@ -208,35 +227,18 @@ void SeriesHydraulics::saveToFile(vector<string> edgeID, vector<string> nodeID, 
 	  	idxEdge.push_back(k);
 	}
 
-	if(idxNode.size() + idxEdge.size() > 0)
+	// saving stuff
+	for(int i=0; i<idxNode.size(); i++)
 	{
-  	mkdir(caseName.c_str(),0777);
-	  ofstream wfile;
-	  wfile.open(caseName + "/seriesResults.txt");
-
-	  // writing the header
-	  wfile << "time;";
-	  for(int i=0; i<idxNode.size(); i++)
-	  	wfile << nodes[idxNode[i]]->name << " [" << hUnit << "];";
-	  for(int i=0; i<idxEdge.size(); i++)
-	  	wfile << edges[idxEdge[i]]->name << " [" << qUnit << "];";
-	  wfile << "\n";
-
-	  for(int i=0; i<vectorTime.size(); i++)
-	  {
-	  	wfile << vectorTime[i] << ";";
-	  	for(int j=0; j<idxNode.size(); j++)
-	  		wfile << nodes[idxNode[j]]->vectorHead[i]*hConvert << ";";
-	  	for(int j=0; j<idxEdge.size(); j++)
-	  		wfile << edges[idxEdge[j]]->vectorVolumeFlowRate[i]*qConvert << ";";
-	  	wfile << "\n";
-	  }
-
-	  wfile.close();
+		string fn = caseName + "/nodes";
+  	mkdir(fn.c_str(),0777);
+		nodes[idxNode[i]]->saveTimeResult(fn, hUnit, qUnit);
 	}
-	else
+	for(int i=0; i<idxEdge.size(); i++)
 	{
-		cout << endl << "!WARNING! In saveToFile() idxNode and idxEdge is empty. Continouing..." << endl;
+		string fn = caseName + "/edges";
+  	mkdir(fn.c_str(),0777);
+		edges[idxEdge[i]]->saveTimeResult(fn, qUnit);
 	}
 }
 
@@ -246,11 +248,11 @@ void SeriesHydraulics::updateDemand()
 	for(int i=0; i<numberNodes; i++)
 	{
 		double demand=0.;
-		for(int j=0; j<nodes[i]->vectorDemand.size(); j++)
+		for(int j=0; j<nodes[i]->vDemand.size(); j++)
 		{
 			if(nodes[i]->vectorPatternIndex[j] == -1)
 			{
-				demand += nodes[i]->vectorDemand[j];
+				demand += nodes[i]->vDemand[j];
 			}
 			else
 			{
@@ -259,7 +261,7 @@ void SeriesHydraulics::updateDemand()
 				// making patternvalues periodic
 				while(timeIndex>=patternValue[ptIndex].size())
 					timeIndex -= patternValue[ptIndex].size();
-				demand += nodes[i]->vectorDemand[j]*patternValue[ptIndex][timeIndex];
+				demand += nodes[i]->vDemand[j]*patternValue[ptIndex][timeIndex];
 			}
 		}
 		nodes[i]->demand = demand;
@@ -431,33 +433,186 @@ double SeriesHydraulics::newHydraulicTimeStep()
 void SeriesHydraulics::updatePool()
 {
 	for(int i=0; i<poolIndex.size(); i++)
-	{	
-		int idx = poolIndex[i]; // index of pool in edges list
-		double wl = edges[idx]->getDoubleProperty("waterLevel");
-		double vf = edges[idx]->volumeFlowRate;
-		double aref = edges[idx]->referenceCrossSection;
-		double min_wl = edges[idx]->getDoubleProperty("minLevel");
-		double max_wl = edges[idx]->getDoubleProperty("maxLevel");
+	{
+		int ei = poolIndex[i]; // index of pool in edges list
+		int ni = edges[ei]->startNodeIndex; // node index of pool
+		double wl = edges[ei]->getDoubleProperty("waterLevel");
+		double vf = edges[ei]->volumeFlowRate;
+		double aref = edges[ei]->referenceCrossSection;
+		double min_wl = edges[ei]->getDoubleProperty("minLevel");
+		double max_wl = edges[ei]->getDoubleProperty("maxLevel");
 
-		if(edges[idx]->status == 0) // CLOSED i.e. FULL
+		// new water level
+		wl += vf * hydraulicTimeStep / aref;
+
+		// controlling the in and outgoing edges
+		if(wl <= min_wl + headTolerance) // gets EMPTY
 		{
-			if(nodes[edges[idx]->startNodeIndex]->head < wl)
-				edges[idx]->status = 1;
-		}
-		else // OPEN
-		{
-			wl += vf * hydraulicTimeStep / aref;
-			if(wl <= min_wl)
-				edges[idx]->setDoubleProperty("waterLevel",min_wl);
-			else if(wl > max_wl + headTolerance)
+			edges[ei]->setDoubleProperty("waterLevel",min_wl);
+			for(int j=1; j<nodes[ni]->edgeOut.size(); j++)
 			{
-				edges[idx]->setDoubleProperty("waterLevel",max_wl);
-				edges[idx]->status = 0;
+				int idx = nodes[ni]->edgeOut[j];
+				if(edges[idx]->typeCode == 2) // pump
+				{
+					if(!edges[idx]->status_fix)
+						edges[idx]->status = 0; // closing outpointing pump
+				}
+				else // not pump
+				{
+					if(edges[idx]->volumeFlowRate > 0.)
+					{
+						if(!edges[idx]->status_fix)
+							deleteFromPipeCVIndex(idx); // opening inflowing pipes/valves
+					}
+					else
+					{
+						if(!edges[idx]->status_fix)
+							addToPipeCVIndex(-idx); // closing outflowing pipes/valves
+					}
+				}
 			}
-			else
-				edges[idx]->setDoubleProperty("waterLevel",wl);
+			for(int j=0; j<nodes[ni]->edgeIn.size(); j++)
+			{
+				int idx = nodes[ni]->edgeIn[j];
+				if(edges[idx]->typeCode == 2) // pump
+				{
+					if(!edges[idx]->status_fix)
+						edges[idx]->status = 1; // just making sure it is open
+				}
+				else // not pump
+				{
+					if(edges[idx]->volumeFlowRate > 0.)
+					{
+						if(!edges[idx]->status_fix)
+							addToPipeCVIndex(idx); // closing outflowing pipes/valves
+					}
+					else
+					{
+						if(!edges[idx]->status_fix)
+							deleteFromPipeCVIndex(idx); // opening inflowing pipes/valves
+					}
+				}
+			}
+		}
+		else if(wl >= max_wl - headTolerance) // gets FULL
+		{
+			edges[ei]->setDoubleProperty("waterLevel",max_wl);
+			bool doOverflow = edges[ei]->getBoolProperty("doOverflow");
+
+			if(!doOverflow) // overflow is not allowed (epanet default)
+			{
+				for(int j=1; j<nodes[ni]->edgeOut.size(); j++)
+				{
+					int idx = nodes[ni]->edgeOut[j];
+					if(edges[idx]->typeCode == 2) // pump
+					{
+						if(!edges[idx]->status_fix)
+							edges[idx]->status = 1; // making sure the pump is operating
+					}
+					else // not pump
+					{
+						if(edges[idx]->volumeFlowRate < 0.)
+						{
+							if(!edges[idx]->status_fix)
+								deleteFromPipeCVIndex(idx); // opening outgoing flow
+						}
+						else
+						{
+							if(!edges[idx]->status_fix)
+								addToPipeCVIndex(idx); // closing ingoing flow
+						}
+					}
+				}
+				for(int j=0; j<nodes[ni]->edgeIn.size(); j++)
+				{
+					int idx = nodes[ni]->edgeIn[j];
+					if(edges[idx]->typeCode == 2) // pump
+					{
+						if(!edges[idx]->status_fix)
+							edges[idx]->status = 0; // closing ingoing pump flow
+					}
+					else
+					{
+						if(edges[idx]->volumeFlowRate < 0.)
+						{
+							if(!edges[idx]->status_fix)
+								addToPipeCVIndex(-idx); // closing ingoing flow
+						}
+						else
+						{
+							if(!edges[idx]->status_fix)
+								deleteFromPipeCVIndex(idx); // opening outgoing flow
+						}
+					}
+				}
+			}
+		}
+		else // normal conditions
+		{
+			edges[ei]->setDoubleProperty("waterLevel",wl);
+			// opening up everyting, active valves??
+			for(int j=1; j<nodes[ni]->edgeOut.size(); j++)
+			{
+				int idx = nodes[ni]->edgeOut[j];
+				if(!edges[idx]->status_fix)
+				{
+					if(edges[idx]->typeCode != 2)
+					{
+						deleteFromPipeCVIndex(idx);
+					}
+					else
+					{
+						edges[idx]->status = 1;
+					}
+				}
+			}
+			for(int j=0; j<nodes[ni]->edgeIn.size(); j++)
+			{
+				int idx = nodes[ni]->edgeIn[j];
+				if(!edges[idx]->status_fix)
+				{
+					if(edges[idx]->typeCode != 2)
+					{
+						deleteFromPipeCVIndex(idx);
+					}
+					else
+					{
+						edges[idx]->status = 1;
+					}
+				}
+			}
 		}
 	}
+}
+
+//-------------------------------------------------------------------
+void SeriesHydraulics::addToPipeCVIndex(int idx)
+{
+	bool gotIt=false;
+	int i=0;
+	while(i<pipeCVIndex.size() && !gotIt)
+	{
+		if(pipeCVIndex[i] == idx)
+			gotIt = true;
+		i++;
+	}
+	if(!gotIt)
+		pipeCVIndex.push_back(idx);
+}
+
+//-------------------------------------------------------------------
+void SeriesHydraulics::deleteFromPipeCVIndex(int idx)
+{
+	int gotIt=-1;
+	int i=0;
+	while(i<pipeCVIndex.size() && gotIt==-1)
+	{
+		if(pipeCVIndex[i] == abs(idx))
+			gotIt = i;
+		i++;
+	}
+	if(gotIt != -1)
+		pipeCVIndex.erase(pipeCVIndex.begin()+gotIt);
 }
 
 //-------------------------------------------------------------------
@@ -540,6 +695,7 @@ void SeriesHydraulics::updateRule()
 						oldStatting.push_back(edges[rules[i]->actionIndex[j]]->setting);
 
 						edges[rules[i]->actionIndex[j]]->setting = rules[i]->actionValue[j];
+						edges[rules[i]->actionIndex[j]]->status_fix = false;
 
 						newStatting.push_back(edges[rules[i]->actionIndex[j]]->setting);
 						changedIndex.push_back(rules[i]->actionIndex[j]);
@@ -553,6 +709,7 @@ void SeriesHydraulics::updateRule()
 						oldStatting.push_back(edges[rules[i]->actionIndex[j]]->status);
 
 						edges[rules[i]->actionIndex[j]]->status = rules[i]->actionValue[j];
+						edges[rules[i]->actionIndex[j]]->status_fix = false;
 
 						newStatting.push_back(edges[rules[i]->actionIndex[j]]->status);
 						changedIndex.push_back(rules[i]->actionIndex[j]);
@@ -827,6 +984,10 @@ void SeriesHydraulics::patternIDtoIndex()
 {
  	for(int i=0; i<numberNodes; i++)
  	{
+ 		if(nodes[i]->vectorPatternID.size() == 1 && nodes[i]->vectorPatternID[0] == "")
+ 		{
+ 			nodes[i]->vectorPatternID[0] = basePattern;
+ 		}
  		for(int j=0; j<nodes[i]->vectorPatternID.size(); j++)
  		{	
  			nodes[i]->vectorPatternIndex.resize(nodes[i]->vectorPatternID.size(),-1);
@@ -891,12 +1052,12 @@ void SeriesHydraulics::loadTimeSettings()
 						vector<string> sv=line2sv(line);
 						if(sv.size()==3)
 						{
-							nodes[i]->vectorDemand.push_back(demandUnit*stod(sv[2],0));
+							nodes[i]->vDemand.push_back(demandUnit*stod(sv[2],0));
 							nodes[i]->vectorPatternID.push_back("");
 						}
 						if(sv.size()>3)
 						{
-							nodes[i]->vectorDemand.push_back(demandUnit*stod(sv[2],0));
+							nodes[i]->vDemand.push_back(demandUnit*stod(sv[2],0));
 							nodes[i]->vectorPatternID.push_back(sv[3]);
 						}
 						i++;
@@ -954,7 +1115,7 @@ void SeriesHydraulics::loadTimeSettings()
 							{
 								if(id == nodes[i]->name)
 								{
-									nodes[i]->vectorDemand.push_back(demandUnit*stod(sv[1],0));
+									nodes[i]->vDemand.push_back(demandUnit*stod(sv[1],0));
 									if(sv.size()>=3)
 										nodes[i]->vectorPatternID.push_back(sv[2]);
 									else
@@ -1060,6 +1221,33 @@ void SeriesHydraulics::loadTimeSettings()
 					}
 				}
 			}
+
+			// LOADING THE DEMANDS AND PATTERNS FOR SERIES CALC
+	  	if(line.substr(0,9) == "[OPTIONS]")
+	  	{
+				while(getline(fileIn,line))
+				{
+					while(line.length() <= 1) // skipping the empty lines
+		  			getline(fileIn,line);
+
+					if(line[0] == '[') // reaching the end of this section
+						break;
+
+					if(line[0] != ';')
+					{
+						vector<string> sv=line2sv(line);
+						if(sv.size()>=2)
+						{
+							if(sv[0] == "Pattern" || sv[0] == "PATTERN")
+							{
+								if(sv.size()>1)
+									basePattern = sv[1];
+							}
+						}
+					}
+				}
+			}
+
 	  	// LOADING CONTROLS
   		// TODO: do this in more general way, handling time contorls as well (maybe struct or class)
 	  	if(line.substr(0,10) == "[CONTROLS]")

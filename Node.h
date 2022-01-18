@@ -23,6 +23,7 @@
 #include <cmath>
 #include <ctime>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include </usr/include/eigen3/Eigen/Eigen>
 
@@ -69,6 +70,9 @@ public:
 
   vector<double> getTimeSeries(string prop);
 
+  // saving timeseries results
+  void saveTimeResult(string folderName, string hUnit, string qUnit);
+
   /// Printing basic information about the node to console and log file
   string info(bool check_if_lonely);
 
@@ -78,13 +82,16 @@ public:
 
   // [m] for series calculations
   vector<double> vectorHead;
-  // [l/s] actual served water in time
+  // [m3/s] actual served water in time
   vector<double> vectorConsumption;
   // [-] status of the nodes, 1: open, 0: closed
   vector<int> vectorStatus;
+  // [m3/s] leakage
+  vector<double> vectorLeakage;
+  vector<double> vectorDemand;
 
   // [l/s] for series calculations, node can have multiple demand with different pattern
-  vector<double> vectorDemand;
+  vector<double> vDemand;
   // patterns for series calculations
   vector<string> vectorPatternID;
   vector<int> vectorPatternIndex;
@@ -98,7 +105,7 @@ public:
   int segment=-1; // the node takes place in which segment
   int DMAZone=-1; // the node takes place in which DMA zone
   double pdExponent = 2.5, pdDesiredPressure = 25., pdMinPressure = 10.; // in case of pressure dependent consumptions
-  double leakageExponent = 1.18, leakageConstant = 1, leakageMinPressure = 10; // in case of leakage modelling //For Balf 0.00000003
+  double leakageExponent = 1.18, leakageConstant = 1., leakageMinPressure = 10.; // in case of leakage modelling //For Balf 0.00000003
   double userOutput;
 
   // Quality timeseries
