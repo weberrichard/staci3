@@ -1,0 +1,76 @@
+#+TITLE: RKF 7(8) Method for Celestial Dynamics on C++
+
+
+* Table of Contents                                                             :TOC:
+ - [[#purpose][Purpose]]
+ - [[#contents][Contents]]
+   - [[#lorenz-attractor][Lorenz attractor]]
+   - [[#two-body-problem][Two-body problem]]
+   - [[#three-body-problems][Three-body problems]]
+     - [[#restricted-three-body-problem][Restricted three-body problem]]
+       - [[#pcr3bp][PCR3BP]]
+       - [[#poincaré-section][Poincaré Section]]
+       - [[#sitnikov-problem][Sitnikov problem]]
+   - [[#gaussian-perturbation][Gaussian perturbation]]
+   - [[#laplaces-parameter][Laplace's parameter]]
+   - [[#spin-orbit-resonance][Spin-orbit resonance]]
+
+* Purpose
+Using Runge-Kutta-Fehlberg 7(8) method for solving numerical problems
+in celestial dynamics, for example, two-body and three-body problems, mainly
+on C++ with some python scripts for plotting.
+
+* Contents
+
+** Lorenz attractor
+
+[[file:img/lorenz.png]]
+** Two-body problem
+Modify the  parameters at the beginning of =twobody.cpp=, and
+type following command in your *nix terminal:
+
+#+BEGIN_SRC sh
+  make
+  make run_twobody
+  make plot_twobody
+#+END_SRC
+
+[[file:img/orbit_trace.png]]
+** Three-body problems
+*** Restricted three-body problem
+**** PCR3BP
+
+Planar circular restricted 3-body problem
+
+[[file:img/pcr3b.png]]
+
+**** Poincaré Section
+
+[[file:img/poincare_section_l1.png]]
+
+[[file:img/poincare_section_l2.png]]
+
+[[file:img/poincare_section_l3.png]]
+
+[[file:img/poincare_section_l4.png]]
+
+**** Sitnikov problem
+
+[[file:img/sitnikov_circle.png]]
+
+[[file:img/sitnikov_ellipse.png]]
+** Gaussian perturbation
+
+#+BEGIN_SRC sh
+  make
+  make run_gaussperturb
+  make plot_gaussperturb
+#+END_SRC
+
+[[file:img/gauss_perturb.png]]
+** Laplace's parameter
+
+[[file:img/laplace_param.png]]
+** Spin-orbit resonance
+
+[[file:img/sor.png]]

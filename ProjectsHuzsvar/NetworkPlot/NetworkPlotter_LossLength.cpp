@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
     string ID1 = argv[2];
     string ID2 = argv[3];
     //------------------------------------------------------------------------Staci init----------------------------------------------------------------//
-    string case_folder = "../../Networks/Sopron/";
+    string case_folder = "../../Networks/ky/";
     string case_name = Network;
     //-----------------------------------------------------------------------Staci init End-------------------------------------------------------------//
     cout << "[*]Network: " << case_folder << case_name << ".inp" << endl;
@@ -109,51 +109,51 @@ int main(int argc, char *argv[])
         }
     }
     cin.get();
+    int EdgeLossID = 0;
     for (int i = 0; i < wds->edges.size(); ++i)
     {
         if(wds->edges[i]->typeCode == 1 || wds->edges[i]->typeCode == 0) // pipe, pipeCV
         {
             EdgeLoss = wds->edges.at(i)->getDoubleProperty("volumeFlowRate")*wds->edges.at(i)->getDoubleProperty("volumeFlowRate")*wds->edges.at(i)->getDoubleProperty("pipeConst");
-            if(EdgeLoss > 0.03)
-                wds->edges.at(i)->setEdgeDoubleProperty("userOutput",0);
-            else
-                wds->edges.at(i)->setEdgeDoubleProperty("userOutput",EdgeLoss);
-            //cout << "Edge loss: " << wds->edges.at(i)->getEdgeDoubleProperty("userOutput") << endl; 
+            if(EdgeLoss > EdgeLossMax)
+                EdgeLossMax = EdgeLoss;
+                EdgeLossID = i;
+            
         }
     }
-    /*for (int i = 0; i < wds->edges.size(); ++i)
-    {
-        if(wds->edges[i]->typeCode == 1 || wds->edges[i]->typeCode == 0) // pipe, pipeCV
-        {
-            EdgeLoss = wds->edges.at(i)->getDoubleProperty("volumeFlowRate")*wds->edges.at(i)->getDoubleProperty("volumeFlowRate")*wds->edges.at(i)->getDoubleProperty("pipeConst");
-            if(EdgeLoss/wds->edges.at(i)->getDoubleProperty("length") > EdgeLossMax);
-                EdgeLossMax = EdgeLoss/wds->edges.at(i)->getDoubleProperty("length");
-            //cout << "Edge loss: " << wds->edges.at(i)->getEdgeDoubleProperty("userOutput") << endl; 
-        }
-    }*/
-    /*vector<int> IndexList;
+    cout << "Edge loss max: " << EdgeLossMax << " , " << wds->edges.at(EdgeLossID)->getEdgeIntProperty("startNodeIndex") << " , " << wds->edges.at(EdgeLossID)->getEdgeIntProperty("endNodeIndex") << " , " <<wds->edges.at(EdgeLossID)->getDoubleProperty("length")<< endl; 
+    cout << EdgeLossMax << endl;
+    double Input = 0.;
+    vector<int> IndexList;
     vector<double> LossLength; 
     for (int i = 0; i < wds->edges.size(); ++i)
     {
         if(wds->edges[i]->typeCode == 1 || wds->edges[i]->typeCode == 0) // pipe, pipeCV
         {
             EdgeLoss = wds->edges.at(i)->getDoubleProperty("volumeFlowRate")*wds->edges.at(i)->getDoubleProperty("volumeFlowRate")*wds->edges.at(i)->getDoubleProperty("pipeConst");
+            //cout << "Edge loss: " << EdgeLoss << endl; 
             LossLength.push_back(EdgeLoss/wds->edges.at(i)->getDoubleProperty("length"));
-            IndexList.push_back(i);
-            //cout << "Edge loss: " << wds->edges.at(i)->getEdgeDoubleProperty("userOutput") << endl; 
+            Input = (EdgeLoss)/EdgeLossMax;///wds->edges.at(i)->getDoubleProperty("length")
+            //Input = 2;
+            if(Input < 0.015q)
+            {
+                wds->edges.at(i)->setEdgeDoubleProperty("userOutput",Input);
+                IndexList.push_back(i);
+            }
         }
     }
-    quickSort(LossLength, IndexList, 0, LossLength.size()-1);
-
+    /*quickSort(LossLength, IndexList, 0, wds->edges.size());
+    //wds->solveSystem();
     for (int i = 0; i < IndexList.size(); ++i)
     {
         if(wds->edges[i]->typeCode == 1 || wds->edges[i]->typeCode == 0) // pipe, pipeCV
         {
-            EdgeLoss = wds->edges.at(i)->getDoubleProperty("volumeFlowRate")*wds->edges.at(i)->getDoubleProperty("volumeFlowRate")*wds->edges.at(i)->getDoubleProperty("pipeConst");
-            wds->edges.at(i)->setEdgeDoubleProperty("userOutput",i);
-            //cout << "Edge loss: " << wds->edges.at(i)->getEdgeDoubleProperty("userOutput") << endl; 
+            EdgeLoss = wds->edges.at(IndexList[i])->getDoubleProperty("volumeFlowRate")*wds->edges.at(IndexList[i])->getDoubleProperty("volumeFlowRate")*wds->edges.at(IndexList[i])->getDoubleProperty("pipeConst");
+            
+            wds->edges.at(IndexList[i])->setEdgeDoubleProperty("userOutput",i);
         }
+        cout << "Edge loss: " << LossLength[i] << " , " << IndexList[i] << endl; 
     }*/
-    wds->saveResult("userOutput", "All");
+    wds->saveResult("head", "All");
     cout << "[*]Plot generation ended succesfully...." << endl;
 }
