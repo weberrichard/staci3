@@ -139,8 +139,10 @@ void SeriesHydraulics::saveOutput()
 	for(int i=0; i<numberNodes; i++)
 	{
 		nodes[i]->vectorHead.push_back(nodes[i]->head);
-		nodes[i]->vectorConsumption.push_back(nodes[i]->demand);
+		nodes[i]->vectorConsumption.push_back(nodes[i]->getProperty("consumption"));
+		nodes[i]->vectorDemand.push_back(nodes[i]->demand);
 		nodes[i]->vectorStatus.push_back(nodes[i]->status);
+		nodes[i]->vectorLeakage.push_back(nodes[i]->getProperty("leakage"));
 	}
 	for(int i=0; i<numberEdges; i++)
 	{
@@ -157,7 +159,9 @@ void SeriesHydraulics::clearOutput()
 	{
 		nodes[i]->vectorHead.clear();
 		nodes[i]->vectorConsumption.clear();
+		nodes[i]->vectorDemand.clear();
 		nodes[i]->vectorStatus.clear();
+		nodes[i]->vectorLeakage.clear();
 	}
 	for(int i=0; i<numberEdges; i++)
 	{
@@ -180,8 +184,21 @@ void SeriesHydraulics::seriesInitialization()
 }
 
 //-------------------------------------------------------------------
-void SeriesHydraulics::saveToFile(vector<string> edgeID, vector<string> nodeID, string qUnit, string hUnit)
+void SeriesHydraulics::saveTimeResult(vector<string> edgeID, vector<string> nodeID, string qUnit, string hUnit)
 {
+	// saving time
+  mkdir(caseName.c_str(),0777);
+	FILE* wFile;
+	string fn = caseName + "/time.txt";
+	wFile = fopen(fn.c_str(),"w");
+	fprintf(wFile, " time [s]\n");
+	for(int i=0; i<vectorTime.size(); i++)
+	{
+		fprintf(wFile,"%8.3f\n",vectorTime[i]);
+	}
+	fclose(wFile);
+
+	// converting units
 	double hConvert = 1.;
 	if(hUnit == "psi")
 		hConvert = 1/0.7032;
@@ -194,6 +211,7 @@ void SeriesHydraulics::saveToFile(vector<string> edgeID, vector<string> nodeID, 
 	else
 		qUnit = "lps";
 
+	// ID to indecies
 	vector<int> idxNode, idxEdge;
 	for(int i=0; i<nodeID.size(); i++)
 	{	
@@ -209,35 +227,18 @@ void SeriesHydraulics::saveToFile(vector<string> edgeID, vector<string> nodeID, 
 	  	idxEdge.push_back(k);
 	}
 
-	if(idxNode.size() + idxEdge.size() > 0)
+	// saving stuff
+	for(int i=0; i<idxNode.size(); i++)
 	{
-  	mkdir(caseName.c_str(),0777);
-	  ofstream wfile;
-	  wfile.open(caseName + "/seriesResults.txt");
-
-	  // writing the header
-	  wfile << "time;";
-	  for(int i=0; i<idxNode.size(); i++)
-	  	wfile << nodes[idxNode[i]]->name << " [" << hUnit << "];";
-	  for(int i=0; i<idxEdge.size(); i++)
-	  	wfile << edges[idxEdge[i]]->name << " [" << qUnit << "];";
-	  wfile << "\n";
-
-	  for(int i=0; i<vectorTime.size(); i++)
-	  {
-	  	wfile << vectorTime[i] << ";";
-	  	for(int j=0; j<idxNode.size(); j++)
-	  		wfile << nodes[idxNode[j]]->vectorHead[i]*hConvert << ";";
-	  	for(int j=0; j<idxEdge.size(); j++)
-	  		wfile << edges[idxEdge[j]]->vectorVolumeFlowRate[i]*qConvert << ";";
-	  	wfile << "\n";
-	  }
-
-	  wfile.close();
+		string fn = caseName + "/nodes";
+  	mkdir(fn.c_str(),0777);
+		nodes[idxNode[i]]->saveTimeResult(fn, hUnit, qUnit);
 	}
-	else
+	for(int i=0; i<idxEdge.size(); i++)
 	{
-		cout << endl << "!WARNING! In saveToFile() idxNode and idxEdge is empty. Continouing..." << endl;
+		string fn = caseName + "/edges";
+  	mkdir(fn.c_str(),0777);
+		edges[idxEdge[i]]->saveTimeResult(fn, qUnit);
 	}
 }
 
@@ -247,11 +248,11 @@ void SeriesHydraulics::updateDemand()
 	for(int i=0; i<numberNodes; i++)
 	{
 		double demand=0.;
-		for(int j=0; j<nodes[i]->vectorDemand.size(); j++)
+		for(int j=0; j<nodes[i]->vDemand.size(); j++)
 		{
 			if(nodes[i]->vectorPatternIndex[j] == -1)
 			{
-				demand += nodes[i]->vectorDemand[j];
+				demand += nodes[i]->vDemand[j];
 			}
 			else
 			{
@@ -260,7 +261,7 @@ void SeriesHydraulics::updateDemand()
 				// making patternvalues periodic
 				while(timeIndex>=patternValue[ptIndex].size())
 					timeIndex -= patternValue[ptIndex].size();
-				demand += nodes[i]->vectorDemand[j]*patternValue[ptIndex][timeIndex];
+				demand += nodes[i]->vDemand[j]*patternValue[ptIndex][timeIndex];
 			}
 		}
 		nodes[i]->demand = demand;
@@ -1051,12 +1052,12 @@ void SeriesHydraulics::loadTimeSettings()
 						vector<string> sv=line2sv(line);
 						if(sv.size()==3)
 						{
-							nodes[i]->vectorDemand.push_back(demandUnit*stod(sv[2],0));
+							nodes[i]->vDemand.push_back(demandUnit*stod(sv[2],0));
 							nodes[i]->vectorPatternID.push_back("");
 						}
 						if(sv.size()>3)
 						{
-							nodes[i]->vectorDemand.push_back(demandUnit*stod(sv[2],0));
+							nodes[i]->vDemand.push_back(demandUnit*stod(sv[2],0));
 							nodes[i]->vectorPatternID.push_back(sv[3]);
 						}
 						i++;
@@ -1114,7 +1115,7 @@ void SeriesHydraulics::loadTimeSettings()
 							{
 								if(id == nodes[i]->name)
 								{
-									nodes[i]->vectorDemand.push_back(demandUnit*stod(sv[1],0));
+									nodes[i]->vDemand.push_back(demandUnit*stod(sv[1],0));
 									if(sv.size()>=3)
 										nodes[i]->vectorPatternID.push_back(sv[2]);
 									else

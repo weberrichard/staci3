@@ -424,7 +424,7 @@ int Staci::edgeIDtoIndex(string ID)
   }
   if(idx == -1)
   {
-    cout << "\n!!!WARNING!!!\nStaci:edgeIDtoIndex function\nNode is not existing, ID: " << ID << "\nContinouing..." << endl;
+    cout << "\n!!!WARNING!!!\nStaci:edgeIDtoIndex function\nEdge is not existing, ID: " << ID << "\nContinouing..." << endl;
   }
   return idx;
 }

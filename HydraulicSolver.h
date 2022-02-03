@@ -74,6 +74,8 @@ public:
   void deletePRVValves(vector<string> valveName);
   void deletePRVValves(vector<int> valveIndex);
 
+  // general delete function
+  void deleteEdge(vector<int> index);
 
 	/// Jacobian matrix in a sparse Eigen type container
 	/// Used in f(x) = 0, and also in Sensitivity class

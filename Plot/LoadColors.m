@@ -79,6 +79,12 @@ if(~isLogColorMap)
         else
             colorBarTicks = min(nodeColor):(max(nodeColor)-min(nodeColor))/10:max(nodeColor);
         end
+    elseif(colorElement == "Valve")
+        if(max(valveColor)-min(valveColor) == 0)
+            colorBarTicks = repmat(max(valveColor),11,1);
+        else
+            colorBarTicks = min(valveColor):(max(valveColor)-min(valveColor))/10:max(valveColor);
+        end
     elseif(colorElement == "All")
         if(max(allColor)-min(allColor) == 0)
             colorBarTicks = repmat(max(allColor),11,1);
@@ -108,6 +114,7 @@ if(colorElement == "All")
         denom = max(allColor);
     else
         denom = max(allColor)-min(allColor);
+        %denom = 1-min(allColor);
     end
     nodeColor = (nodeColor-min(allColor))/denom;
     pipeColor = (pipeColor-min(allColor))/denom;
@@ -119,6 +126,7 @@ if(colorElement == "Node" || colorElement == "Both")
     if((max(nodeColor)-min(nodeColor)) == 0)
         denom = max(nodeColor);
     else
+        %denom = 1-min(nodeColor);
         denom = max(nodeColor)-min(nodeColor);
     end
     nodeColor = (nodeColor-min(nodeColor))/denom;
@@ -130,6 +138,14 @@ if(colorElement == "Pipe" || colorElement == "Both")
         denom = max(pipeColor)-min(pipeColor);
     end
     pipeColor = (pipeColor-min(pipeColor))/denom;
+end
+if(colorElement == "Valve")
+    if((max(valveColor)-min(valveColor)) == 0)
+        denom = max(valveColor);
+    else
+        denom = max(valveColor)-min(valveColor);
+    end
+    valveColor = (valveColor-min(valveColor))/denom;
 end
 
 

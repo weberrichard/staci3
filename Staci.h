@@ -101,6 +101,8 @@ public:
   vector<string> line2sv(string line); // cutting string line to pieces
   string frictionModel; // Darcy-Weisbach (DW) or Hazen-Williams (HW)
   
+  string caseName;
+  
 protected:
 
   // UNITS
@@ -108,7 +110,6 @@ protected:
   string unit; // SI or US
 
   // name of the network without extension or folders
-  string caseName;
   string definitionFile;
 
   // Creates the indicies for the nodes of edges and edges of nodes i.e. indexing of the sparse Jacobian

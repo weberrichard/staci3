@@ -101,10 +101,7 @@ int main(int argc, char *argv[])
      ISOValvesToDelete.push_back(wds->valveISOIndex[i]);
     }
     wds->deleteISOValves(ISOValvesToDelete);
-    // todo string helyett index
-
-    // loading iso valve positions
-    string inFileName = argv[3];
+    string inFileName = argv[2];
     vector<string> fileData = readVectorString(inFileName);
     vector<int> addISOPipe;
     vector<bool> isStart;

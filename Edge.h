@@ -58,6 +58,9 @@ public:
   /// Setting the fricition model: DW (Darcy-Weisbach) | HW (Hazen-Williams)
   virtual void setFrictionModel(string friction_model){};
 
+  /// Saving time results to file 
+  void saveTimeResult(string folderName, string qUnit);
+
   /// Containing the status of the edge, -1: manually closed, 0: closed, 1: open, 2: active (in case of active edges)
   int status;
   bool status_fix=false; // mannually can be prescribed the status
