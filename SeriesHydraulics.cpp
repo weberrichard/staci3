@@ -3,8 +3,11 @@
 //-------------------------------------------------------------------
 SeriesHydraulics::SeriesHydraulics(string fileName) : Sensitivity(fileName)
 {
+	cout << "1" << endl;
   loadTimeSettings();
+  cout << "2" << endl;
   patternIDtoIndex(); // FILLING THE PATTERNS TO THE NODES
+  cout << "3" << endl;
 }
 
 //-------------------------------------------------------------------

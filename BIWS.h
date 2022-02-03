@@ -22,7 +22,8 @@
 #include <algorithm>
 #include <stdio.h>
 #include <sys/stat.h>
-
+#include <iostream>
+#include <vector>
 #include "SeriesHydraulics.h"
 
 using namespace std;
@@ -38,18 +39,24 @@ public:
 
 	// calculating fitness functions: ff and I
 	void evaluate();
-
+	void readCostTable(string fname, string whichCost);
 	// modifying stuff
-	double leakageRepair(int year, string leakageID);
-	double replacePipe(int year, string pipeID, double newDiameter);
-	double increaseTank(int year, string tankID, double newVolume);
-	double installValve(int year, string pipeID, bool isStart, string type);
-	double replacePump(int year, string pumpID, double newQ, double newH);
-	double installFrequencyInverter(int year, string pumpID);
+	double leakageRepair(int year, string leakageID_local, bool Activate);
+	double replacePipe(int year, string pipeID, double newDiameter, bool Activate);
+	double increaseTank(int year, string tankID, double newVolume, bool Activate);
+	double installValve(int year, string pipeID, bool isStart, string type, double setting, bool Activate);
+	double replacePump(int year, string pumpID, double newQ, double newH, bool Activate);
+	double installFrequencyInverter(int year, string pumpID, double RevRate, bool Activate);
 
 	// fitnes functions
 	vector<double> I;
 	vector<vector<double> > ff;
+
+	bool PipeReplacementCost_Read = false;//->Menjen privatebe
+	bool ValvePlacementCost_Read = false;
+
+	vector<vector<string> > PipeReplacementCost;
+	vector<vector<string> > ValvePlacementCost;
 
 	// printing fitness functions to console
 	void printFitnessFunction();

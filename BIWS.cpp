@@ -27,6 +27,7 @@ BIWS::BIWS(string fileName)
 
 	for(int i=0; i<nYear; i++)
 	{
+		cout << "EZ OK: " << fileName << endl;
 		// loading the INP file
 		wds[i] = new SeriesHydraulics(fileName);
 
@@ -59,6 +60,10 @@ BIWS::BIWS(string fileName)
 		{
 			wds[i]->edges[wds[i]->pumpIndex[j]]->setDoubleProperty("efficiencyNominal",oldEta);
 		}
+
+		///----------- Read cost tables ---------------///
+		readCostTable("PipeReplacementCost.csv","PipeReplacementCost");
+		readCostTable("ValvePlacementCost.csv","ValvePlacementCost");
 	}
 }
 
@@ -330,46 +335,208 @@ void BIWS::evaluate()
 }
 
 //--------------------------------------------------------------
-double BIWS::leakageRepair(int year, string leakageID)
+double BIWS::leakageRepair(int year, string leakageID_local, bool Activate)
 {
-	double cost=0.;
+	double cost=0., leakageCoefficientLocal = 0., pipeDiameter = 0., C_det = 0., C_repair = 0.;
+	int EdgeID;
+	for (int i = 0; i < leakageEdgeID.at(year).size(); ++i)
+	{
+		if(leakageEdgeID[year].at(i) == leakageID_local)
+		{
+			leakageCoefficientLocal = leakageCoefficient[year][i];
+			EdgeID = wds[year]->edgeIDtoIndex(leakageID_local);
+			pipeDiameter = wds[year]->edges.at(EdgeID)->getDoubleProperty("diameter");
+			cout << pipeDiameter << " " << EdgeID << " " << leakageCoefficientLocal << endl;
+			if(Activate == true)
+			{
+				for (int j = year; j < nYear; ++j)
+				{
+					leakageEdgeLength.at(j).erase(leakageEdgeLength[j].begin()+i);
+					leakageCoefficient.at(j).erase(leakageCoefficient[j].begin()+i);
+					leakageEdgeID.at(j).erase(leakageEdgeID.at(j).begin()+i);
+				}
+			}
+		}
+	}
+	C_repair = (94-0.3*pipeDiameter+0.01*pipeDiameter*pipeDiameter)*(1.5+0.11*log10(leakageCoefficientLocal));
+	cout << " C_rep: " << C_repair << endl;
+	C_det = 2400*exp(-28*leakageCoefficientLocal);
+	cout << " C_det: " << C_det << endl;
+	cost = C_det+C_repair;
+	cout << " a csere költsége: " << cost << endl;
+	if(cost == 0.)
+		cout << "ZERO COST DETECTED!!!!!!!!!!!!! " << year << " ID: " << leakageID_local << " leakageRepair" << endl;
 	return cost;
 }
 
 //--------------------------------------------------------------
-double BIWS::replacePipe(int year, string pipeID, double newDiameter)
+double BIWS::replacePipe(int year, string pipeID, double newDiameter, bool Activate)
 {
-	// use newHW variable for Hazen coef
-	double cost=0.;
+	double cost=0., pipeDiameter = 0., pipeLength = 0., CostPerMeter = 0.;
+	bool IdentifiedDiameter = false, found = false, getBack = true;
+	int pipeIndex = 0, leakageCoefficientLocal = 0, EdgeID = 0;
+	pipeIndex = wds[year]->edgeIDtoIndex(pipeID);
+	pipeLength = wds[year]->edges.at(pipeIndex)->getDoubleProperty("length");
+	for (int i = 1; i < PipeReplacementCost[0].size(); ++i)
+	{
+		if (newDiameter == stod(PipeReplacementCost[0][i])/1000.)
+		{
+			CostPerMeter = stod(PipeReplacementCost[1][i]);
+			IdentifiedDiameter = true;
+		}
+	}
+	while (getBack == true)
+	{
+		getBack = false;
+		for (int i = 0; i < leakageEdgeID[year].size(); ++i)
+		{
+			if(leakageEdgeID[year].at(i) == pipeID)
+			{
+				found = true;
+				leakageCoefficientLocal = leakageCoefficient[year][i];
+				pipeDiameter = wds[year]->edges.at(pipeIndex)->getDoubleProperty("diameter");
+				if(Activate == true)
+				{
+					for (int j = year; j < nYear; ++j)
+					{
+						getBack = true;
+						leakageEdgeLength.at(j).erase(leakageEdgeLength[j].begin()+i);
+						leakageCoefficient.at(j).erase(leakageCoefficient[j].begin()+i);
+						leakageEdgeID.at(j).erase(leakageEdgeID.at(j).begin()+i);
+						wds[j]->edges.at(pipeIndex)->setDoubleProperty("roughness", 120.);
+					}
+				}
+			}
+		}
+		if (found == false && Activate == true)
+		{
+			for (int j = year; j < nYear; ++j)
+			{
+				wds[j]->edges.at(pipeIndex)->setDoubleProperty("roughness", 120.);
+			}
+		}
+	}
+	cost = pipeLength*CostPerMeter;
+	cout << "Pipe replace cost: " << cost << endl;
+	if(cost == 0.)
+		cout << "ZERO COST DETECTED!!!!!!!!!!!!! " << year << " ID: " << pipeID << " PIPE REPLACE" << endl;
 	return cost;
 }
 
 //--------------------------------------------------------------
-double BIWS::increaseTank(int year, string tankID, double newVolume)
+double BIWS::increaseTank(int year, string tankID, double newVolume, bool Activate)
 {
-
-	double cost=0.;
+	double cost=0., oldVolume = 0., area = 0., minLevelLocal = 0., maxLevelLocal = 0., Aref_New = 0., initLevelLocal = 0., initLevel_New = 0.;
+	int EdgeID = wds[year]->edgeIDtoIndex(tankID);
+	minLevelLocal = wds[year]->edges.at(EdgeID)->getDoubleProperty("minLevel");
+	maxLevelLocal = wds[year]->edges.at(EdgeID)->getDoubleProperty("maxLevel");
+	initLevelLocal = wds[year]->edges.at(EdgeID)->getDoubleProperty("initLevel");
+	area = wds[year]->edges.at(EdgeID)->getDoubleProperty("Aref");
+	oldVolume = (maxLevelLocal-minLevelLocal)*area;//Mivel elvileg a max level ugyan annyi marad és hengeres a tartály, ezért
+	if (Activate == true)
+	{
+		Aref_New = newVolume/maxLevelLocal;
+		initLevel_New = (area*(initLevelLocal-minLevelLocal))/Aref_New;
+		for (int j = year; j < nYear; ++j)
+		{
+			wds[j]->edges.at(EdgeID)->setDoubleProperty("reference_cross_section",Aref_New);
+			wds[j]->edges.at(EdgeID)->setDoubleProperty("initLevel",initLevel_New);
+		}
+	}
+	cout << " newVolume: " << newVolume << " oldVolume: " << oldVolume << endl;
+	cost = 2000 + 200*(newVolume-oldVolume);
+	cout << " increase Tank cost: " << cost << endl;
+	if(cost <= 2000.)
+		cout << "ZERO COST DETECTED!!!!!!!!!!!!!" << endl;
 	return cost;
 }
 
 //--------------------------------------------------------------
-double BIWS::installValve(int year, string pipeID, bool isStart, string type)
+double BIWS::installValve(int year, string pipeID, bool isStart, string type, double setting, bool Activate)
 {
-	double cost=0.;
+	double cost=0., edgeDiameter=0., Av = 0., Bv = 0.;
+	int EdgeID = wds[year]->edgeIDtoIndex(pipeID);
+	edgeDiameter = wds[year]->edges.at(EdgeID)->getDoubleProperty("diameter");
+	cout << edgeDiameter << endl;
+	for (int i = 0; i < ValvePlacementCost.size(); ++i)
+	{
+		if (ValvePlacementCost[i][0] == type)
+		{
+			Av = stod(ValvePlacementCost[i][1]);
+			Bv = stod(ValvePlacementCost[i][2]);
+		}
+	}
+	if (Activate == true)
+	{
+		for (int j = year; j < nYear; ++j)
+		{
+			cout << "majd prv ide..." << endl;
+			//wds[j]->addNewPRVValves("new_Valve", pipeID, 0., 1000., 0.1, setting, 0.1, 0.);
+		}
+	}
+	cost = Av*pow(edgeDiameter,Bv);
+	cout << "install Valve cost: " << cost << endl;
 	return cost;
 }
 
 //--------------------------------------------------------------
-double BIWS::replacePump(int year, string pumpID, double newQ, double newH)
+double BIWS::replacePump(int year, string pumpID, double newQ, double newH, bool Activate)
 {
-	double cost=0.;
+	double cost=0., costOfPipeExtractionPerMeter = 500., baseLvl = 0., pumpLvl = 0., C_ex = 0., C_np = 0., P_BEP = 0.;//->Kilowattban kell
+	int SNI = 0, ENI = 0;
+	int EdgeID = wds[year]->edgeIDtoIndex(pumpID);
+	SNI = wds[year]->edges.at(EdgeID)->startNodeIndex;
+	ENI = wds[year]->edges.at(EdgeID)->endNodeIndex;
+	P_BEP = newQ*newH*1000*9.81/1000.;
+	for (int i = 0; i < wds[year]->presIndex.size(); ++i)
+	{
+		if ( (wds[year]->edges.at(wds[year]->poolIndex[i])->startNodeIndex == ENI && wds[year]->edges.at(i)->type == "Reservoir") || (wds[year]->edges.at(i)->endNodeIndex == ENI && wds[year]->edges.at(i)->type == "Reservoir"))//Reservoirindexú vector<int> 
+		{
+			baseLvl = wds[year]->edges.at(i)->getEdgeDoubleProperty("head");
+			pumpLvl = wds[year]->nodes.at(SNI)->getProperty("height"); 
+		}
+		else if(wds[year]->edges.at(i)->startNodeIndex == SNI && wds[year]->edges.at(i)->type == "Reservoir" || wds[year]->edges.at(i)->endNodeIndex == SNI && wds[year]->edges.at(i)->type == "Reservoir")
+		{
+			baseLvl = wds[year]->edges.at(i)->getEdgeDoubleProperty("head");
+			pumpLvl = wds[year]->nodes.at(ENI)->getProperty("height"); 
+		}
+	}
+	if(baseLvl == 0. || pumpLvl == 0.)
+		cout << " No reservoir found.... !!! " << pumpID << " replacePump" << endl;
+	if (Activate == true)
+	{
+		for (int j = year; j < nYear; ++j)
+		{
+			wds[j]->edges.at(EdgeID)->setDoubleProperty("volumeFlowRate",newQ);
+			wds[j]->edges.at(EdgeID)->setDoubleProperty("efficiencyNominal",0.8);
+		}
+	}
+	C_ex = (pumpLvl - baseLvl)*costOfPipeExtractionPerMeter;
+	C_np = 1475*pow(P_BEP,0.525);
+	cost = C_ex+C_np;
+	if(cost <= 0.)
+		cout << "ZERO COST DETECTED!!!!!!!!!!!!!" << endl;
+	cout << " cost: " << cost << endl;
 	return cost;
 }
 
 //--------------------------------------------------------------
-double BIWS::installFrequencyInverter(int year, string pumpID)
+double BIWS::installFrequencyInverter(int year, string pumpID, double RevRate, bool Activate)
 {
-	double cost=0.;
+	double cost=0., P_BEP = 0.;
+	int EdgeID = wds[year]->edgeIDtoIndex(pumpID);
+	P_BEP = wds[year]->edges.at(EdgeID)->getDoubleProperty("head")*wds[year]->edges.at(EdgeID)->getDoubleProperty("volumeFlowRate")*1000*9.81/1000.;
+	cost = 1350+235*P_BEP-1.2*P_BEP*P_BEP;
+	if(cost == 0.)
+		cout << "ZERO COST DETECTED!!!!!!!!!!!!! ...." << endl;
+	if (Activate == true)
+	{
+		for (int j = year; j < nYear; ++j)
+		{
+			wds[j]->edges.at(EdgeID)->setDoubleProperty("revolutionNumber",RevRate);
+		}
+	}
+	cout << "cost: " << cost << endl;
 	return cost;
 }
 
@@ -391,4 +558,47 @@ void BIWS::printFitnessFunction()
 		printf("\n");
 	}
 	printf("------------------------------------------------------------------------------------------\n");
+}
+
+void BIWS::readCostTable(string fname, string whichCost)
+{
+ 	vector<vector<string>> content;
+	vector<string> row;
+	string line, word;
+ 
+	fstream file (fname, ios::in);
+	if(file.is_open())
+	{
+		while(getline(file, line))
+		{
+			row.clear();
+ 
+			stringstream str(line);
+ 
+			while(getline(str, word, ','))
+				row.push_back(word);
+			content.push_back(row);
+		}
+	}
+	else
+		cout<<"Could not open the file\n";
+ 
+	for(int i=0;i<content.size();i++)
+	{
+		for(int j=0;j<content[i].size();j++)
+		{
+			cout<<content[i][j]<<" ";
+		}
+		cout<<"\n";
+	}
+	if (whichCost == "PipeReplacementCost")
+	{
+		PipeReplacementCost_Read = true;
+		PipeReplacementCost = content;
+	}
+	if (whichCost == "ValvePlacementCost")
+	{
+		ValvePlacementCost_Read = true;
+		ValvePlacementCost = content;
+	}
 }
