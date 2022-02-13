@@ -22,12 +22,15 @@ BIWS::BIWS(string fileName)
 		leakageCoefficient[i] = leakageCoefficient[0];
 	}
 
+	// ----- Saving the original tables ------//
+	failsafe_leakageEdgeID = leakageEdgeID;
+	failsafe_leakageEdgeLength = leakageEdgeLength;
+	failsafe_leakageCoefficient = leakageCoefficient;
 	// resizing STACI vector
 	wds.resize(nYear);
 
 	for(int i=0; i<nYear; i++)
 	{
-		cout << "EZ OK: " << fileName << endl;
 		// loading the INP file
 		wds[i] = new SeriesHydraulics(fileName);
 
@@ -78,10 +81,14 @@ void BIWS::evaluate()
 	vector<double> Vc(nYear,0.), Vd(nYear,0.); // I4
 	vector<vector<double> > SR(nYear); // I9
 
+	I.clear();
+	ff.clear();
+	I.resize(9,0.);
+	ff.resize(9, vector<double>(6,0.));
 	// start of main cycle
 	for(int i=0; i<nYear; i++)
 	{
-		cout << " [*] year: " << i << endl;
+		//cout << " [*] year: " << i << endl;
 
 		// resizing leakage constant vector
 		k0[i].clear();
@@ -335,18 +342,18 @@ void BIWS::evaluate()
 }
 
 //--------------------------------------------------------------
-double BIWS::leakageRepair(int year, string leakageID_local, bool Activate)
+double BIWS::leakageRepair(int year, string leakageID_local, double leakageEdgeLength_local, bool Activate)
 {
 	double cost=0., leakageCoefficientLocal = 0., pipeDiameter = 0., C_det = 0., C_repair = 0.;
 	int EdgeID;
 	for (int i = 0; i < leakageEdgeID.at(year).size(); ++i)
 	{
-		if(leakageEdgeID[year].at(i) == leakageID_local)
+		if(leakageEdgeID[year].at(i) == leakageID_local && leakageEdgeLength_local == leakageEdgeLength[year].at(i))
 		{
 			leakageCoefficientLocal = leakageCoefficient[year][i];
 			EdgeID = wds[year]->edgeIDtoIndex(leakageID_local);
 			pipeDiameter = wds[year]->edges.at(EdgeID)->getDoubleProperty("diameter");
-			cout << pipeDiameter << " " << EdgeID << " " << leakageCoefficientLocal << endl;
+			//cout << pipeDiameter << " " << EdgeID << " " << leakageCoefficientLocal << endl;
 			if(Activate == true)
 			{
 				for (int j = year; j < nYear; ++j)
@@ -359,24 +366,42 @@ double BIWS::leakageRepair(int year, string leakageID_local, bool Activate)
 		}
 	}
 	C_repair = (94-0.3*pipeDiameter+0.01*pipeDiameter*pipeDiameter)*(1.5+0.11*log10(leakageCoefficientLocal));
-	cout << " C_rep: " << C_repair << endl;
+	//cout << " C_rep: " << C_repair << endl;
 	C_det = 2400*exp(-28*leakageCoefficientLocal);
-	cout << " C_det: " << C_det << endl;
+	//cout << " C_det: " << C_det << endl;
 	cost = C_det+C_repair;
-	cout << " a csere költsége: " << cost << endl;
+	//cout << " a csere költsége: " << cost << endl;
 	if(cost == 0.)
 		cout << "ZERO COST DETECTED!!!!!!!!!!!!! " << year << " ID: " << leakageID_local << " leakageRepair" << endl;
 	return cost;
 }
 
 //--------------------------------------------------------------
+void BIWS::undo_LeakageRepair(int year, string leakageID_local, double leakageEdgeLength_local, double leakageCoefficient_local, bool Activate)
+{
+	double cost=0., leakageCoefficientLocal = 0., pipeDiameter = 0., C_det = 0., C_repair = 0.;
+	for (int j = year; j < nYear; ++j)
+	{
+		leakageEdgeLength[j].insert(end(leakageEdgeLength[j]),leakageEdgeLength_local);
+		leakageCoefficient[j].insert(end(leakageCoefficient[j]),leakageCoefficient_local);
+		leakageEdgeID[j].insert(end(leakageEdgeID[j]),leakageID_local);
+	}
+}
+
+//--------------------------------------------------------------
 double BIWS::replacePipe(int year, string pipeID, double newDiameter, bool Activate)
 {
 	double cost=0., pipeDiameter = 0., pipeLength = 0., CostPerMeter = 0.;
+	double Arp = 13., Brp = 29., Crp = 1200.;
 	bool IdentifiedDiameter = false, found = false, getBack = true;
 	int pipeIndex = 0, leakageCoefficientLocal = 0, EdgeID = 0;
 	pipeIndex = wds[year]->edgeIDtoIndex(pipeID);
 	pipeLength = wds[year]->edges.at(pipeIndex)->getDoubleProperty("length");
+	roughness_local = wds[year]->edges.at(pipeIndex)->getDoubleProperty("roughness");
+	if (newDiameter == -1)
+	{
+		newDiameter = wds[year]->edges.at(pipeIndex)->getDoubleProperty("diameter")*1000;
+	}
 	for (int i = 1; i < PipeReplacementCost[0].size(); ++i)
 	{
 		if (newDiameter == stod(PipeReplacementCost[0][i])/1000.)
@@ -384,6 +409,10 @@ double BIWS::replacePipe(int year, string pipeID, double newDiameter, bool Activ
 			CostPerMeter = stod(PipeReplacementCost[1][i]);
 			IdentifiedDiameter = true;
 		}
+	}
+	if (IdentifiedDiameter == false)
+	{
+		CostPerMeter = Arp+Brp*(newDiameter/1000)+Crp*(newDiameter/1000)*(newDiameter/1000);
 	}
 	while (getBack == true)
 	{
@@ -400,6 +429,7 @@ double BIWS::replacePipe(int year, string pipeID, double newDiameter, bool Activ
 					for (int j = year; j < nYear; ++j)
 					{
 						getBack = true;
+						//cout << "leakage removed: " << leakageEdgeID.at(j).at(i) << " | " << leakageEdgeLength.at(j).at(i) << endl;
 						leakageEdgeLength.at(j).erase(leakageEdgeLength[j].begin()+i);
 						leakageCoefficient.at(j).erase(leakageCoefficient[j].begin()+i);
 						leakageEdgeID.at(j).erase(leakageEdgeID.at(j).begin()+i);
@@ -421,6 +451,17 @@ double BIWS::replacePipe(int year, string pipeID, double newDiameter, bool Activ
 	if(cost == 0.)
 		cout << "ZERO COST DETECTED!!!!!!!!!!!!! " << year << " ID: " << pipeID << " PIPE REPLACE" << endl;
 	return cost;
+}
+//--------------------------------------------------------------
+void BIWS::undo_PipeReplace(int year, string leakageID_local)
+{
+	leakageEdgeLength = failsafe_leakageEdgeLength;
+	leakageCoefficient = failsafe_leakageCoefficient;
+	leakageEdgeID = failsafe_leakageEdgeID;
+	for (int j = year; j < nYear; ++j)
+	{
+		wds[j]->edges.at(wds[j]->edgeIDtoIndex(leakageID_local))->setDoubleProperty("roughness", roughness_local);
+	}
 }
 
 //--------------------------------------------------------------
@@ -582,15 +623,6 @@ void BIWS::readCostTable(string fname, string whichCost)
 	}
 	else
 		cout<<"Could not open the file\n";
- 
-	for(int i=0;i<content.size();i++)
-	{
-		for(int j=0;j<content[i].size();j++)
-		{
-			cout<<content[i][j]<<" ";
-		}
-		cout<<"\n";
-	}
 	if (whichCost == "PipeReplacementCost")
 	{
 		PipeReplacementCost_Read = true;

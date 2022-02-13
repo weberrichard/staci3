@@ -45,7 +45,7 @@ public:
   double CalculateAverageSensitivity(); // It calculates the average value of the NODAL part of the sensitivity matrix, which means all of the rows are summarized and average row sum value is calculated.
 
 	Sensitivity(string spr_filename);
-	~Sensitivity();
+	virtual ~Sensitivity();
 
   /*! Calculating the sensitivity on a per-pipe basis.
       Paramter can be either Pipe diameter, roughness or Node demand.

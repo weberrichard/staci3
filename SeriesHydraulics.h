@@ -20,7 +20,7 @@ class SeriesHydraulics : public Sensitivity
 public:
 
 	SeriesHydraulics(string fileName);
-	~SeriesHydraulics();
+	virtual ~SeriesHydraulics();
 
   // control parameteres of the series sensitivity
   struct ssc

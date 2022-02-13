@@ -26,7 +26,7 @@ class HydraulicSolver : public Staci
 public:
 
 	HydraulicSolver(string spr_filename);
-	~HydraulicSolver();
+	virtual ~HydraulicSolver();
 
 	/// Fills up the unknown variables pressure, velovity
 	bool solveSystem();

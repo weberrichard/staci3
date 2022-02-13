@@ -32,7 +32,7 @@ class BIWS
 {
 public:
 	BIWS(string fileName);
-	~BIWS();
+	virtual ~BIWS();
 
 	// main STACI case
 	vector<SeriesHydraulics*> wds;
@@ -41,7 +41,7 @@ public:
 	void evaluate();
 	void readCostTable(string fname, string whichCost);
 	// modifying stuff
-	double leakageRepair(int year, string leakageID_local, bool Activate);
+	double leakageRepair(int year, string leakageID_local, double leakageEdgeLength_local, bool Activate);
 	double replacePipe(int year, string pipeID, double newDiameter, bool Activate);
 	double increaseTank(int year, string tankID, double newVolume, bool Activate);
 	double installValve(int year, string pipeID, bool isStart, string type, double setting, bool Activate);
@@ -60,6 +60,11 @@ public:
 
 	// printing fitness functions to console
 	void printFitnessFunction();
+	void undo_LeakageRepair(int year, string leakageID_local, double leakageEdgeLength_local, double leakageCoefficient_local, bool Activate);
+	void undo_PipeReplace(int year, string leakageID_local);
+	vector<vector<string> > leakageEdgeID, failsafe_leakageEdgeID;
+	vector<vector<double> > leakageEdgeLength, failsafe_leakageEdgeLength;
+	vector<vector<double> > leakageCoefficient, failsafe_leakageCoefficient;
 
 private:
 	// constants of biws
@@ -81,13 +86,10 @@ private:
 	double pdExponent = 2.0;
 	double pdDesiredPressure = 10.;
 	double pdMinPressure = 0.0;
-	
+	double roughness_local = 0.;
 	// leakge constants
 	double leakageExponent = 1.0;
 	double leakageMinPressure = 0.0;
-	vector<vector<string> > leakageEdgeID;
-	vector<vector<double> > leakageEdgeLength;
-	vector<vector<double> > leakageCoefficient;
 	vector<vector<double> > k0; // for saving initial leakage const
 };
 

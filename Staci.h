@@ -57,7 +57,7 @@ class Staci
 {
 public:
   Staci(string spr_filename);
-  ~Staci();
+  virtual ~Staci();
 
   // Basic Node and Edge list
   vector<Node *> nodes;
