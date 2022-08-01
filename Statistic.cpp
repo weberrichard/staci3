@@ -24,7 +24,7 @@ double absoluteMax(const vector<double> &x)
 {
   double m=0.;
   for(int i=0; i<x.size(); i++)
-    if((x[i]>m))
+    if((abs(x[i])>m))
       m = abs(x[i]);
   return m;
 }

@@ -33,6 +33,7 @@ MatrixXd readMatrixXdDouble(string fileName, char separator);
 
 // Reading doubles from file to vector<double>
 vector<double> readVectorDouble(string fileName);
+vector<int> readVectorInt(string fileName);
 
 // Counting the rows for Eigen Vectors
 int countRows(string fileName);

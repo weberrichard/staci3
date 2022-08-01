@@ -275,6 +275,8 @@ double Node::getProperty(string prop)
 
    if(prop == "demand")
       out = demand;
+   else if(prop == "demandLPS")
+      out = demand*1000.;
    else if(prop == "consumption")
    {
       if(status == 1)

@@ -4,8 +4,14 @@
 BIWS::BIWS(string fileName)
 {
 	// setting fitness functions sizes
+	I.clear();
 	I.resize(9,0.);
-	ff.resize(9, vector<double>(6,0.));
+	ff.clear();
+	ff.resize(9, vector<double>(nYear,0.));
+	maxWellFlowYear.clear();
+	maxWellFlowYear.resize(numberWell,vector<double>(nYear,0.));
+	maxWellFlow.clear();
+	maxWellFlow.resize(numberWell);
 
 	// loading leakage data
 	leakageEdgeID.resize(nYear);
@@ -114,6 +120,22 @@ void BIWS::evaluate()
 
 		// hydraulic solver
 		wds[i]->seriesSolve();
+
+		// saving stuff if necessary
+	   //vector<string> edgeID{"V_G1"};
+	   //vector<string> nodeID{"N1761","N1761b"};
+	   //string qUnit = "lps";
+	   //string hUnit = "mtr";
+   	//wds[i]->saveTimeResult(edgeID,nodeID,qUnit,hUnit);
+   	//cout << "save ok " << endl;
+   	//cin.get();
+
+		// max flow rates of wells
+		for(unsigned int j=0; j<wds[i]->presIndex.size(); j++)
+		{	
+			int idx = wds[i]->presIndex[j];
+			maxWellFlowYear[j][i] = 1000.*absoluteMax(wds[i]->edges[idx]->vectorVolumeFlowRate);
+		}
 
 		// fitness function
 		// I1 - service effectiveness
@@ -339,6 +361,11 @@ void BIWS::evaluate()
 	ADEV /= 6.*nDem;
 	I[8] = 1-ADEV/ASR;
 
+	// max flow rate overall
+	for(int i=0; i<numberWell; i++)
+	{
+		maxWellFlow[i] = absoluteMax(maxWellFlowYear[i]);
+	}
 }
 
 //--------------------------------------------------------------
@@ -601,6 +628,7 @@ void BIWS::printFitnessFunction()
 	printf("------------------------------------------------------------------------------------------\n");
 }
 
+//--------------------------------------------------------------
 void BIWS::readCostTable(string fname, string whichCost)
 {
  	vector<vector<string>> content;
@@ -632,5 +660,60 @@ void BIWS::readCostTable(string fname, string whichCost)
 	{
 		ValvePlacementCost_Read = true;
 		ValvePlacementCost = content;
+	}
+}
+
+//--------------------------------------------------------------
+void BIWS::addControl(int year, string edgeID, bool status, string nodeID, string type, bool above, double value)
+{
+	wds[year]->controlEdgeID.push_back(edgeID);
+	wds[year]->controlEdgeIndex.push_back(wds[year]->edgeIDtoIndex(edgeID));
+	wds[year]->controlStatus.push_back(status);
+	wds[year]->controlNodeID.push_back(nodeID);
+	wds[year]->controlNodeIndex.push_back(wds[year]->nodeIDtoIndex(nodeID));
+	wds[year]->controlType.push_back(type);
+	wds[year]->controlAbove.push_back(above);
+	wds[year]->controlValue.push_back(value);
+}
+
+//--------------------------------------------------------------
+void BIWS::setControl(int year, int index, string edgeID, bool status, string nodeID, string type, bool above, double value)
+{
+	wds[year]->controlEdgeID[index] = edgeID;
+	wds[year]->controlEdgeIndex[index] = wds[year]->edgeIDtoIndex(edgeID);
+	wds[year]->controlStatus[index] = status;
+	wds[year]->controlNodeID[index] = nodeID;
+	wds[year]->controlNodeIndex[index] = wds[year]->nodeIDtoIndex(nodeID);
+	wds[year]->controlType[index] = type;
+	wds[year]->controlAbove[index] = above;
+	wds[year]->controlValue[index] = value;
+}
+
+//--------------------------------------------------------------
+void BIWS::deleteControl(int year, int index)
+{
+	wds[year]->controlEdgeID.erase(wds[year]->controlEdgeID.begin()+index);
+	wds[year]->controlEdgeIndex.erase(wds[year]->controlEdgeIndex.begin()+index);
+	wds[year]->controlStatus.erase(wds[year]->controlStatus.begin()+index);
+	wds[year]->controlNodeID.erase(wds[year]->controlNodeID.begin()+index);
+	wds[year]->controlNodeIndex.erase(wds[year]->controlNodeIndex.begin()+index);
+	wds[year]->controlType.erase(wds[year]->controlType.begin()+index);
+	wds[year]->controlAbove.erase(wds[year]->controlAbove.begin()+index);
+	wds[year]->controlValue.erase(wds[year]->controlValue.begin()+index);
+}
+
+//--------------------------------------------------------------
+void BIWS::clearControl()
+{
+	for(int i=0; i<nYear; i++)
+	{
+		wds[i]->controlEdgeID.clear();
+		wds[i]->controlEdgeIndex.clear();
+		wds[i]->controlStatus.clear();
+		wds[i]->controlNodeID.clear();
+		wds[i]->controlNodeIndex.clear();
+		wds[i]->controlType.clear();
+		wds[i]->controlAbove.clear();
+		wds[i]->controlValue.clear();
 	}
 }

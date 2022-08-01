@@ -57,6 +57,17 @@ public:
   void addToPipeCVIndex(int idx);
   void deleteFromPipeCVIndex(int idx);
 
+  // CONTROLS
+  // TODO: do this in more general way, handling time controls as well (maybe struct or class)
+  vector<string> controlEdgeID; // controlled edge ID
+  vector<int> controlEdgeIndex; // controlled edge INDEX in edges list
+  vector<bool> controlStatus; // Open (true) or closed (false)
+  vector<string> controlNodeID; // checked node (or tank) pressure ID
+  vector<int> controlNodeIndex; // checked node (or tank) pressure INDEX
+  vector<string> controlType; // Pool or Node
+  vector<bool> controlAbove; // true if ABOVE, false if BELOW
+  vector<double> controlValue; // head [m]
+
 protected:
   // updating stuffs
   void updateDemand();
@@ -109,17 +120,6 @@ private:
   string basePattern;
   vector<string> patternID;
   vector<vector<double> > patternValue;
-
-  // CONTROLS
-  // TODO: do this in more general way, handling time controls as well (maybe struct or class)
-  vector<string> controlEdgeID; // controlled edge ID
-  vector<int> controlEdgeIndex; // controlled edge INDEX in edges list
-  vector<bool> controlStatus; // Open (true) or closed (false)
-  vector<string> controlNodeID; // checked node (or tank) pressure ID
-  vector<int> controlNodeIndex; // checked node (or tank) pressure INDEX
-  vector<string> controlType; // Pool or Node
-  vector<bool> controlAbove; // true if ABOVE, false if BELOW
-  vector<double> controlValue; // head [m]
 
   // RULES
   vector<Rule*> rules;

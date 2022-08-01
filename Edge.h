@@ -66,8 +66,8 @@ public:
   bool status_fix=false; // mannually can be prescribed the status
 
   /* typeCode values for edges
-  -2:  pool
-  -1:  pressure point
+  -2:  pressure point
+  -1:  pool
    0:  pipe with check valve
    1:  normal pipe
    2:  pump

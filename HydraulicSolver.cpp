@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 HydraulicSolver::HydraulicSolver(string spr_filename) : Staci(spr_filename)
 {
-  maxIterationNumber = 1000;
+  maxIterationNumber = 100;
   maxPressureError = 1.524e-4*5.;
   maxMassFlowError = 2.832e-5*5.;
   relaxationFactor = 1.0;

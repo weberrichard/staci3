@@ -297,13 +297,13 @@ double SeriesHydraulics::newHydraulicTimeStep()
 	// Checking the [CONTROLS]
 	for(int i=0; i<controlEdgeID.size(); i++)
 	{
-		dt2 = hydraulicTimeStepOriginal;
-		double wl = edges[controlNodeIndex[i]]->getDoubleProperty("waterLevel");
-		double aref = edges[controlNodeIndex[i]]->referenceCrossSection;
-		double set = controlValue[i];
-		double vf = edges[controlNodeIndex[i]]->volumeFlowRate;
 		if(controlType[i] == "Pool")
 		{
+			dt2 = hydraulicTimeStepOriginal;
+			double wl = edges[controlNodeIndex[i]]->getDoubleProperty("waterLevel");
+			double aref = edges[controlNodeIndex[i]]->referenceCrossSection;
+			double set = controlValue[i];
+			double vf = edges[controlNodeIndex[i]]->volumeFlowRate;
 			if(vf > 0. && controlAbove[i] && wl < set) // FILLING THE TANK
 				dt2 = (set - wl) * aref / vf;
 			else if(vf < 0. && !controlAbove[i] && wl > set)
@@ -317,7 +317,7 @@ double SeriesHydraulics::newHydraulicTimeStep()
 			if(dt2<dt)
 				dt = dt2*1.0;
 		}
-		else
+		else if(controlType[i] != "Node")
 			cout << endl << "!WARNING! [CONTROLS] control type unkown: " << controlType[i] << endl;
 	}
 
@@ -640,18 +640,46 @@ void SeriesHydraulics::updateControl()
 					edges[controlEdgeIndex[i]]->status = controlStatus[i];
 				}
 			}
+			if(edges[controlEdgeIndex[i]]->status != status) // i.e. there is a change
+			{
+				changedIndex.push_back(i);
+				oldStatus.push_back(status);
+				if(edges[controlEdgeIndex[i]]->status == 0)
+				{
+					x(controlEdgeIndex[i]) = 0.0;
+				}
+			}
+		}
+		else if(controlType[i] == "Node")
+		{	
+			double head = nodes[controlNodeIndex[i]]->head;
+			if(controlAbove[i])
+			{
+				if(head >= controlValue[i] - headTolerance)
+				{
+					edges[controlEdgeIndex[i]]->status = controlStatus[i];
+				}
+			}
+			else
+			{
+				if(head <= controlValue[i] + headTolerance)
+				{
+					edges[controlEdgeIndex[i]]->status = controlStatus[i];
+				}
+			}
+			if(edges[controlEdgeIndex[i]]->status != status) // i.e. there is a change
+			{
+				changedIndex.push_back(i);
+				oldStatus.push_back(status);
+				if(edges[controlEdgeIndex[i]]->status == 0)
+				{
+					x(controlEdgeIndex[i]) = 0.0;
+				}
+			}
 		}
 		else
-			cout << endl << "!WARNING! [CONTROLS] control type unkown: " << controlType[i] << endl;
-
-		if(edges[controlEdgeIndex[i]]->status != status) // i.e. there is a change
 		{
-			changedIndex.push_back(i);
-			oldStatus.push_back(status);
-			if(edges[controlEdgeIndex[i]]->status == 0)
-			{
-				x(controlEdgeIndex[i]) = 0.0;
-			}
+			cout << endl << "!WARNING! [CONTROLS] control type unkown: " << controlType[i] << endl;
 		}
 	}
 
@@ -1287,16 +1315,21 @@ void SeriesHydraulics::loadTimeSettings()
 
 						controlNodeID.push_back(sv[5]);
 
-						for(int i=0; i<numberEdges; i++)
+						for(int i=0; i<poolIndex.size(); i++)
 						{
-							if(edges[i]->getEdgeStringProperty("type") == "Pool")
+							if(controlNodeID.back() == edges[poolIndex[i]]->name)
 							{
-								if(controlNodeID.back() == edges[i]->getEdgeStringProperty("name"))
-								{
-									controlNodeIndex.push_back(i);
-									controlType.push_back("Pool");
-									break;
-								}
+								controlNodeIndex.push_back(poolIndex[i]);
+								controlType.push_back("Pool");
+								break;
+							}
+						}
+						for(int i=0; i<numberNodes; i++)
+						{
+							if(controlNodeID.back() == nodes[i]->name)
+							{
+								controlNodeIndex.push_back(i);
+								controlType.push_back("Node");
 							}
 						}
 						if(controlNodeIndex.size() != controlNodeID.size())

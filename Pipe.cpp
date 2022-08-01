@@ -268,6 +268,8 @@ double Pipe::getDoubleProperty(string prop)
     out = abs(volumeFlowRate)*1000.;
   else if(prop == "velocity")
     out = volumeFlowRate / referenceCrossSection;
+  else if(prop == "velocityAbs")
+    out = abs(volumeFlowRate) / referenceCrossSection;
   else if(prop == "density")
     out = density;
   else if(prop == "referenceCrossSection" || prop == "reference_cross_section" || prop == "Aref")

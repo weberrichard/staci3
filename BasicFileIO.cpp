@@ -105,6 +105,32 @@ vector<double> readVectorDouble(string fileName)
    return out;
 }
 
+// Reading doubles from file into vector<double>
+//--------------------------------------------------------------
+vector<int> readVectorInt(string fileName)
+{
+   //int rows = countRows(fileName);
+   ifstream ifile(fileName);
+   vector<int> out;
+   string line;
+   if(ifile.is_open())
+   {
+      while(getline(ifile,line))
+      {
+         if(line[0] != '/')
+         {
+            out.push_back(stoi(line,0));
+         }
+      }
+   }
+   else
+   {
+      cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl << "Staci::readVectorDouble(), File is not open when calling readVectorDouble function, file name: " << fileName << endl;
+      exit(-1);
+   }
+   ifile.close();
+   return out;
+}
 
 // Counting the rows of a file
 //--------------------------------------------------------------

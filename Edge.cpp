@@ -96,6 +96,8 @@ double Edge::getEdgeDoubleProperty(string prop)
     out = volumeFlowRate * density;
   else if(prop == "velocity") // m/s
     out = volumeFlowRate  / referenceCrossSection;
+  else if(prop == "velocityAbs") // m/s
+    out = abs(volumeFlowRate)  / referenceCrossSection;
   else if(prop == "density") // kg/m3
     out = density;
   else if(prop == "referenceCrossSection" || prop == "Aref")

@@ -48,9 +48,19 @@ public:
 	double replacePump(int year, string pumpID, double newQ, double newH, bool Activate);
 	double installFrequencyInverter(int year, string pumpID, double RevRate, bool Activate);
 
+	// manipulating the controls
+	void addControl(int year, string edgeID, bool status, string nodeID, string type, bool above, double value);
+	void setControl(int year, int index, string edgeID, bool status, string nodeID, string type, bool above, double value);
+	void deleteControl(int year, int index);
+	void clearControl();
+
 	// fitnes functions
 	vector<double> I;
 	vector<vector<double> > ff;
+
+	// max flow rates of wells
+	vector<double> maxWellFlow;
+	vector<vector<double> > maxWellFlowYear;
 
 	bool PipeReplacementCost_Read = false;//->Menjen privatebe
 	bool ValvePlacementCost_Read = false;
@@ -73,6 +83,9 @@ private:
 
 	// number of years
 	int nYear = 6;
+
+	// number of Wells
+	int numberWell = 6;
 
 	// original and new nominal efficiency of pumps
 	double oldEta = 0.65;
