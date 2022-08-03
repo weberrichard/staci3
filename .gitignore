@@ -58,7 +58,6 @@ Archive/*
 *.txt
 
 # pics
-*.png
 *.svg
 *.eps
 
@@ -68,4 +67,4 @@ ProjectsHundzsa/*
 ProjectsWeber/*
 ProjectsWeber/*/*
 */Network Data/*
-Documentation/ClassHiearchy.svg
+Documentation/*

@@ -1,7 +1,7 @@
 # STACI
 Standard hydraulic solver for water distribution networks developed by the Department of Hydrodynamic Systems, Faculty of Mechanical Engineering, Budapest University of Technology and Economics. *STACI* uses a general mathematical solver for nonlinear, algebric equations, namely Newton's iteration, thus there is no restriciton for the nature of the equations. It also has a modular built, any extension/modification can be easily performed. The figure depicts the class hiearchy below.
 
-![Alt text](ClassHiearchy.png?raw=true "Title")
+![Class hiearchy](ClassHiearchy.png?raw=true "ClassHiearchy")
 
 ### Functions
 - *snapshot simulation:* standard hydraulic simulation for a time instant for a water distribution network
