@@ -35,6 +35,7 @@ Running *.out* file will run the simulation. The *Networks* folder must contain 
 
 ### Developement team
 Dr Richárd Wéber, assistant professor
+
 Tamás Huzsvár, PhD student
 
 ### Publications
