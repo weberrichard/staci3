@@ -15,9 +15,9 @@
 #ifndef SHUTDOWN_H
 #define SHUTDOWN_H
 
-#include "HydraulicSolver.h"
+#include "SeriesHydraulics.h"
 
-class Shutdown : public HydraulicSolver
+class Shutdown : public SeriesHydraulics
 {
 public:
 	Shutdown(string spr_filename);

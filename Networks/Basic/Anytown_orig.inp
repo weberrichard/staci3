@@ -1,0 +1,166 @@
+[TITLE]
+Converted from Epanet to Staci, case name: Anytown.spr
+
+
+[JUNCTIONS]
+;ID              	Elev        	Demand      	Pattern         
+ node_0          	15.2400     	12.520000   	                	;
+ node_1          	15.2400     	12.520000   	                	;
+ node_2          	15.2400     	31.520000   	                	;
+ node_3          	15.2400     	12.520000   	                	;
+ node_4          	36.6000     	31.520000   	                	;
+ node_5          	36.6000     	12.520000   	                	;
+ node_6          	15.2400     	12.520000   	                	;
+ node_7          	36.6000     	12.520000   	                	;
+ node_8          	24.4000     	12.520000   	                	;
+ node_9          	15.2400     	31.520000   	                	;
+ node_10         	15.2400     	50.900000   	                	;
+ node_11         	15.2400     	31.520000   	                	;
+ node_12         	36.6000     	31.520000   	                	;
+ node_13         	15.2400     	63.833333   	                	;
+ node_14         	36.6000     	12.520000   	                	;
+ node_17         	3.0400      	0.000000    	                	;
+ node_18         	6.2300      	31.520000   	                	;
+
+[RESERVOIRS]
+;ID              	Head        	Pattern         
+
+[TANKS]
+;ID             	Elevation   	InitLevel   	MinLevel    	MaxLevel    	Diameter    	MinVol      	VolCurve
+ pool_0          	3.0400      	2.0000      	0.0000      	1000.0000   	11.2291     	0.0000      	                	
+ pool_1          	71.6000     	1.0000      	0.0000      	1000.0000   	11.3010     	0.0000      	                	
+ pool_2          	71.6000     	1.0000      	0.0000      	1000.0000   	11.2291     	0.0000      	                	
+
+[PIPES]
+;ID             	Node1           	Node2           	Length      	Diameter    	Roughness   	MinorLoss   	Status
+ pipe_0          	node_18         	node_0          	3657.0000   	406.0000    	120.0000    	0.0000      	Open  ;
+ pipe_1          	node_0          	node_1          	1830.0000   	254.0000    	120.0000    	0.0000      	Open  ;
+ pipe_2          	node_18         	node_2          	3657.0000   	406.0000    	120.0000    	0.0000      	Open  ;
+ pipe_3          	node_18         	node_3          	3657.0000   	406.0000    	120.0000    	0.0000      	Open  ;
+ pipe_4          	node_3          	node_4          	1830.0000   	203.0000    	90.0000     	0.0000      	Open  ;
+ pipe_5          	node_4          	node_5          	1830.0000   	203.0000    	130.0000    	0.0000      	Open  ;
+ pipe_6          	node_2          	node_6          	1830.0000   	305.0000    	120.0000    	0.0000      	Open  ;
+ pipe_7          	node_5          	node_7          	1830.0000   	203.0000    	130.0000    	0.0000      	Open  ;
+ pipe_8          	node_7          	node_8          	3656.0000   	203.0000    	130.0000    	0.0000      	Open  ;
+ pipe_9          	node_1          	node_9          	1830.0000   	254.0000    	120.0000    	0.0000      	Open  ;
+ pipe_10         	node_9          	node_8          	3656.0000   	203.0000    	130.0000    	0.0000      	Open  ;
+ pipe_11         	node_0          	node_10         	1830.0000   	254.0000    	120.0000    	0.0000      	Open  ;
+ pipe_12         	node_10         	node_11         	1830.0000   	305.0000    	70.0000     	0.0000      	Open  ;
+ pipe_13         	node_11         	node_8          	1830.0000   	254.0000    	130.0000    	0.0000      	Open  ;
+ pipe_14         	node_2          	node_10         	1830.0000   	305.0000    	70.0000     	0.0000      	Open  ;
+ pipe_15         	node_2          	node_0          	2743.0000   	305.0000    	70.0000     	0.0000      	Open  ;
+ pipe_16         	node_0          	node_9          	2743.0000   	254.0000    	120.0000    	0.0000      	Open  ;
+ pipe_17         	node_3          	node_12         	1830.0000   	254.0000    	90.0000     	0.0000      	Open  ;
+ pipe_18         	node_5          	node_12         	1830.0000   	254.0000    	130.0000    	0.0000      	Open  ;
+ pipe_19         	node_6          	node_12         	1830.0000   	305.0000    	90.0000     	0.0000      	Open  ;
+ pipe_20         	node_6          	node_13         	1830.0000   	254.0000    	70.0000     	0.0000      	Open  ;
+ pipe_21         	node_2          	node_13         	1830.0000   	254.0000    	70.0000     	0.0000      	Open  ;
+ pipe_22         	node_13         	node_11         	1830.0000   	254.0000    	70.0000     	0.0000      	Open  ;
+ pipe_23         	node_13         	node_14         	1830.0000   	254.0000    	70.0000     	0.0000      	Open  ;
+ pipe_24         	node_6          	node_14         	1830.0000   	305.0000    	70.0000     	0.0000      	Open  ;
+ pipe_25         	node_13         	node_10         	1830.0000   	254.0000    	70.0000     	0.0000      	Open  ;
+ pipe_26         	node_9          	node_11         	1830.0000   	254.0000    	120.0000    	0.0000      	Open  ;
+ pipe_27         	node_3          	node_6          	1830.0000   	203.0000    	90.0000     	0.0000      	Open  ;
+ pipe_28         	node_11         	node_14         	1830.0000   	254.0000    	90.0000     	0.0000      	Open  ;
+ pipe_29         	node_14         	node_12         	1830.0000   	203.0000    	90.0000     	0.0000      	Open  ;
+ pipe_30         	node_14         	node_8          	1830.0000   	203.0000    	130.0000    	0.0000      	Open  ;
+ pipe_31         	node_12         	node_8          	1830.0000   	203.0000    	130.0000    	0.0000      	Open  ;
+ pipe_32         	node_10         	pool_1          	30.5000     	305.0000    	110.0000    	0.0000      	Open  ;
+ pipe_33         	node_12         	pool_2          	30.5000     	305.0000    	110.0000    	0.0000      	Open  ;
+ pipe_34         	node_17         	node_18         	10.0000     	200.0000    	130.0000    	0.0000      	Open  ;
+
+[PUMPS]
+;ID             	Node1           	Node2           	Parameters
+ pump_0          	pool_0          	node_17         	HEAD 0;
+
+[VALVES]
+;ID             	Node1           	Node2           	Diameter    	Type	Setting     	MinorLoss   
+
+[TAGS]
+
+[DEMANDS]
+;Junction       	Demand      	Pattern         	Category
+
+[STATUS]
+;ID              	Status/Setting
+
+[PATTERNS]
+;ID             	Multipliers
+
+[CURVES]
+;ID             	X-Value     	Y-Value
+ 0               	0.0000      	91.4400     
+ 0               	378.5000    	89.0016     
+ 0               	757.0000    	82.2960     
+ 0               	1135.5000   	70.1040     
+ 0               	1514.0000   	55.1688     
+ 0               	1944.4444   	0.0000      
+
+[CONTROLS]
+
+[RULES]
+
+[ENERGY]
+
+[EMITTERS]
+
+[QUALITY]
+
+[SOURCES]
+
+[REACTIONS]
+
+[MIXING]
+
+[TIMES]
+
+[REPORT]
+
+[OPTIONS]
+ Units              	LPS
+ Headloss           	H-W
+ Specific Gravity   	1.0
+ Viscosity          	1.0
+ Trials             	40
+ Accuracy           	0.001
+ CHECKFREQ          	2
+ MAXCHECK           	10
+ DAMPLIMIT          	0
+ Unbalanced         	Continue 10
+ Pattern            	1
+ Demand Multiplier  	1.0
+ Emitter Exponent   	0.5
+ Quality            	Chlorine mg/L
+ Diffusivity        	1.0
+ Tolerance          	0.01
+
+[COORDINATES]
+;Node           	X-Coord         	Y-Coord
+ node_0          	94.0000         	145.0000        
+ node_1          	103.0000        	43.0000         
+ node_2          	210.0000        	257.0000        
+ node_3          	313.0000        	333.0000        
+ node_4          	407.0000        	386.0000        
+ node_5          	496.0000        	320.0000        
+ node_6          	313.0000        	257.0000        
+ node_7          	573.0000        	212.0000        
+ node_8          	425.0000        	110.0000        
+ node_9          	237.0000        	34.0000         
+ node_10         	210.0000        	131.0000        
+ node_11         	295.0000        	110.0000        
+ node_12         	447.0000        	266.0000        
+ node_13         	278.0000        	190.0000        
+ node_14         	367.0000        	177.0000        
+ pool_1          	209.0000        	100.0000        
+ pool_2          	477.0000        	244.0000        
+ node_17         	59.0000         	360.0000        
+ node_18         	81.0000         	347.0000        
+ pool_0          	35.0000         	380.0000        
+
+[VERTICES]
+
+[LABELS]
+
+[BACKDROP]
+
+[END]

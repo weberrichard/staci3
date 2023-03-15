@@ -1,7 +1,7 @@
 #include "Shutdown.h"
 
 //--------------------------------------------------------------
-Shutdown::Shutdown(string spr_filename) : HydraulicSolver(spr_filename)
+Shutdown::Shutdown(string spr_filename) : SeriesHydraulics(spr_filename)
 {
   buildSegmentGraph();
 }

@@ -416,24 +416,28 @@ vector<double> Node::getTimeSeries(string prop)
    {
       return chlorineConcentration;
    }
-      else if (prop == "microbesWater" || prop == "Cf")
+   else if (prop == "microbesWater" || prop == "Cf")
    {
       return microbesWater;
    }
-      else if (prop == "microbesWall" || prop == "Cb")
+   else if (prop == "microbesWall" || prop == "Cb")
    {
       return microbesWall;
    }
-      else if (prop == "substratWater" || prop == "Sf")
+   else if (prop == "substratWater" || prop == "Sf")
    {
       return substratWater;
    }
-      else if (prop == "substratWall" || prop == "Sb")
+   else if (prop == "substratWall" || prop == "Sb")
    {
       return substratWall;
    }
-      else if (prop == "timeSteps" || prop == "TS")
+   else if (prop == "timeSteps" || prop == "TS")
    {
       return TS;
+   }
+   else if(prop == "vectorConsumption")
+   {
+      return vectorConsumption;
    }
 }

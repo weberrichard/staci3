@@ -23,7 +23,7 @@ void SeriesHydraulics::seriesSolve(ssc seriesSensitivityControl)
 	while(time<=endTime && convOk)
 	{
 		// printing basic info to consol
-		if(printLevel > 1)
+		//if(printLevel > 1)
 			seriesInfo();
 
 		updateDemand();
@@ -1305,7 +1305,7 @@ void SeriesHydraulics::loadTimeSettings()
 
 						if(sv[2] == "OPEN" || sv[2] == "Open" || sv[2] == "open")
 							controlStatus.push_back(true);
-						else if(sv[2] == "CLOSED" || sv[2] == "Close" || sv[2] == "close")
+						else if(sv[2] == "CLOSED" || sv[2] == "Close" || sv[2] == "closed")
 							controlStatus.push_back(false);
 						else
 						{
@@ -1315,21 +1315,27 @@ void SeriesHydraulics::loadTimeSettings()
 
 						controlNodeID.push_back(sv[5]);
 
+						bool gotIt=false;
 						for(int i=0; i<poolIndex.size(); i++)
 						{
 							if(controlNodeID.back() == edges[poolIndex[i]]->name)
 							{
 								controlNodeIndex.push_back(poolIndex[i]);
 								controlType.push_back("Pool");
+								gotIt=true;
 								break;
 							}
 						}
-						for(int i=0; i<numberNodes; i++)
+
+						if(!gotIt)
 						{
-							if(controlNodeID.back() == nodes[i]->name)
+							for(int i=0; i<numberNodes; i++)
 							{
-								controlNodeIndex.push_back(i);
-								controlType.push_back("Node");
+								if(controlNodeID.back() == nodes[i]->name)
+								{
+									controlNodeIndex.push_back(i);
+									controlType.push_back("Node");
+								}
 							}
 						}
 						if(controlNodeIndex.size() != controlNodeID.size())
