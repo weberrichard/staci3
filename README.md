@@ -40,6 +40,8 @@ Tamás Huzsvár, PhD student
 
 ### Publications
 
+Wéber, R., Huzsvár, T., Déllei, Á., & Hős, C. (2021). Criticality of Isolation Valves in Water Distribution Networks with Hydraulics and Topology. Water Resources Management. https://doi.org/10.1007/s11269-023-03488-y
+
 Huzsvár, T., Wéber, R., Déllei, Á., & Hős, C. (2021). Increasing the capacity of water distribution networks using fitness function transformation. Water Research, 201. https://doi.org/10.1016/j.watres.2021.117362
 
 Wéber, R., Huzsvár, T., & Hős, C. (2021). Vulnerability of water distribution networks with real-life pipe failure statistics. Water Supply, 00(0), 1–10. https://doi.org/10.2166/ws.2021.447
