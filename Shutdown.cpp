@@ -119,11 +119,13 @@ void Shutdown::openEverything()
 {
   for(int i=0; i<numberEdges; i++)
   {
-    edges[i]->status = 1;
+    if(edges[i]->status==0)
+      edges[i]->status = 1;
   }
   for(int i=0; i<numberNodes; i++)
   {
-    nodes[i]->status = 1;
+    if(nodes[i]->status==0)
+      nodes[i]->status = 1;
   }
 }
 

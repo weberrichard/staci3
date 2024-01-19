@@ -64,9 +64,4 @@ Archive/*
 *.eps
 
 # unsynced projects Weber
-ProjectsHuzsvar/*
-ProjectsHundzsa/*
-ProjectsWeber/*
-ProjectsWeber/*/*
 */Network Data/*
-Documentation/*
