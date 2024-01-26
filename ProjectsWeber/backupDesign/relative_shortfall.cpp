@@ -16,90 +16,107 @@ int main(int argc, char* argv[])
 {
    // Name of containing folder of staci file
    string caseFolder = "../../Networks/Sopron/";
-   //string caseFolder = "../../Networks/Sopron/";
 
-   vector<string> everyCase;
-   //everyCase.push_back("villasor_mat_year");
-   //everyCase.push_back("ferto_mat_year");
-   //everyCase.push_back("sanchegy_mat_year");
-   //everyCase.push_back("buk_mat_year");
-   //everyCase.push_back("lovo_mat_year");
-   //everyCase.push_back("nagycenk_mat_year");
-   //everyCase.push_back("vashegy_mat_year");
-   //everyCase.push_back("varis_mat_year");
-   //everyCase.push_back("becsidomb_mat_year");
-   //everyCase.push_back("tomalom_mat_year");
-   //everyCase.push_back("szakov_mat_year");
-   //everyCase.push_back("kohegy_mat_year");
-   //everyCase.push_back("harka_mat_year");
-   //everyCase.push_back("pozsonyiut_mat_year");
-   //everyCase.push_back("sopronkovesd_mat_year");
-   //everyCase.push_back("dudlesz_mat_year");
-   //everyCase.push_back("ivan_mat_year");
-   //everyCase.push_back("agyagosszergeny_mat_year");
-   //everyCase.push_back("kofejto_mat_year");
-   //everyCase.push_back("simasag_mat_year");
-   //everyCase.push_back("acsad_mat_year");
-   //everyCase.push_back("csaford_mat_year");
-   everyCase.push_back("nagylozs_mat_year");
-   //everyCase.push_back("balf_mat_year");
-   //everyCase.push_back("csapod_mat_year");
-   //everyCase.push_back("und_mat_year");
-   //everyCase.push_back("rojtokmuzsaj_mat_year");
-   //everyCase.push_back("brennberg_mat_year");
-   //everyCase.push_back("pusztacsalad_mat_year");
-   //everyCase.push_back("kutyahegy_mat_year");
-   //everyCase.push_back("nyarliget_mat_year");
-   //everyCase.push_back("meszlen_mat_year");
-   //everyCase.push_back("fertoujlak_mat_year");
-   //everyCase.push_back("gorbehalom_mat_year");
-   //everyCase.push_back("tozeggyarmajor_mat_year");
-   //everyCase.push_back("ebergoc_mat_year");
-   //everyCase.push_back("csillahegy_mat_year");
-   //everyCase.push_back("jerevan_mat_year");
-   //everyCase.push_back("gloriette_mat_year");
-   //everyCase.push_back("alomhegy_mat_year");
-   //everyCase.push_back("ohermes_mat_year");
-   //everyCase.push_back("ujhermes_mat_year");
-
-   int nCases = everyCase.size();
-   cout << endl << "   CASES\n***********\n";
-   for(int i=0; i<nCases; i++)
-      cout << i+1 << "  " << everyCase[i] << endl;
-   
-   srand( (unsigned)time(NULL) );
-
-   // for writing to files
-   ofstream wFile;
-
-   vector<vector<double> > everyLocalGamma(nCases);
-   for(int i=0; i<nCases; i++)
+   string caseName, runType;
+   if(argc != 3)
    {
-      printf("\n[*] %15s\n", everyCase[i].c_str());
-
-      string caseName = everyCase[i];
-      Vulnerability *wds = new Vulnerability(caseFolder + caseName + ".inp");
-
-      cout << "load ok " << endl;
-
-      wds->calculateVulnerability();
-
-      double orig_gamma = wds->globalGamma;
-
-      cout << endl << "orig vulner ok " << endl;
-
-      wds->calculateBackupVulnerability();
-
-      vector<double> backup_gamma = wds->backupGamma;
-
-      cout << endl << "orig: " << orig_gamma << endl;
-      for(int j=0; j<backup_gamma.size(); j++)
-      {
-         cout << j << " " << backup_gamma[j]-orig_gamma << endl;
-      }
-
+      cout << "Wrong number of inputs, correct: 2 (caseName, runType[pn,of,of2])" << endl;
+      exit(-1);
+   }
+   else
+   {
+      caseName = argv[1];
+      runType = argv[2];
    }
    
-   cout << endl << endl;
+   Vulnerability *wds = new Vulnerability(caseFolder + caseName + ".inp");
+   if(runType == "pn") // pipe number
+   {
+      int pn = wds->pipeIndex.size();
+      ofstream wFile;
+      wFile.open("pn.txt");
+      wFile << pn << endl;
+      wFile.close();
+   }
+   else if(runType == "of")
+   {
+      double cost=0., cost_orig=0.;
+      double Arp=13.,Brp=29.,Crp=1200.;
+      vector<double> diameter = readVectorDouble("diameter.txt");
+      for(int i=0; i<wds->pipeIndex.size(); i++)
+      {  
+         double length=wds->edges[wds->pipeIndex[i]]->getDoubleProperty("length");
+
+         double diam_orig =  wds->edges[wds->pipeIndex[i]]->getDoubleProperty("diameter");
+         cost_orig += (Arp + Brp*diam_orig + Crp*diam_orig*diam_orig)*length;
+
+         wds->edges[wds->pipeIndex[i]]->setDoubleProperty("diameter",diameter[i]*1.e-3);
+         cost += (Arp + Brp*diameter[i]*1.e-3 + Crp*diameter[i]*diameter[i]*1.e-6)*length;
+      }
+      double cost_rel = cost/cost_orig;
+
+      wds->isPressureDemand = true;
+      wds->solveSystem();
+      double rs=0., sumd=0.;
+      for(int i=0; i<wds->nodes.size(); i++)
+      {
+         double d = wds->nodes[i]->getProperty("demand");
+         if(d!=0)
+         {
+            double c = wds->nodes[i]->getProperty("consumption");
+            rs += (d-c);
+            sumd += d;
+         }
+      }
+      rs /= sumd;
+
+      double a = 1000.;
+      double b = 1.;
+      double of = a*rs + b*cost_rel;
+
+      // cout << "rs : " << rs << " c: " << cost_rel << endl;
+
+      ofstream wFile;
+      wFile.open("of.txt");
+      wFile << of << endl;
+      wFile.close();
+   }
+   else if(runType == "of2")
+   {
+      double cost=0., cost_orig=0.;
+      double Arp=13.,Brp=29.,Crp=1200.;
+      vector<double> diameter = readVectorDouble("diameter.txt");
+      for(int i=0; i<wds->pipeIndex.size(); i++)
+      {  
+         double length=wds->edges[wds->pipeIndex[i]]->getDoubleProperty("length");
+
+         double diam_orig =  wds->edges[wds->pipeIndex[i]]->getDoubleProperty("diameter");
+         cost_orig += (Arp + Brp*diam_orig + Crp*diam_orig*diam_orig)*length;
+
+         wds->edges[wds->pipeIndex[i]]->setDoubleProperty("diameter",diameter[i]*1.e-3);
+         cost += (Arp + Brp*diameter[i]*1.e-3 + Crp*diameter[i]*diameter[i]*1.e-6)*length;
+      }
+      double cost_rel = cost/cost_orig;
+
+      // cout << "cost: " << cost << endl;
+      // cout << "cost_orig: " << cost_orig << endl;
+
+      wds->calculateVulnerability();
+      double rs = wds->backupRelativeShortfall;
+
+      // cout << "rs: " << rs << endl;
+
+      double a = 1.;
+      double b = 1.;
+      double of2 = a*rs + b*cost_rel;
+
+      // cout << "of2: " << of2 << endl;
+
+      ofstream wFile;
+      wFile.open("of2.txt");
+      wFile << of2 << endl;
+      wFile.close();
+   }
+   
    return 0;
 }

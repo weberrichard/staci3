@@ -35,6 +35,9 @@ using namespace Eigen;
 double average(const vector<double> &x);
 double average(const vector<int> &x);
 
+// WR sum of a vector
+double sum(const vector<double> &x);
+
 // WR maximum of a vector in absolute value
 double absoluteMax(const vector<double> &x);
 

@@ -20,6 +20,15 @@ double average(const vector<int> &x)
 }
 
 //--------------------------------------------------------------
+double sum(const vector<double> &x)
+{
+  double s=0.;
+  for(int i=0; i<x.size(); i++)
+    s += x[i];
+  return s;
+}
+
+//--------------------------------------------------------------
 double absoluteMax(const vector<double> &x)
 {
   double m=0.;
