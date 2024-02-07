@@ -6,9 +6,9 @@ of_best = 1e10
 diam_best = ''
 
 def of(x):
-	np.savetxt('diameter.txt', x)
-	os.system('./relative_shortfall.out ' + case_name + ' of')
-	f = open("of.txt", "r")
+	np.savetxt('diameter2.txt', x)
+	os.system('./relative_shortfall.out ' + case_name + ' of2')
+	f = open("of2.txt", "r")
 	of = f.read()
 	of = np.array(of)
 	of = of.astype(float)
@@ -20,7 +20,7 @@ def of(x):
 		of_best = of
 		diam_best = x
 		print(of_best)
-		np.savetxt('diameter_best.txt', diam_best)
+		np.savetxt('diameter_best2.txt', diam_best)
 
 
 	return of

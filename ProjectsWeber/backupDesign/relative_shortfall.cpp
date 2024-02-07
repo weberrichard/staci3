@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
       wFile << pn << endl;
       wFile.close();
    }
-   else if(runType == "of")
+   else if(runType == "of") // classic optimisation
    {
       double cost=0., cost_orig=0.;
       double Arp=13.,Brp=29.,Crp=1200.;
@@ -81,11 +81,11 @@ int main(int argc, char* argv[])
       wFile << of << endl;
       wFile.close();
    }
-   else if(runType == "of2")
+   else if(runType == "of2") // backup optimisation
    {
       double cost=0., cost_orig=0.;
       double Arp=13.,Brp=29.,Crp=1200.;
-      vector<double> diameter = readVectorDouble("diameter.txt");
+      vector<double> diameter = readVectorDouble("diameter2.txt");
       for(int i=0; i<wds->pipeIndex.size(); i++)
       {  
          double length=wds->edges[wds->pipeIndex[i]]->getDoubleProperty("length");
@@ -106,11 +106,11 @@ int main(int argc, char* argv[])
 
       // cout << "rs: " << rs << endl;
 
-      double a = 1.;
+      double a = 1000.;
       double b = 1.;
       double of2 = a*rs + b*cost_rel;
 
-      // cout << "of2: " << of2 << endl;
+      //cout << "of2: " << of2 << endl;
 
       ofstream wFile;
       wFile.open("of2.txt");
