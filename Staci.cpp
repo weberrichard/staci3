@@ -411,120 +411,119 @@ int Staci::edgeIDtoIndex(string ID)
 //--------------------------------------------------------------
 void Staci::simplifySystem(double demandCut)
 {
-	for(int i=0; i<numberEdges; i++)
+	for(int i=0; i<edges.size(); i++)
 	{
-		// dealing with the starting node
-		int i1  = edges[i]->startNodeIndex;
-		int k11 = nodes[i1]->edgeIn.size();
-		int k12 = nodes[i1]->edgeOut.size();
+    if(edges[i]->typeCode == 1)
+    {
+  		// dealing with the starting node
+  		int i1  = edges[i]->startNodeIndex;
+  		int k11 = nodes[i1]->edgeIn.size();
+  		int k12 = nodes[i1]->edgeOut.size();
 
-		if(k11+k12==2 && nodes[i1]->demand < demandCut)
-		{
-			// getting the other edges index
-			int e1;
-			string node_name;
-			int j1;
-			if(k11==1)
-			{
-				e1 = nodes[i1]->edgeIn[0];
-				node_name = edges[e1]->startNodeName;
-				j1 = edges[e1]->startNodeIndex;
-			}
-			else
-			{
-				if(nodes[i1]->edgeOut[0]==i)
-				{
-					e1 = nodes[i1]->edgeOut[1];
-				}
-				else
-				{
-					e1 = nodes[i1]->edgeOut[0];
-				}
-				node_name = edges[e1]->endNodeName;
-				j1 = edges[e1]->endNodeIndex;
-			}
+  		if((k11+k12==2) && (nodes[i1]->demand < demandCut))
+  		{
+  			// getting the other edges index
+  			int e1;
+  			string node_name;
+  			int j1;
+  			if(k11==1)
+  			{
+  				e1 = nodes[i1]->edgeIn[0];
+  				node_name = edges[e1]->startNodeName;
+  				j1 = edges[e1]->startNodeIndex;
+  			}
+  			else
+  			{
+  				if(nodes[i1]->edgeOut[0]==i)
+  				{
+  					e1 = nodes[i1]->edgeOut[1];
+  				}
+  				else
+  				{
+  					e1 = nodes[i1]->edgeOut[0];
+  				}
+  				node_name = edges[e1]->endNodeName;
+  				j1 = edges[e1]->endNodeIndex;
+  			}
 
-			// checking the diameters and edge types
-			if(edges[i]->getDoubleProperty("diameter") == edges[e1]->getDoubleProperty("diameter") && edges[i]->typeCode == 1 && edges[e1]->typeCode == 1)
-			{
-				// actually saving to delete the e1 pipe, and the correspoing node j1
-				nodesToDelete.push_back(i1); // this is fockin stupid, idea: rename the pipe, also continously change edgein, edgeout vars TODO
-				edgesToDelete.push_back(e1);
+  			// checking the diameters and edge types
+  			if((edges[i]->getDoubleProperty("diameter") == edges[e1]->getDoubleProperty("diameter")) && (edges[e1]->typeCode == 1))
+  			{
+  				// adding the length to the retreained one
+  				double l_new = edges[i]->getDoubleProperty("length") + edges[i]->getDoubleProperty("length");
+  				edges[i]->setDoubleProperty("length",l_new);
 
-				// adding the length to the retreained one
-				double l_new = edges[i]->getDoubleProperty("length") + edges[i]->getDoubleProperty("length");
-				edges[i]->setDoubleProperty("length",l_new);
+  				// changing starting node
+  				edges[i]->startNodeName = node_name;
+  				nodes[j1]->demand += nodes[i1]->demand;
 
-				// changing starting node
-				edges[i]->startNodeName = node_name;
-				nodes[j1]->demand += nodes[i1]->demand;
-			}
-		}
+          // actually saving to delete the e1 pipe, and the correspoing node j1
+          edges.erase(edges.begin()+e1);
+          nodes.erase(nodes.begin()+j1);
 
-		// dealing with the ending node
-		int i2 = edges[i]->endNodeIndex;
-		int k21 = nodes[i2]->edgeIn.size();
-		int k22 = nodes[i2]->edgeOut.size();
+          // rebuild system, exit for loop
+          buildSystem();
+          buildIndexing();
+          break;
+  			}
+  		}
 
-		if(k21+k22==2 && nodes[i2]->demand < demandCut)
-		{
-			// getting the other edges index
-			int e2;
-			string node_name;
-			int j2;
-			if(k22==1)
-			{
-				e2 = nodes[i2]->edgeOut[0];
-				node_name = edges[e2]->endNodeName;
-				j2 = edges[e2]->endNodeIndex;
-			}
-			else
-			{
-				if(nodes[i2]->edgeIn[0]==i)
-				{
-					e2 = nodes[i2]->edgeIn[1];
-				}
-				else
-				{
-					e2 = nodes[i2]->edgeIn[0];
-				}
-				node_name = edges[e2]->endNodeName;
-				j2 = edges[e2]->endNodeIndex;
-			}
+  		// dealing with the ending node
+  		int i2 = edges[i]->endNodeIndex;
+  		int k21 = nodes[i2]->edgeIn.size();
+  		int k22 = nodes[i2]->edgeOut.size();
 
-			// checking the diameters
-			if(edges[i]->getDoubleProperty("diameter") == edges[e2]->getDoubleProperty("diameter") && edges[i]->typeCode == 1 && edges[e2]->typeCode == 1)
-			{
-				// actually saving to delete the e2 pipe, and the correspoing node j2
-				nodesToDelete.push_back(i2);
-				edgesToDelete.push_back(e2);
+  		if((k21+k22==2) && (nodes[i2]->demand < demandCut))
+  		{
+  			// getting the other edges index
+  			int e2;
+  			string node_name;
+  			int j2;
+  			if(k22==1)
+  			{
+  				e2 = nodes[i2]->edgeOut[0];
+  				node_name = edges[e2]->endNodeName;
+  				j2 = edges[e2]->endNodeIndex;
+  			}
+  			else
+  			{
+  				if(nodes[i2]->edgeIn[0]==i)
+  				{
+  					e2 = nodes[i2]->edgeIn[1];
+  				}
+  				else
+  				{
+  					e2 = nodes[i2]->edgeIn[0];
+  				}
+  				node_name = edges[e2]->endNodeName;
+  				j2 = edges[e2]->endNodeIndex;
+  			}
 
-				// adding the length to the retreained one
-				double l_new = edges[i]->getDoubleProperty("length") + edges[i]->getDoubleProperty("length");
-				edges[i]->setDoubleProperty("length",l_new);
+  			// checking the diameters
+  			if((edges[i]->getDoubleProperty("diameter") == edges[e2]->getDoubleProperty("diameter")) && (edges[e2]->typeCode == 1))
+  			{
+  				// adding the length to the retreained one
+  				double l_new = edges[i]->getDoubleProperty("length") + edges[i]->getDoubleProperty("length");
+  				edges[i]->setDoubleProperty("length",l_new);
 
-				// changing starting node
-				edges[i]->startNodeName = node_name;
-				nodes[j2]->demand += nodes[i2]->demand;
-			}
-		}
+  				// changing starting node
+  				edges[i]->startNodeName = node_name;
+  				nodes[j2]->demand += nodes[i2]->demand;
 
+          // actually saving to delete the e2 pipe, and the correspoing node j2
+          edges.erase(edges.begin()+e2);
+          nodes.erase(nodes.begin()+j2);
 
-		// actually deleting the unnecessary edges and nodes
-
-
-
-
-
+          // rebuild system, exit for loop
+          buildSystem();
+          buildIndexing();
+          break;
+  			}
+  		}
+    }
 	}
 
-
-
-
-
-
-	// rebuild network
+	// just for sure
 	buildSystem();
 	buildIndexing();
-
 }

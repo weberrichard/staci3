@@ -92,6 +92,9 @@ public:
   /// Saving the system to INP | IOinp.cpp
   void saveSystem(string newFileName);
 
+  // for simplifying networks with multiple nodes along the same pipeline
+  void simplifySystem(double demandCut);
+
   // level of printing
   int printLevel = 0;
 
