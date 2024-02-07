@@ -99,7 +99,9 @@ public:
   int printLevel = 0;
 
   int nodeIDtoIndex(string ID);
+  int nodeIDtoIndex(string ID, bool do_warning);
   int edgeIDtoIndex(string ID);
+  int edgeIDtoIndex(string ID, bool do_warning);
   
   vector<string> line2sv(string line); // cutting string line to pieces
   string frictionModel; // Darcy-Weisbach (DW) or Hazen-Williams (HW)

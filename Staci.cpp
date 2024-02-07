@@ -14,18 +14,18 @@ Staci::Staci(string fileName)
   string fileFormat = definitionFile.substr(definitionFile.length()-3,3); // SPR or INP
   if(fileFormat == "inp") // Standard EPANET inp format
   {
-    loadSystem();
+	 loadSystem();
   }
   else if(fileFormat == "spr") // Old STACI spr format
   {
-    IOxml IOxmlObj(definitionFile.c_str());
-    IOxmlObj.loadSystem(nodes, edges);
-    frictionModel = "C-F";
+	 IOxml IOxmlObj(definitionFile.c_str());
+	 IOxmlObj.loadSystem(nodes, edges);
+	 frictionModel = "C-F";
   }
   else
   {
-    cout << endl << "Unkown file format: " << fileFormat << endl << "Available file formats are: inp" << endl;
-    exit(-1);
+	 cout << endl << "Unkown file format: " << fileFormat << endl << "Available file formats are: inp" << endl;
+	 exit(-1);
   }
 
   // calculating the number of nodes and edges
@@ -52,54 +52,54 @@ void Staci::buildSystem()
   // Clearing the in/out going edges from nodes
   for(int i=0; i<numberNodes; i++)
   {
-    nodes[i]->edgeIn.clear();
-    nodes[i]->edgeOut.clear();
+	 nodes[i]->edgeIn.clear();
+	 nodes[i]->edgeOut.clear();
   }
 
   for(int i=0; i<numberEdges; i++)
   {
-    startGotIt = false;
-    j = 0;
-    while((j < numberNodes) && (!startGotIt)){
-      if((edges[i]->startNodeName).compare(nodes[j]->name) == 0){
-        startGotIt = true;
-        startNode = j;
-        nodes[j]->edgeOut.push_back(i);
-      }
-      j++;
-    }
-    if(!startGotIt){
-      cout << "\n!!! ERROR !!! Edge name: " << edges[i]->name.c_str() << ", startnode not found !!!";
-      cout << endl << "startNode: " << edges[i]->startNodeName.c_str() << endl << "Exiting..." << endl;
-      exit(-1);
-    } 
+	 startGotIt = false;
+	 j = 0;
+	 while((j < numberNodes) && (!startGotIt)){
+		if((edges[i]->startNodeName).compare(nodes[j]->name) == 0){
+		  startGotIt = true;
+		  startNode = j;
+		  nodes[j]->edgeOut.push_back(i);
+		}
+		j++;
+	 }
+	 if(!startGotIt){
+		cout << "\n!!! ERROR !!! Edge name: " << edges[i]->name.c_str() << ", startnode not found !!!";
+		cout << endl << "startNode: " << edges[i]->startNodeName.c_str() << endl << "Exiting..." << endl;
+		exit(-1);
+	 } 
 
-    if(edges[i]->numberNode == 2){
-      endGotIt = false;
-      j = 0;
-      while ((j < numberNodes) && (!endGotIt)) {
-        if ((edges[i]->endNodeName).compare(nodes[j]->name) == 0) {
-          endGotIt = true;
-          endNode = j;
-          nodes[j]->edgeIn.push_back(i);
-        }
-        j++;
-      }
-      if(!endGotIt) {
-        cout << "\n!!! ERROR !!! Edge name: " << edges[i]->name.c_str() << ", startnode not found !!!";
-        cout << endl << "startNode: " << startNode << endl << "Exiting..." << endl;
-        exit(-1);
-      }
-    }
+	 if(edges[i]->numberNode == 2){
+		endGotIt = false;
+		j = 0;
+		while ((j < numberNodes) && (!endGotIt)) {
+		  if ((edges[i]->endNodeName).compare(nodes[j]->name) == 0) {
+			 endGotIt = true;
+			 endNode = j;
+			 nodes[j]->edgeIn.push_back(i);
+		  }
+		  j++;
+		}
+		if(!endGotIt) {
+		  cout << "\n!!! ERROR !!! Edge name: " << edges[i]->name.c_str() << ", startnode not found !!!";
+		  cout << endl << "startNode: " << startNode << endl << "Exiting..." << endl;
+		  exit(-1);
+		}
+	 }
 
-    if(edges[i]->numberNode == 2){
-      edges[i]->startNodeIndex = startNode;
-      edges[i]->endNodeIndex = endNode;
-    }
-    else{
-      edges[i]->startNodeIndex = startNode;
-      edges[i]->endNodeIndex = -1;
-    }
+	 if(edges[i]->numberNode == 2){
+		edges[i]->startNodeIndex = startNode;
+		edges[i]->endNodeIndex = endNode;
+	 }
+	 else{
+		edges[i]->startNodeIndex = startNode;
+		edges[i]->endNodeIndex = -1;
+	 }
   }
 }
 
@@ -117,45 +117,45 @@ void Staci::buildIndexing()
 
   for(int i=0; i<edges.size(); i++)
   { 
-    int typeCode = edges[i]->typeCode;
-    if(typeCode == 1) // normal pipe
-    {
-      pipeIndex.push_back(i);
-    }
-    else if(typeCode == 0) // pipe with cv
-    {
-      pipeIndex.push_back(i);
-      pipeCVIndex.push_back(i);
-    }
-    else if(typeCode == 2) // pump
-    {
-      pumpIndex.push_back(i);
-    }
-    else if(typeCode == 3 || typeCode == 4 || typeCode == 5 || typeCode == 6 || typeCode == 7 || typeCode == 8) // active valves
-    {
-      valveIndex.push_back(i);
-    }
-    else if(typeCode == 9) // ISO valves
-    {
-      valveIndex.push_back(i);
-      valveISOIndex.push_back(i);
-    }
-    else if(typeCode == 10) // Flow Meter
-    {
-      flowMeterIndex.push_back(i);
-    }
-    else if(typeCode == -1) // pool
-    {
-      poolIndex.push_back(i);
-    }
-    else if(typeCode == -2) // pressure point
-    {
-      presIndex.push_back(i);
-    }
-    else
-    {
-      cout << endl << "!WARNING! Unkown typeCode: " << typeCode << ", type: " << edges[i]->type << ", name: " << edges[i]->name << endl;
-    }
+	 int typeCode = edges[i]->typeCode;
+	 if(typeCode == 1) // normal pipe
+	 {
+		pipeIndex.push_back(i);
+	 }
+	 else if(typeCode == 0) // pipe with cv
+	 {
+		pipeIndex.push_back(i);
+		pipeCVIndex.push_back(i);
+	 }
+	 else if(typeCode == 2) // pump
+	 {
+		pumpIndex.push_back(i);
+	 }
+	 else if(typeCode == 3 || typeCode == 4 || typeCode == 5 || typeCode == 6 || typeCode == 7 || typeCode == 8) // active valves
+	 {
+		valveIndex.push_back(i);
+	 }
+	 else if(typeCode == 9) // ISO valves
+	 {
+		valveIndex.push_back(i);
+		valveISOIndex.push_back(i);
+	 }
+	 else if(typeCode == 10) // Flow Meter
+	 {
+		flowMeterIndex.push_back(i);
+	 }
+	 else if(typeCode == -1) // pool
+	 {
+		poolIndex.push_back(i);
+	 }
+	 else if(typeCode == -2) // pressure point
+	 {
+		presIndex.push_back(i);
+	 }
+	 else
+	 {
+		cout << endl << "!WARNING! Unkown typeCode: " << typeCode << ", type: " << edges[i]->type << ", name: " << edges[i]->name << endl;
+	 }
   }
 }
 
@@ -166,40 +166,40 @@ void Staci::listSystem()
   cout << "\n\n Nodes:\n--------------------------";
   for (int i = 0; i < numberNodes; i++)
   {
-    cout << "\n Node index      : " << i;
-    cout << nodes[i]->info(true);
+	 cout << "\n Node index      : " << i;
+	 cout << nodes[i]->info(true);
   }
   cout << "\n\n Edges:\n--------------------------";
   for (int i = 0; i < numberEdges; i++)
   {
-    cout << "\n\n Edge index            : " << i;
-    cout << edges[i]->info();
+	 cout << "\n\n Edge index            : " << i;
+	 cout << edges[i]->info();
   }
 }
 
 //--------------------------------------------------------------
 void Staci::listSystemShort()
 {
-   cout << "\n\n Nodes:\n--------------------------\n";
-   for(int i=0; i<numberNodes; i++)
-   {
-      printf("%10s\n",nodes[i]->name.c_str());
-   }
-   cout << "\n\n Edges:\n--------------------------\n";
-   for(int i=0; i<numberEdges; i++)
-   {
-      int is = edges[i]->startNodeIndex;
-      int ie = edges[i]->endNodeIndex;
-      if(ie == -1)
-      {
-         printf("%10s, %10s\n", edges[i]->name.c_str(), nodes[is]->name.c_str());
-      }
-      else
-      {
-         printf("%10s, %10s-%10s\n", edges[i]->name.c_str(), nodes[is]->name.c_str(), nodes[ie]->name.c_str());
-      }
-   }
-   cout << endl;
+	cout << "\n\n Nodes:\n--------------------------\n";
+	for(int i=0; i<numberNodes; i++)
+	{
+		printf("%10s\n",nodes[i]->name.c_str());
+	}
+	cout << "\n\n Edges:\n--------------------------\n";
+	for(int i=0; i<numberEdges; i++)
+	{
+		int is = edges[i]->startNodeIndex;
+		int ie = edges[i]->endNodeIndex;
+		if(ie == -1)
+		{
+			printf("%10s, %10s\n", edges[i]->name.c_str(), nodes[is]->name.c_str());
+		}
+		else
+		{
+			printf("%10s, %10s-%10s\n", edges[i]->name.c_str(), nodes[is]->name.c_str(), nodes[ie]->name.c_str());
+		}
+	}
+	cout << endl;
 }
 
 
@@ -214,32 +214,32 @@ void Staci::checkSystem()
   cout << "\n [*] Looking for identical IDs  ";
   string name1, name2;
   for(int i = 0; i < numberEdges; i++){
-    name1 = edges.at(i)->name;
-    for(int j = 0; j < numberEdges; j++){
-      name2 = edges.at(j)->name;
-      if(i != j){
-        if(name1 == name2){
-          cout << "\n !!!ERROR!!! edge #" << i << ": " << name1 << " and edge #" << j << ": " << name2 << " with same ID!" << endl;
-          stop = true;
-        }
-      }
-    }
+	 name1 = edges.at(i)->name;
+	 for(int j = 0; j < numberEdges; j++){
+		name2 = edges.at(j)->name;
+		if(i != j){
+		  if(name1 == name2){
+			 cout << "\n !!!ERROR!!! edge #" << i << ": " << name1 << " and edge #" << j << ": " << name2 << " with same ID!" << endl;
+			 stop = true;
+		  }
+		}
+	 }
 
-    for(int j = 0; j < numberNodes; j++){
-      name2 = nodes.at(j)->name;
-      if(i != j){
-        if(name1 == name2){
-          cout << "\n !!!ERROR!!! edge #" << i << ": " << name1 << " and node #" << j << ": " << name2 << " with same ID!" << endl;
-          stop = true;
-        }
-      }
-    }
+	 for(int j = 0; j < numberNodes; j++){
+		name2 = nodes.at(j)->name;
+		if(i != j){
+		  if(name1 == name2){
+			 cout << "\n !!!ERROR!!! edge #" << i << ": " << name1 << " and node #" << j << ": " << name2 << " with same ID!" << endl;
+			 stop = true;
+		  }
+		}
+	 }
   }
 
   if (stop)
-    exit(-1);
+	 exit(-1);
   else
-    cout << endl << " [*] Checking System:  OK";
+	 cout << endl << " [*] Checking System:  OK";
 }
 
 //--------------------------------------------------------------
@@ -251,138 +251,144 @@ void Staci::saveResult(string property, string element)
   int i=0;
   while(i<allElement.size() && !elementExist)
   {
-    if(element == allElement[i])
-      elementExist = true;
-    i++;
+	 if(element == allElement[i])
+		elementExist = true;
+	 i++;
   }
 
   if(elementExist)
   {
-    // LINUX
-    //mkdir("Network Data",0777);
-    //mkdir(("Network Data/" + caseName).c_str(),0777);
+	 // LINUX
+	 //mkdir("Network Data",0777);
+	 //mkdir(("Network Data/" + caseName).c_str(),0777);
 
-    // FOR WINDOWS
-    //mkdir("Network Data");
-    //mkdir(("Network Data/" + caseName).c_str());
+	 // FOR WINDOWS
+	 //mkdir("Network Data");
+	 //mkdir(("Network Data/" + caseName).c_str());
 
-    makeDirectory("Network Data");
-    makeDirectory(("Network Data/" + caseName).c_str());
+	 makeDirectory("Network Data");
+	 makeDirectory(("Network Data/" + caseName).c_str());
 
-    if(element == "All")
-    {
-      remove(("/Network Data/" + caseName + "/Node.txt").c_str());
-      remove(("/Network Data/" + caseName + "/Pipe.txt").c_str());
-      remove(("/Network Data/" + caseName + "/Pump.txt").c_str());
-      remove(("/Network Data/" + caseName + "/Pool.txt").c_str());
-      remove(("/Network Data/" + caseName + "/Pres.txt").c_str());
-      remove(("/Network Data/" + caseName + "/Valve.txt").c_str());
-    }
+	 if(element == "All")
+	 {
+		remove(("/Network Data/" + caseName + "/Node.txt").c_str());
+		remove(("/Network Data/" + caseName + "/Pipe.txt").c_str());
+		remove(("/Network Data/" + caseName + "/Pump.txt").c_str());
+		remove(("/Network Data/" + caseName + "/Pool.txt").c_str());
+		remove(("/Network Data/" + caseName + "/Pres.txt").c_str());
+		remove(("/Network Data/" + caseName + "/Valve.txt").c_str());
+	 }
 
-    ofstream wfile;
-    if(element == "Node" || element == "All")
-    { 
-      remove(("Network Data/" + caseName + "/Node.txt").c_str());
-      wfile.open("Network Data/" + caseName + "/Node.txt");
-      for(int i=0; i<numberNodes; i++)
-        wfile << nodes[i]->getProperty(property) << endl;
-      wfile.close();
-    }
+	 ofstream wfile;
+	 if(element == "Node" || element == "All")
+	 { 
+		remove(("Network Data/" + caseName + "/Node.txt").c_str());
+		wfile.open("Network Data/" + caseName + "/Node.txt");
+		for(int i=0; i<numberNodes; i++)
+		  wfile << nodes[i]->getProperty(property) << endl;
+		wfile.close();
+	 }
 
-    if(element == "Pipe" || element == "All")
-    { 
-      remove(("Network Data/" + caseName + "/Pipe.txt").c_str());
-      wfile.open("Network Data/" + caseName + "/Pipe.txt");
-      for(int i=0; i<numberEdges; i++)
-      {
-        if(edges[i]->typeCode == 0 || edges[i]->typeCode == 1) // Pipe or PipeCV
-        {
-          wfile << edges[i]->getDoubleProperty(property) << endl;
-        }
-      }
-      wfile.close();
-    }
+	 if(element == "Pipe" || element == "All")
+	 { 
+		remove(("Network Data/" + caseName + "/Pipe.txt").c_str());
+		wfile.open("Network Data/" + caseName + "/Pipe.txt");
+		for(int i=0; i<numberEdges; i++)
+		{
+		  if(edges[i]->typeCode == 0 || edges[i]->typeCode == 1) // Pipe or PipeCV
+		  {
+			 wfile << edges[i]->getDoubleProperty(property) << endl;
+		  }
+		}
+		wfile.close();
+	 }
 
-    if(element == "Pump" || element == "All")
-    {
-      remove(("Network Data/" + caseName + "/Pump.txt").c_str());
-      wfile.open("Network Data/" + caseName + "/Pump.txt");
-      for(int i=0; i<numberEdges; i++)
-      {
-        if(edges[i]->typeCode == 2) // Pump
-        {
-          wfile << edges[i]->getEdgeDoubleProperty(property) << endl;
-        }
-      }  wfile.close();
-    }
+	 if(element == "Pump" || element == "All")
+	 {
+		remove(("Network Data/" + caseName + "/Pump.txt").c_str());
+		wfile.open("Network Data/" + caseName + "/Pump.txt");
+		for(int i=0; i<numberEdges; i++)
+		{
+		  if(edges[i]->typeCode == 2) // Pump
+		  {
+			 wfile << edges[i]->getEdgeDoubleProperty(property) << endl;
+		  }
+		}  wfile.close();
+	 }
 
-    if(element == "Valve" || element == "All")
-    {
-      remove(("Network Data/" + caseName + "/Valve.txt").c_str());
-      wfile.open("Network Data/" + caseName + "/Valve.txt");
-      for(int i=0; i<numberEdges; i++)
-      {
-        if(edges[i]->typeCode == 9) // ValveISO TODO more valve type
-        {
-          wfile << edges[i]->getEdgeDoubleProperty(property) << endl;
-        }
-      }  wfile.close();
-    }
+	 if(element == "Valve" || element == "All")
+	 {
+		remove(("Network Data/" + caseName + "/Valve.txt").c_str());
+		wfile.open("Network Data/" + caseName + "/Valve.txt");
+		for(int i=0; i<numberEdges; i++)
+		{
+		  if(edges[i]->typeCode == 9) // ValveISO TODO more valve type
+		  {
+			 wfile << edges[i]->getEdgeDoubleProperty(property) << endl;
+		  }
+		}  wfile.close();
+	 }
 
-    if(element == "PressurePoint" || element == "All")
-    {
-      remove(("Network Data/" + caseName + "/Pres.txt").c_str());
-      wfile.open("Network Data/" + caseName + "/Pres.txt");
-      for(int i=0; i<numberEdges; i++)
-      {
-        if(edges[i]->typeCode == -2)
-        {
-          wfile << edges[i]->getEdgeDoubleProperty(property) << endl;
-        }
-      }
-      wfile.close();
-    }
+	 if(element == "PressurePoint" || element == "All")
+	 {
+		remove(("Network Data/" + caseName + "/Pres.txt").c_str());
+		wfile.open("Network Data/" + caseName + "/Pres.txt");
+		for(int i=0; i<numberEdges; i++)
+		{
+		  if(edges[i]->typeCode == -2)
+		  {
+			 wfile << edges[i]->getEdgeDoubleProperty(property) << endl;
+		  }
+		}
+		wfile.close();
+	 }
 
-    if(element == "Pool" || element == "All")
-    { 
-      remove(("Network Data/" + caseName + "/Pool.txt").c_str());
-      wfile.open("Network Data/" + caseName + "/Pool.txt");
-      for(int i=0; i<numberEdges; i++)
-      {
-        if(edges[i]->typeCode == -1)
-        {
-          wfile << edges[i]->getEdgeDoubleProperty(property) << endl;
-        }
-      }
-      wfile.close();
-    }
+	 if(element == "Pool" || element == "All")
+	 { 
+		remove(("Network Data/" + caseName + "/Pool.txt").c_str());
+		wfile.open("Network Data/" + caseName + "/Pool.txt");
+		for(int i=0; i<numberEdges; i++)
+		{
+		  if(edges[i]->typeCode == -1)
+		  {
+			 wfile << edges[i]->getEdgeDoubleProperty(property) << endl;
+		  }
+		}
+		wfile.close();
+	 }
   }
   else
   {
-    cout << endl << "Elemenet: " << element << " does not exist in Staci::saveResult() function" << endl << "Possible elements: ";
-    for(int i=0; i<allElement.size(); i++)
-      cout << allElement[i] << ", ";
-    cout << endl;
+	 cout << endl << "Elemenet: " << element << " does not exist in Staci::saveResult() function" << endl << "Possible elements: ";
+	 for(int i=0; i<allElement.size(); i++)
+		cout << allElement[i] << ", ";
+	 cout << endl;
   }
 }
 
 //--------------------------------------------------------------
 int Staci::nodeIDtoIndex(string ID)
 {
+	return nodeIDtoIndex(ID, true);
+}
+
+//--------------------------------------------------------------
+int Staci::nodeIDtoIndex(string ID, bool do_warning)
+{
   int i=0, idx=-1;
   bool gotIt=false;
   while(i<numberNodes && !gotIt)
   {
-    if(ID.compare(nodes[i]->name) == 0)
-    {
-      gotIt = true;
-      idx = i;
-    }
-    i++;
+	 if(ID.compare(nodes[i]->name) == 0)
+	 {
+		gotIt = true;
+		idx = i;
+	 }
+	 i++;
   }
-  if(idx == -1)
+  if(idx == -1 && do_warning)
   {
-    cout << "\n!!!WARNING!!!\nStaci:nodeIDtoIndex function\nNode is not existing, ID: " << ID << "\nContinouing..." << endl;
+	 cout << "\n!!!WARNING!!!\nStaci:nodeIDtoIndex function\nNode is not existing, ID: " << ID << "\nContinouing..." << endl;
   }
   return idx;
 }
@@ -390,20 +396,26 @@ int Staci::nodeIDtoIndex(string ID)
 //--------------------------------------------------------------
 int Staci::edgeIDtoIndex(string ID)
 {
+   return edgeIDtoIndex(ID,true);
+}
+
+//--------------------------------------------------------------
+int Staci::edgeIDtoIndex(string ID, bool do_warning)
+{
   int i=0, idx=-1;
   bool gotIt=false;
   while(i<numberEdges && !gotIt)
   {
-    if(ID.compare(edges[i]->name) == 0)
-    {
-      gotIt = true;
-      idx = i;
-    }
-    i++;
+	 if(ID.compare(edges[i]->name) == 0)
+	 {
+		gotIt = true;
+		idx = i;
+	 }
+	 i++;
   }
-  if(idx == -1)
+  if(idx == -1 && do_warning)
   {
-    cout << "\n!!!WARNING!!!\nStaci:edgeIDtoIndex function\nEdge is not existing, ID: " << ID << "\nContinouing..." << endl;
+	 cout << "\n!!!WARNING!!!\nStaci:edgeIDtoIndex function\nEdge is not existing, ID: " << ID << "\nContinouing..." << endl;
   }
   return idx;
 }
@@ -413,114 +425,129 @@ void Staci::simplifySystem(double demandCut)
 {
 	for(int i=0; i<edges.size(); i++)
 	{
-    if(edges[i]->typeCode == 1)
-    {
-  		// dealing with the starting node
-  		int i1  = edges[i]->startNodeIndex;
-  		int k11 = nodes[i1]->edgeIn.size();
-  		int k12 = nodes[i1]->edgeOut.size();
+		if(edges[i]->typeCode == 1)
+		{
+			// dealing with the starting node
+			int i1  = edges[i]->startNodeIndex;
+			int k11 = nodes[i1]->edgeIn.size();
+			int k12 = nodes[i1]->edgeOut.size();
 
-  		if((k11+k12==2) && (nodes[i1]->demand < demandCut))
-  		{
-  			// getting the other edges index
-  			int e1;
-  			string node_name;
-  			int j1;
-  			if(k11==1)
-  			{
-  				e1 = nodes[i1]->edgeIn[0];
-  				node_name = edges[e1]->startNodeName;
-  				j1 = edges[e1]->startNodeIndex;
-  			}
-  			else
-  			{
-  				if(nodes[i1]->edgeOut[0]==i)
-  				{
-  					e1 = nodes[i1]->edgeOut[1];
-  				}
-  				else
-  				{
-  					e1 = nodes[i1]->edgeOut[0];
-  				}
-  				node_name = edges[e1]->endNodeName;
-  				j1 = edges[e1]->endNodeIndex;
-  			}
+			if((k11+k12==2) && (nodes[i1]->demand < demandCut))
+			{
+				// getting the other edges index
+				int e1;
+				string node_name;
+				int j1;
+				if(k11==1)
+				{
+					e1 = nodes[i1]->edgeIn[0];
+					node_name = edges[e1]->startNodeName;
+					j1 = edges[e1]->startNodeIndex;
+				}
+				else
+				{
+					if(nodes[i1]->edgeOut[0]==i)
+					{
+						e1 = nodes[i1]->edgeOut[1];
+					}
+					else
+					{
+						e1 = nodes[i1]->edgeOut[0];
+					}
+					node_name = edges[e1]->endNodeName;
+					j1 = edges[e1]->endNodeIndex;
+				}
 
-  			// checking the diameters and edge types
-  			if((edges[i]->getDoubleProperty("diameter") == edges[e1]->getDoubleProperty("diameter")) && (edges[e1]->typeCode == 1))
-  			{
-  				// adding the length to the retreained one
-  				double l_new = edges[i]->getDoubleProperty("length") + edges[i]->getDoubleProperty("length");
-  				edges[i]->setDoubleProperty("length",l_new);
+				// checking the diameters and edge types
+				if(edges[e1]->typeCode == 1)
+				{
+					if((nodes[j1]->name.substr(0,4) != "POOL" ) && (nodes[j1]->name.substr(0,5) != "PRESS"))
+					{
+						if(edges[i]->getDoubleProperty("diameter") == edges[e1]->getDoubleProperty("diameter"))
+						{
+							// adding the length to the retreained one
+							double l_new = edges[i]->getDoubleProperty("length") + edges[e1]->getDoubleProperty("length");
+							edges[i]->setDoubleProperty("length",l_new);
 
-  				// changing starting node
-  				edges[i]->startNodeName = node_name;
-  				nodes[j1]->demand += nodes[i1]->demand;
+							// changing starting node
+							edges[i]->startNodeName = node_name;
+							nodes[j1]->demand += nodes[i1]->demand;
 
-          // actually saving to delete the e1 pipe, and the correspoing node j1
-          edges.erase(edges.begin()+e1);
-          nodes.erase(nodes.begin()+j1);
+							// actually saving to delete the e1 pipe, and the correspoing node j1
+							edges.erase(edges.begin()+e1);
+							nodes.erase(nodes.begin()+i1);
 
-          // rebuild system, exit for loop
-          buildSystem();
-          buildIndexing();
-          break;
-  			}
-  		}
+							// rebuild system, exit for loop
+							buildSystem();
+							buildIndexing();
+							i=0;
+						}
+					}
+				}
+			}
 
-  		// dealing with the ending node
-  		int i2 = edges[i]->endNodeIndex;
-  		int k21 = nodes[i2]->edgeIn.size();
-  		int k22 = nodes[i2]->edgeOut.size();
+			if(i!=0)
+			{
+				// dealing with the ending node
+				int i2 = edges[i]->endNodeIndex;
+				int k21 = nodes[i2]->edgeIn.size();
+				int k22 = nodes[i2]->edgeOut.size();
 
-  		if((k21+k22==2) && (nodes[i2]->demand < demandCut))
-  		{
-  			// getting the other edges index
-  			int e2;
-  			string node_name;
-  			int j2;
-  			if(k22==1)
-  			{
-  				e2 = nodes[i2]->edgeOut[0];
-  				node_name = edges[e2]->endNodeName;
-  				j2 = edges[e2]->endNodeIndex;
-  			}
-  			else
-  			{
-  				if(nodes[i2]->edgeIn[0]==i)
-  				{
-  					e2 = nodes[i2]->edgeIn[1];
-  				}
-  				else
-  				{
-  					e2 = nodes[i2]->edgeIn[0];
-  				}
-  				node_name = edges[e2]->endNodeName;
-  				j2 = edges[e2]->endNodeIndex;
-  			}
+				if((k21+k22==2) && (nodes[i2]->demand < demandCut))
+				{
+					// getting the other edges index
+					int e2;
+					string node_name;
+					int j2;
+					if(k22==1)
+					{
+						e2 = nodes[i2]->edgeOut[0];
+						node_name = edges[e2]->endNodeName;
+						j2 = edges[e2]->endNodeIndex;
+					}
+					else
+					{
+						if(nodes[i2]->edgeIn[0]==i)
+						{
+							e2 = nodes[i2]->edgeIn[1];
+						}
+						else
+						{
+							e2 = nodes[i2]->edgeIn[0];
+						}
+						node_name = edges[e2]->startNodeName;
+						j2 = edges[e2]->startNodeIndex;
+					}
 
-  			// checking the diameters
-  			if((edges[i]->getDoubleProperty("diameter") == edges[e2]->getDoubleProperty("diameter")) && (edges[e2]->typeCode == 1))
-  			{
-  				// adding the length to the retreained one
-  				double l_new = edges[i]->getDoubleProperty("length") + edges[i]->getDoubleProperty("length");
-  				edges[i]->setDoubleProperty("length",l_new);
+					// checking the diameters
+					if(edges[e2]->typeCode == 1)
+					{
+						if((nodes[j2]->name.substr(0,4) != "POOL" ) && (nodes[j2]->name.substr(0,5) != "PRESS"))
+						{
+							if(edges[i]->getDoubleProperty("diameter") == edges[e2]->getDoubleProperty("diameter"))
+							{
+								// adding the length to the retreained one
+								double l_new = edges[i]->getDoubleProperty("length") + edges[e2]->getDoubleProperty("length");
+								edges[i]->setDoubleProperty("length",l_new);
 
-  				// changing starting node
-  				edges[i]->startNodeName = node_name;
-  				nodes[j2]->demand += nodes[i2]->demand;
+								// changing starting node
+								edges[i]->endNodeName = node_name;
+								nodes[j2]->demand += nodes[i2]->demand;
 
-          // actually saving to delete the e2 pipe, and the correspoing node j2
-          edges.erase(edges.begin()+e2);
-          nodes.erase(nodes.begin()+j2);
+								// actually saving to delete the e2 pipe, and the correspoing node j2
+								edges.erase(edges.begin()+e2);
+								nodes.erase(nodes.begin()+i2);
 
-          // rebuild system, exit for loop
-          buildSystem();
-          buildIndexing();
-          break;
-  			}
-  		}
-    }
+								// rebuild system, exit for loop
+								buildSystem();
+								buildIndexing();
+								i=0;
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	// just for sure

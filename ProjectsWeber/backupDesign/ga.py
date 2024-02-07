@@ -27,7 +27,7 @@ def of(x):
 
 #np.savetxt('diameter.txt', X, delimiter=',')
 
-case_name = "balf_mat_year"
+case_name = "balf_mat_year_simp"
 
 os.system('./relative_shortfall.out ' + case_name + ' pn')
 f = open("pn.txt", "r")
