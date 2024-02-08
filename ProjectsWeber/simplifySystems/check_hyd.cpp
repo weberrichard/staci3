@@ -41,7 +41,6 @@ int main(int argc, char* argv[])
 
       if(idx>-1)
       {
-         cout << "orig: " << wds->nodes[idx]->head << "  simp: " << wds_simp->nodes[i]->head << " reldif: " << abs(wds->nodes[idx]->head - wds_simp->nodes[i]->head)/wds->nodes[idx]->head << " pe: " << pres_error << endl;
          pres_error += abs(wds->nodes[idx]->head - wds_simp->nodes[i]->head)/wds->nodes[idx]->head;
       }
    }
