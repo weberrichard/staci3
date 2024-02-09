@@ -24,9 +24,9 @@ int main(int argc, char* argv[])
 	vector<double> st_diam{50.,63.,75.,100.,125.,150.,200.,250.,300.,350.,400.,450.,500.,600.,700.,800.}; 
 
 	string caseName, runType;
-	if(argc >= 3)
+	if(argc < 3)
 	{
-		cout << "Wrong number of inputs, correct: 2/3 (caseName, runType[pn,sn,of,of2,of_p1,of_p2], standardize(sn)/pref(of_p1,of_p2))" << endl;
+		cout << "Wrong number of inputs " << argc << ", correct: 2/3 (caseName, runType[pn,sn,of,of2,of_p1,of_p2], standardize(sn)/pref(of_p1,of_p2))" << endl;
 		exit(-1);
 	}
 	else
@@ -97,8 +97,6 @@ int main(int argc, char* argv[])
 		double a = 1000.;
 		double b = 1.;
 		double of = a*rs + b*cost_rel;
-
-		// cout << "rs : " << rs << " c: " << cost_rel << endl;
 
 		ofstream wFile;
 		wFile.open("of.txt");
@@ -187,7 +185,7 @@ int main(int argc, char* argv[])
 			ofstream wFile;
 			wFile.open("of_p1.txt");
 			wFile << cost_rel << endl;
-			wFile << pres_rel << endl;
+			wFile << 1./pres_rel << endl;
 			wFile.close();
 		}
 		else // for all backups
@@ -198,7 +196,7 @@ int main(int argc, char* argv[])
 			ofstream wFile;
 			wFile.open("of_p2.txt");
 			wFile << cost_rel << endl;
-			wFile << wds->backupPressure << endl;
+			wFile << 1./wds->backupPressure << endl;
 			wFile.close();
 		}
 	}
