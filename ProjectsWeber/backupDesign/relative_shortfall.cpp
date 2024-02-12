@@ -153,6 +153,10 @@ int main(int argc, char* argv[])
 		{
 			diameter = readVectorDouble("diameter2.txt");
 		}
+		
+		// standardised diameter values
+		standardizeDiameter(st_diam,diameter);
+
 		for(int i=0; i<wds->pipeIndex.size(); i++)
 		{  
 			double length=wds->edges[wds->pipeIndex[i]]->getDoubleProperty("length");
@@ -160,15 +164,12 @@ int main(int argc, char* argv[])
 			double diam_orig =  wds->edges[wds->pipeIndex[i]]->getDoubleProperty("diameter");
 			cost_orig += (Arp + Brp*diam_orig + Crp*diam_orig*diam_orig)*length;
 
-			// standardised diameter values
-			standardizeDiameter(st_diam,diameter);
-
 			wds->edges[wds->pipeIndex[i]]->setDoubleProperty("diameter",diameter[i]*1.e-3);
 			cost += (Arp + Brp*diameter[i]*1.e-3 + Crp*diameter[i]*diameter[i]*1.e-6)*length;
 		}
 		double cost_rel = cost/cost_orig;
 
-		if(runType == "of_p1") // for the single network
+		if(runType == "of_p1" || runType == "of_p2") // for the single network
 		{
 			wds->isPressureDemand = false;
 			wds->solveSystem();
@@ -181,23 +182,41 @@ int main(int argc, char* argv[])
 			}
 			pres_rel /= pref;
 			pres_rel /= wds->numberNodes;
+			double of_p1 = 1./pres_rel;
 
-			ofstream wFile;
-			wFile.open("of_p1.txt");
-			wFile << cost_rel << endl;
-			wFile << 1./pres_rel << endl;
-			wFile.close();
-		}
-		else // for all backups
-		{
 			wds->presRef = stod(argv[3],0);
 			wds->calculateVulnerability();
+			double of_p2 = 1./wds->backupPressure;
 
-			ofstream wFile;
-			wFile.open("of_p2.txt");
-			wFile << cost_rel << endl;
-			wFile << 1./wds->backupPressure << endl;
-			wFile.close();
+			// writing the objective function value
+			if(runType == "of_p1")
+			{
+				ofstream wFile;
+				wFile.open("of_p1.txt");
+				wFile << cost_rel << endl;
+				wFile << of_p1 << endl;
+				wFile.close();
+			}
+			else
+			{
+				ofstream wFile;
+				wFile.open("of_p2.txt");
+				wFile << cost_rel << endl;
+				wFile << of_p2 << endl;
+				wFile.close();
+			}
+
+			// writing every other value to log file
+			FILE *wfile;
+			wfile = fopen((caseName+"_log.txt").c_str(),"a");
+
+			fprintf(wfile, "%8.5e,%8.5e,%8.5e,%8.5e,",cost_rel,of_p1,of_p2,pref);
+			for(int i=0; i<wds->pipeIndex.size(); i++)
+			{
+			 	fprintf(wfile, "%8.5e,",wds->edges[wds->pipeIndex[i]]->getDoubleProperty("diameter"));
+			}
+			fprintf(wfile,"\n");
+  			fclose(wfile);
 		}
 	}
 	
@@ -209,7 +228,7 @@ double standardizeDiameter(const vector<double>& st_diam, double diam)
 	double new_diam=diam;
 	for(int i=1; i<st_diam.size(); i++)
 	{
-		if (st_diam[i-1] >= diam && st_diam[i] < diam)
+		if (st_diam[i-1] < diam && st_diam[i] >= diam)
 		{
 			new_diam = st_diam[i];
 		}
