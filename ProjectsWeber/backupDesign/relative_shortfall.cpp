@@ -174,19 +174,19 @@ int main(int argc, char* argv[])
 			wds->isPressureDemand = false;
 			wds->solveSystem();
 
-			double pres_rel=0.;
+			double of_p1=0.;
 			double pref = stod(argv[3],0);
+			double p0 = 20.;
+			double alpha = log(p0)/pref;
 			for(int i=0; i<wds->nodes.size(); i++)
 			{
-				pres_rel += abs(wds->nodes[i]->head - pref);
+				of_p1 += exp(-alpha*(wds->nodes[i]->head - pref));
 			}
-			pres_rel /= pref;
-			pres_rel /= wds->numberNodes;
-			double of_p1 = 1./pres_rel;
+			of_p1 /= wds->numberNodes;
 
 			wds->presRef = stod(argv[3],0);
 			wds->calculateVulnerability();
-			double of_p2 = 1./wds->backupPressure;
+			double of_p2 = wds->backupPressure;
 
 			// writing the objective function value
 			if(runType == "of_p1")
