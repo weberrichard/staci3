@@ -188,6 +188,8 @@ int main(int argc, char* argv[])
 			wds->calculateVulnerability();
 			double of_p2 = wds->backupPressure;
 
+			FILE *wfile;
+
 			// writing the objective function value
 			if(runType == "of_p1")
 			{
@@ -196,6 +198,9 @@ int main(int argc, char* argv[])
 				wFile << cost_rel << endl;
 				wFile << of_p1 << endl;
 				wFile.close();
+
+				wfile = fopen((caseName+"_of_p1_log.txt").c_str(),"a");
+
 			}
 			else
 			{
@@ -204,12 +209,11 @@ int main(int argc, char* argv[])
 				wFile << cost_rel << endl;
 				wFile << of_p2 << endl;
 				wFile.close();
+				
+				wfile = fopen((caseName+"_of_p2_log.txt").c_str(),"a");
 			}
 
 			// writing every other value to log file
-			FILE *wfile;
-			wfile = fopen((caseName+"_log.txt").c_str(),"a");
-
 			fprintf(wfile, "%8.5e,%8.5e,%8.5e,%8.5e,",cost_rel,of_p1,of_p2,pref);
 			for(int i=0; i<wds->pipeIndex.size(); i++)
 			{
