@@ -176,7 +176,7 @@ int main(int argc, char* argv[])
 
 			double of_p1=0.;
 			double pref = stod(argv[3],0);
-			double p0 = 20.;
+			double p0 = 10.;
 			double alpha = log(p0)/pref;
 			for(int i=0; i<wds->nodes.size(); i++)
 			{
